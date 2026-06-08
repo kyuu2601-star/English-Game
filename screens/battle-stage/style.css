@@ -1,4 +1,6 @@
-/* LAYOUT KHUNG TRẬN ĐẤU */
+/* ==========================================================================
+   1. LAYOUT & SÂN KHẤU CHÍNH (MAIN SCREEN & STAGE)
+   ========================================================================== */
 .battle-screen-layout {
     width: 100%;
     height: 100%;
@@ -6,7 +8,17 @@
     background: #000;
 }
 
-/* THANH ĐIỀU HƯỚNG PHÍA TRÊN */
+.battle-stage {
+    width: 100%;
+    height: 385px;
+    position: relative;
+    background-size: cover;
+    background-position: center;
+}
+
+/* ==========================================================================
+   2. THANH ĐIỀU HƯỚNG TOP NAV & BỘ NÚT MINI CHUẨN ASSET THẬT
+   ========================================================================== */
 .top-nav-bar {
     position: absolute;
     top: 15px; left: 15px; right: 15px;
@@ -15,6 +27,7 @@
     align-items: center;
     z-index: 10;
 }
+
 .coin-display {
     background: rgba(0, 0, 0, 0.65);
     color: #facc15;
@@ -25,12 +38,12 @@
     font-family: 'MyFredoka', sans-serif;
     border: 2px solid #facc15;
 }
+
 .right-minis {
     display: flex;
     gap: 12px;
 }
 
-/* ĐỊNH DẠNG BỘ 4 NÚT MINI GÓC TRÊN */
 .btn-mini {
     width: 48px;
     height: 48px;
@@ -40,25 +53,24 @@
     background-repeat: no-repeat;
     background-color: transparent;
 }
-.btn-back { background-image: url('../../assets/Btn_Back_Normal.png'); }
+
+/* Đồng bộ chính xác theo tên file trên Github của fen */
+.btn-back { background-image: url('../../assets/Btn_Back.png'); }
 .btn-back:active { background-image: url('../../assets/Btn_Back_Pressed.png'); }
-.btn-mini-book { background-image: url('../../assets/Btn_Mini_Collection_Normal.png'); }
-.btn-mini-book:active { background-image: url('../../assets/Btn_Mini_Collection_Pressed.png'); }
-.btn-backpack { background-image: url('../../assets/Btn_Backpack_Normal.png'); }
-.btn-backpack:active { background-image: url('../../assets/Btn_Backpack_Pressed.png'); }
-.btn-setting { background-image: url('../../assets/Btn_Setting_Normal.png'); }
-.btn-setting:active { background-image: url('../../assets/Btn_Setting_Pressed.png'); }
 
-/* SÂN KHẤU CHIẾN ĐẤU (BACKGROUND ĐỔ RANDOM BẰNG JS) */
-.battle-stage {
-    width: 100%;
-    height: 385px;
-    position: relative;
-    background-size: cover;
-    background-position: center;
-}
+.btn-mini-book { background-image: url('../../assets/Btn_Collection_Icon.png'); }
+.btn-mini-book:active { background-image: url('../../assets/Btn_Collection_Icon_Pressed.png'); }
 
-/* NHÂN VẬT CHÍNH QUAY LƯNG TRƯỚC SÂN KHẤU */
+.btn-backpack { background-image: url('../../assets/Btn_Backpack_Icon.png'); }
+.btn-backpack:active { background-image: url('../../assets/Btn_Backpack_Icon_Pressed.png'); }
+
+.btn-setting { background-image: url('../../assets/Btn_Setting_Icon.png'); }
+.btn-setting:active { background-image: url('../../assets/Btn_Setting_Icon_Pressed.png'); }
+
+
+/* ==========================================================================
+   3. KHU VỰC NHÂN VẬT & QUÁI VẬT 512px (SPRITES NODES)
+   ========================================================================== */
 .sprite-player {
     position: absolute;
     bottom: 15px; left: 90px;
@@ -68,7 +80,6 @@
     background-position: bottom;
 }
 
-/* CỤM QUÁI KÍCH THƯỚC 512x512 PIXELS CHUẨN ĐÉT VÀ THANH NAMETAG CHÂN QUÁI */
 .mob-node-box {
     position: absolute;
     top: 15px; right: 60px;
@@ -79,6 +90,7 @@
     justify-content: space-between;
     z-index: 5;
 }
+
 .sprite-mob {
     width: 512px;
     height: 512px;
@@ -87,7 +99,7 @@
     background-position: center;
 }
 
-/* THANH PHÔI NAMETAG ĐÃ ĐƯỢC PHÓNG TO PHÙ HỢP CÂN XỨNG VỚI QUÁI BỰ */
+/* THANH PHÔI NAMETAG DƯỚI CHÂN QUÁI */
 .mob-nametag-plate {
     width: 300px;
     height: 75px;
@@ -101,25 +113,20 @@
     box-sizing: border-box;
     margin-top: -15px;
 }
+
 .mob-nametag-plate span {
     font-family: 'MyFredoka', sans-serif;
     font-size: 1.15rem;
-    color: #1e3a8a; /* Màu chữ tên quái, đổi tự do */
+    color: #1e3a8a;
     font-weight: bold;
     text-transform: uppercase;
     text-align: center;
 }
 
-/* HOẠT ẢNH NHÚN NHẢY IDLE CHO PLAYER VÀ MOB */
-.animation-idle {
-    animation: battleBreath 0.8s ease-in-out infinite alternate;
-}
-@keyframes battleBreath {
-    0% { transform: translateY(0) scaleY(1); }
-    100% { transform: translateY(-6px) scaleY(1.03); }
-}
 
-/* KHUNG UI CÂU HỎI VÀ ĐÁP ÁN (UI_QUESTION_BOX) */
+/* ==========================================================================
+   4. GIAO DIỆN HỘP CÂU HỎI & NÚT ĐÁP ÁN TIẾNG ANH
+   ========================================================================== */
 .battle-dialogue-ui {
     position: absolute;
     bottom: 8px; left: 50%;
@@ -133,7 +140,6 @@
     justify-content: space-between;
 }
 
-/* VÙNG CHỨA CÂU HỎI TIẾNG ANH (DÙNG FONT PATRICK HAND) */
 .question-zone {
     height: 60px;
     font-family: 'MyPatrick', cursive;
@@ -144,13 +150,14 @@
     align-items: center;
 }
 
-/* KHU VỰC CHỨA 3 NÚT ĐÁP ÁN DÀN NGANG */
 .answers-zone {
     height: 65px;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
+
+/* Đã sửa về đúng tên file phôi UI_Answer_Box gốc của fen */
 .btn-answer {
     width: 270px;
     height: 55px;
@@ -158,17 +165,21 @@
     cursor: pointer;
     color: white;
     font-weight: bold;
-    background: url('../../assets/UI_Answer_Box_Normal.png') no-repeat center/contain;
+    background: url('../../assets/UI_Answer_Box.png') no-repeat center/contain;
     background-color: transparent;
     font-family: 'MyFredoka', sans-serif;
     font-size: 1.15rem;
     text-align: center;
 }
+
 .btn-answer:active {
     background-image: url('../../assets/UI_Answer_Box_Pressed.png');
 }
 
-/* EFFECT LAYERS - ĐÃ ĐƯỢC CANH CHỈNH LẠI TỌA ĐỘ VÀO GIỮA TÂM QUÁI BỰ */
+
+/* ==========================================================================
+   5. HIỆU ỨNG VFX LAYERS (SMOKE, BALL, SHINY PARTICLES)
+   ========================================================================== */
 .vfx-smoke-effect {
     position: absolute;
     top: 120px; right: 166px;
@@ -177,10 +188,12 @@
     display: none;
     z-index: 6;
 }
+
 .play-smoke {
     display: block;
     animation: runSmokeSheet 0.5s steps(6) forwards;
 }
+
 @keyframes runSmokeSheet {
     from { background-position: 0 0; }
     to { background-position: -1800px 0; }
@@ -203,14 +216,29 @@
     pointer-events: none;
     z-index: 4;
 }
+
 .shiny-star {
     position: absolute;
     width: 22px; height: 22px;
     background: url('../../assets/VFX_Star_Shiny.png') no-repeat center/contain;
     animation: shinySpreadOut 0.9s infinite linear;
 }
+
 @keyframes shinySpreadOut {
     0% { transform: translate(0, 0) scale(0); opacity: 0; }
     50% { opacity: 1; }
     100% { transform: translate(var(--x), var(--y)) scale(1.2); opacity: 0; }
+}
+
+
+/* ==========================================================================
+   6. HOẠT ẢNH NHÚN NHẢY IDLE (BREATHING ANIMATIONS)
+   ========================================================================== */
+.animation-idle {
+    animation: battleBreath 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes battleBreath {
+    0% { transform: translateY(0) scaleY(1); }
+    100% { transform: translateY(-6px) scaleY(1.03); }
 }
