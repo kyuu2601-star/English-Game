@@ -212,7 +212,9 @@ function changeScreen(scrId) {
             document.getElementById('loading-bar-container').style.display = "none";
             document.getElementById('login-popup').style.display = "none";
             document.getElementById('menu-controls').style.display = "flex";
-            document.getElementById('menu-avatar-display').style.backgroundImage = `url('assets/Player_${gameState.gender === 'male' ? 'Male' : 'Female'}_Main.png')`;
+            
+            // 🛠️ ĐÃ FIX ĐƯỜNG DẪN: Lùi cấp ra ngoài thư mục assets gốc để lấy ảnh tướng sảnh chính
+            document.getElementById('menu-avatar-display').style.backgroundImage = `url('../../assets/Player_${gameState.gender === 'male' ? 'Male' : 'Female'}_Main.png')`;
             document.getElementById('user-coins').innerText = gameState.coins;
         });
     }
@@ -274,7 +276,8 @@ function confirmLogin() {
     const avatarDisplay = document.getElementById('menu-avatar-display');
     const loginPopup = document.getElementById('login-popup');
     
-    if (avatarDisplay) avatarDisplay.style.backgroundImage = `url('assets/Player_${gameState.gender === 'male' ? 'Male' : 'Female'}_Main.png')`;
+    // 🛠️ ĐÃ FIX ĐƯỜNG DẪN: Lùi cấp ra ngoài thư mục assets gốc để lấy ảnh tướng sảnh chính khi bé vừa Đăng nhập xong
+    if (avatarDisplay) avatarDisplay.style.backgroundImage = `url('../../assets/Player_${gameState.gender === 'male' ? 'Male' : 'Female'}_Main.png')`;
     if (loginPopup) loginPopup.style.display = "none";
     if (menuControls) menuControls.style.display = "flex";
     
@@ -286,7 +289,6 @@ function nextBattleTurn() {
     const mobSprite = document.getElementById('mob-sprite');
     if (!mobSprite) return;
 
-    // 🌧️ DỌN DẸP SẠCH SẼ: Tự động xóa bộ đếm mưa sao rơi của turn cũ để tránh lỗi chồng dồn hạt
     if (shinyRainInterval) {
         clearInterval(shinyRainInterval);
         shinyRainInterval = null;
@@ -320,12 +322,11 @@ function nextBattleTurn() {
 
     if (isShinyRoll && shinyPool.length > 0) {
         currentMob = shinyPool[Math.floor(Math.random() * shinyPool.length)];
-        triggerShinyVFX(); // Gọi cơn mưa sao rơi lùi nền ngầm
+        triggerShinyVFX(); 
     } else {
         currentMob = normalPool.length > 0 ? normalPool[Math.floor(Math.random() * normalPool.length)] : pool[Math.floor(Math.random() * pool.length)];
     }
 
-    // Đổi cảnh nền map ngẫu nhiên theo đúng bảng chữ hoa chữ thường tài sản thật
     const maps = ['Desert', 'Forest', 'Snow', 'Volcano'];
     let randMap = maps[Math.floor(Math.random() * maps.length)];
     document.getElementById('battle-field').style.backgroundImage = `url('assets/BG_${randMap}.png')`;
@@ -333,6 +334,8 @@ function nextBattleTurn() {
     mobSprite.style.backgroundImage = `url('${currentMob.Image}')`;
     document.getElementById('mob-nametag').style.backgroundImage = `url('assets/Nametag_lv${stars}.png')`;
     document.getElementById('mob-name-text').innerText = currentMob.Name;
+    
+    // Găm ảnh nhân vật quay lưng trận đấu lùi cấp chuẩn
     document.getElementById('player-sprite').style.backgroundImage = `url('assets/Player_${gameState.gender === 'male' ? 'Male' : 'Female'}_Back.png')`;
 
     // Lọc câu hỏi cùng cấp sao
@@ -346,16 +349,13 @@ function nextBattleTurn() {
     document.getElementById('ans-C').innerText = currentQuestion.Option_C;
 }
 
-// NÂNG CẤP: HỆ THỐNG MƯA SAO RƠI NGẪU NHIÊN XUYÊN SUỐT TRẬN ĐẤU CỦA QUÁI SHINY
 function triggerShinyVFX() {
     const container = document.getElementById('shiny-particles');
     if (!container) return;
     
     if (shinyRainInterval) clearInterval(shinyRainInterval);
 
-    // 🌧️ ĐÚNG 1 GIÂY (1000ms) TỰ ĐỘNG THẢ 1 HẠT SAO RƠI TỪ TRÊN TRỜI XUỐNG
     shinyRainInterval = setInterval(() => {
-        // Biện pháp an toàn: Nếu chuyển màn hình (container bay màu khỏi UI), tự hủy đếm ngầm liền
         if (!document.getElementById('shiny-particles')) {
             clearInterval(shinyRainInterval);
             return;
@@ -364,17 +364,14 @@ function triggerShinyVFX() {
         let star = document.createElement('div');
         star.className = "shiny-star";
         
-        // Tọa độ nằm ngang X chạy ngẫu nhiên từ trái qua phải (0% -> 95%) dọc màn hình map
         let randomX = Math.random() * 95; 
         star.style.left = `${randomX}%`;
         
-        // Tốc độ rơi ngẫu nhiên từ 2.5s đến 4s để các hạt rơi so le, tự nhiên hơn
         let duration = 2.5 + Math.random() * 1.5;
         star.style.setProperty('--fall-duration', `${duration}s`);
         
         container.appendChild(star);
         
-        // Hạt rơi tuột khỏi màn hình -> Tự hủy thẻ div để giải phóng RAM cho trình duyệt mượt mà
         setTimeout(() => { star.remove(); }, duration * 1000);
     }, 1000);
 }
