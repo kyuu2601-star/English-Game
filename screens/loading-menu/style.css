@@ -1,11 +1,12 @@
-/* Áp hình nền Loading/Menu cho wrapper ngoài cùng (Đã sửa lỗi hiển thị lùi cấp) */
+/* ==========================================================================
+   1. KHUNG NỀN LAYOUT CHÍNH (MAIN LAYOUT & BACKGROUND)
+   ========================================================================== */
 .loading-menu-bg {
     background: url('../../assets/Background_Loading.png') no-repeat center/cover !important;
     width: 100%;
     height: 100%;
     position: absolute;
-    top: 0;
-    left: 0;
+    top: 0; left: 0;
 }
 
 .menu-content-core {
@@ -18,7 +19,9 @@
     position: relative;
 }
 
-/* Kích thước thanh Loading */
+/* ==========================================================================
+   2. THANH TIẾN TRÌNH LOADING (PROGRESS LOADING BAR)
+   ========================================================================== */
 .loading-bar-bg {
     width: 450px;
     height: 26px;
@@ -31,14 +34,16 @@
     align-items: center;
     justify-content: center;
 }
+
 .loading-bar-fill {
     position: absolute;
     top: 0; left: 0;
     height: 100%;
-    width: 0%; /* Sẽ được điều khiển tăng dần bằng Javascript */
+    width: 0%;
     background: linear-gradient(to right, #4ade80, #22c55e);
     transition: width 0.3s ease-out;
 }
+
 #loading-text {
     position: relative;
     z-index: 3;
@@ -48,18 +53,22 @@
     font-family: 'MyFredoka', sans-serif;
 }
 
-/* Menu chính xuất hiện sau khi Login thành công */
+/* ==========================================================================
+   3. GIAO DIỆN MENU CHÍNH - ĐÃ ĐỒNG BỘ TÊN ASSET THẬT
+   ========================================================================== */
 .menu-layout-box {
-    display: none; /* Mặc định ẩn, JS sẽ bật flex khi login xong */
+    display: none; /* JS bật flex khi login xong */
     gap: 40px;
     align-items: center;
     justify-content: center;
 }
+
 .menu-buttons-side {
     display: flex;
     flex-direction: column;
     gap: 15px;
 }
+
 .btn-main {
     width: 200px;
     height: 66px;
@@ -69,9 +78,11 @@
     background-repeat: no-repeat;
     background-color: transparent;
 }
-#btn-start { background-image: url('../../assets/Btn_Start_Normal.png'); }
+
+#btn-start { background-image: url('../../assets/Btn_Start.png'); }
 #btn-start:active { background-image: url('../../assets/Btn_Start_Pressed.png'); }
-#btn-collection-menu { background-image: url('../../assets/Btn_Collection_Normal.png'); }
+
+#btn-collection-menu { background-image: url('../../assets/Btn_Collection.png'); }
 #btn-collection-menu:active { background-image: url('../../assets/Btn_Collection_Pressed.png'); }
 
 .menu-char-preview {
@@ -82,17 +93,20 @@
     background-position: bottom;
 }
 
-/* POPUP MODAL ĐĂNG NHẬP CHỒNG LÊN */
+/* ==========================================================================
+   4. POPUP ĐĂNG NHẬP CHỌN NHÂN VẬT (LOGIN MODAL CONTAINER)
+   ========================================================================== */
 .modal-overlay {
     position: absolute;
     top: 0; left: 0;
     width: 100%; height: 100%;
     background: rgba(0, 0, 0, 0.75);
-    display: none; /* JS sẽ bật flex khi nạp xong dữ liệu */
+    display: none;
     justify-content: center;
     align-items: center;
     z-index: 20;
 }
+
 .login-popup-content {
     background: #fef08a;
     border: 6px solid #ca8a04;
@@ -102,6 +116,7 @@
     text-align: center;
     box-sizing: border-box;
 }
+
 .login-popup-content h3 {
     color: #854d0e;
     font-size: 1.6rem;
@@ -117,7 +132,6 @@
     gap: 15px;
 }
 
-/* HIỆU ỨNG RÊ CHUỘT VÀO LÀ VIỀN SÁNG LÊN THEO YÊU CẦU */
 .char-select-card {
     background: white;
     border: 4px solid transparent;
@@ -127,21 +141,25 @@
     width: 140px;
     transition: all 0.25s ease;
 }
+
 .char-select-card:hover {
     transform: scale(1.05);
     border-color: #fbbf24;
-    box-shadow: 0 0 20px #fbbf24; /* Viền phát sáng vàng rực */
+    box-shadow: 0 0 20px #fbbf24;
 }
+
 .char-select-card.selected {
     border-color: #22c55e;
-    box-shadow: 0 0 20px #22c55e; /* Viền sáng xanh khi được chọn */
+    box-shadow: 0 0 20px #22c55e;
     background: #dcfce7;
 }
+
 .char-select-card img {
     width: 100%;
     height: 150px;
     object-fit: contain;
 }
+
 .char-select-card p {
     margin: 8px 0 0 0;
     font-weight: bold;
@@ -160,40 +178,37 @@
     width: 200px;
 }
 
+/* Nút CONFIRM - Đã đồng bộ về đúng phôi UI_Answer_Box thực tế */
 .btn-confirm-login {
-    width: 270px;  /* Tăng chiều rộng lên một chút cho bằng kích thước nút đáp án bên Battle */
-    height: 55px;  /* Chiều cao chuẩn phôi hộp đáp án */
+    width: 270px;  
+    height: 55px;  
     border: none;
     cursor: pointer;
-    background: url('../../assets/UI_Answer_Box_Normal.png') no-repeat center/contain;
-    background-color: transparent; /* Triệt tiêu hoàn toàn màu xám mặc định của trình duyệt */
-    
-    /* Canh chữ CONFIRM lọt lòng vào ngay chính giữa tâm ảnh */
+    background: url('../../assets/UI_Answer_Box.png') no-repeat center/contain;
+    background-color: transparent; 
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    
-    /* Setup Font chữ mập Fredoka xịn của fen */
     font-family: 'MyFredoka', sans-serif;
     font-size: 1.2rem;
     color: white; 
     font-weight: bold;
     text-transform: uppercase;
-    
-    /* Khoảng cách đẩy nút xuống dưới cụm nhân vật cho thoáng */
     margin-top: 15px; 
     padding: 0;
 }
 
-/* HIỆU ỨNG KHI BÉ NHẤN CHUỘT VÀO: ĐỔI SANG PHÔI PRESSED LIỀN */
 .btn-confirm-login:active {
     background-image: url('../../assets/UI_Answer_Box_Pressed.png') !important;
 }
 
-/* Hoạt ảnh nhấp nhô nhẹ */
+/* ==========================================================================
+   5. HOẠT ẢNH HOẠT HỌA NHẸ (ANIMATIONS SYSTEM)
+   ========================================================================== */
 .animation-idle {
     animation: menuBreath 0.8s ease-in-out infinite alternate;
 }
+
 @keyframes menuBreath {
     0% { transform: translateY(0) scaleY(1); }
     100% { transform: translateY(-5px) scaleY(1.03); }
