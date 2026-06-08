@@ -1,0 +1,213 @@
+/* LAYOUT KHUNG TRẬN ĐẤU */
+.battle-screen-layout {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background: #000;
+}
+
+/* THANH ĐIỀU HƯỚNG PHÍA TRÊN */
+.top-nav-bar {
+    position: absolute;
+    top: 15px; left: 15px; right: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 10;
+}
+.coin-display {
+    background: rgba(0, 0, 0, 0.65);
+    color: #facc15;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 1.3rem;
+    font-weight: bold;
+    font-family: 'MyFredoka', sans-serif;
+    border: 2px solid #facc15;
+}
+.right-minis {
+    display: flex;
+    gap: 12px;
+}
+
+/* ĐỊNH DẠNG BỘ 4 NÚT MINI GÓC TRÊN */
+.btn-mini {
+    width: 48px;
+    height: 48px;
+    border: none;
+    cursor: pointer;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-color: transparent;
+}
+.btn-back { background-image: url('assets/Btn_Back_Normal.png'); }
+.btn-back:active { background-image: url('assets/Btn_Back_Pressed.png'); }
+.btn-mini-book { background-image: url('assets/Btn_Mini_Collection_Normal.png'); }
+.btn-mini-book:active { background-image: url('assets/Btn_Mini_Collection_Pressed.png'); }
+.btn-backpack { background-image: url('assets/Btn_Backpack_Normal.png'); }
+.btn-backpack:active { background-image: url('assets/Btn_Backpack_Pressed.png'); }
+.btn-setting { background-image: url('assets/Btn_Setting_Normal.png'); }
+.btn-setting:active { background-image: url('assets/Btn_Setting_Pressed.png'); }
+
+/* SÂN KHẤU CHIẾN ĐẤU (BACKGROUND ĐỔ RANDOM BẰNG JS) */
+.battle-stage {
+    width: 100%;
+    height: 385px;
+    position: relative;
+    background-size: cover;
+    background-position: center;
+}
+
+/* NHÂN VẬT CHÍNH QUAY LƯNG TRƯỚC SÂN KHẤU */
+.sprite-player {
+    position: absolute;
+    bottom: 15px; left: 90px;
+    width: 180px; height: 260px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: bottom;
+}
+
+/* CỤM QUÁI VÀ THANH NAMETAG CHÂN QUÁI */
+.mob-node-box {
+    position: absolute;
+    top: 55px; right: 140px;
+    width: 180px; height: 210px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+.sprite-mob {
+    width: 140px;
+    height: 140px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+/* THANH PHÔI NAMETAG CỦA FEN (400x100px gốc co về kích thước 200x50px) */
+.mob-nametag-plate {
+    width: 200px;
+    height: 50px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 12px;
+    box-sizing: border-box;
+}
+.mob-nametag-plate span {
+    font-family: 'MyFredoka', sans-serif;
+    font-size: 0.95rem;
+    color: #1e3a8a; /* Màu chữ tên quái, đổi tự do */
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+/* HOẠT ẢNH NHÚN NHẢY IDLE CHO PLAYER VÀ MOB */
+.animation-idle {
+    animation: battleBreath 0.8s ease-in-out infinite alternate;
+}
+@keyframes battleBreath {
+    0% { transform: translateY(0) scaleY(1); }
+    100% { transform: translateY(-6px) scaleY(1.03); }
+}
+
+/* KHUNG UI CÂU HỎI VÀ ĐÁP ÁN (UI_QUESTION_BOX) */
+.battle-dialogue-ui {
+    position: absolute;
+    bottom: 8px; left: 50%;
+    transform: translateX(-50%);
+    width: 980px; height: 170px;
+    background: url('assets/UI_Question_Box.png') no-repeat center/contain;
+    padding: 15px 45px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* VÙNG CHỨA CÂU HỎI TIẾNG ANH (DÙNG FONT PATRICK HAND) */
+.question-zone {
+    height: 60px;
+    font-family: 'MyPatrick', cursive;
+    font-size: 1.85rem;
+    color: #1e293b;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+}
+
+/* KHU VỰC CHỨA 3 NÚT ĐÁP ÁN DÀN NGANG */
+.answers-zone {
+    height: 65px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.btn-answer {
+    width: 270px;
+    height: 55px;
+    border: none;
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+    background: url('assets/UI_Answer_Box_Normal.png') no-repeat center/contain;
+    background-color: transparent;
+    font-family: 'MyFredoka', sans-serif;
+    font-size: 1.15rem;
+    text-align: center;
+}
+.btn-answer:active {
+    background-image: url('assets/UI_Answer_Box_Pressed.png');
+}
+
+/* EFFECT LAYERS */
+.vfx-smoke-effect {
+    position: absolute;
+    top: -10px; right: 60px;
+    width: 300px; height: 300px;
+    background: url('assets/VFX_Smoke.png') no-repeat;
+    display: none;
+    z-index: 6;
+}
+.play-smoke {
+    display: block;
+    animation: runSmokeSheet 0.5s steps(6) forwards;
+}
+@keyframes runSmokeSheet {
+    from { background-position: 0 0; }
+    to { background-position: -1800px 0; }
+}
+
+.vfx-ball-effect {
+    position: absolute;
+    top: 100px; right: 190px;
+    width: 60px; height: 60px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    display: none;
+    z-index: 7;
+}
+
+.shiny-container {
+    position: absolute;
+    top: 40px; right: 140px;
+    width: 180px; height: 180px;
+    pointer-events: none;
+}
+.shiny-star {
+    position: absolute;
+    width: 22px; height: 22px;
+    background: url('assets/VFX_Star_Shiny.png') no-repeat center/contain;
+    animation: shinySpreadOut 0.9s infinite linear;
+}
+@keyframes shinySpreadOut {
+    0% { transform: translate(0, 0) scale(0); opacity: 0; }
+    50% { opacity: 1; }
+    100% { transform: translate(var(--x), var(--y)) scale(1.2); opacity: 0; }
+}
