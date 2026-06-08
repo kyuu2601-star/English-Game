@@ -1,88 +1,64 @@
 // ==========================================
-// 🔗 CONFIG CÁC ĐƯỜNG LINK GOOGLE SHEETS (CSV)
+// 🚀 LUỒNG ĐIỀU KHIỂN HOẠT ĐỘNG SAU KHI NẠP UI
 // ==========================================
-const MOBS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT-EFZn4iPTyVHW35NtYDWCwVH5mt6Vuw9kbAFNMm8CkLXzu31QdoK7vW18NdlKLXKKgZIH9YYFKqoh/pubhtml?gid=0&single=true";
-const QUESTIONS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT-EFZn4iPTyVHW35NtYDWCwVH5mt6Vuw9kbAFNMm8CkLXzu31QdoK7vW18NdlKLXKKgZIH9YYFKqoh/pubhtml?gid=991631725&single=true"; // Link quest tạm của tui
 
-// ==========================================
-// 📦 GAME STATE MANAGEMENT (QUẢN LÝ TRẠNG THÁI)
-// ==========================================
-let globalMobList = [];      
-let globalQuestionList = []; 
-
-let gameState = {
-    username: "",
-    coins: 0,
-    gender: "", // 'male' hoặc 'female'
-    captured: {} 
-};
-
-let currentMob = null;
-let currentQuestion = null;
-let currentBookPage = 0; 
-let selectedGenderTemp = ""; // Lưu tạm lúc click popup
-
-// ==========================================
-// ⚙️ HÀM CỐT LÕI: NẠP ĐỘNG UI TỪ THƯ MỤC RIÊNG
-// ==========================================
-async function loadScreen(screenName, callback) {
-    const viewport = document.getElementById('game-viewport');
+// Hàm này tự động chạy ngay khi màn hình Loading vừa hiện ra
+async function triggerDataFetching() {
+    const fill = document.getElementById('loading-bar-fill');
+    if(fill) fill.style.width = "30%";
     
     try {
-        // 1. Tải file HTML của màn hình đó
-        const htmlResponse = await fetch(`screens/${screenName}/ui.html`);
-        const htmlText = await htmlResponse.text();
+        // Kéo data thật từ link Google Sheets của fen
+        const mobsResponse = await fetch(MOBS_CSV_URL).then(res => res.text());
+        if(fill) fill.style.width = "70%";
         
-        // 2. Xóa màn hình cũ, đập màn hình mới vào viewport
-        viewport.innerHTML = htmlText;
+        globalMobList = parseCSV(mobsResponse);
         
-        // 3. Kiểm tra xem đã nạp CSS của màn hình này chưa, nếu chưa thì nạp vào <head>
-        const cssId = `css-${screenName}`;
-        if (!document.getElementById(cssId)) {
-            const link = document.createElement('link');
-            link.id = cssId;
-            link.rel = 'stylesheet';
-            link.href = `screens/${screenName}/style.css`;
-            document.head.appendChild(link);
-        }
+        // Tạo kho câu hỏi mặc định (Fen có thể thay bằng link fetch quest thật tùy ý)
+        globalQuestionList = [
+            {Q_ID:"Q1", Question:"What color is an apple?", Option_A:"Red", Option_B:"Blue", Option_C:"Green", Correct_Answer:"A", Question_Stars:"1"},
+            {Q_ID:"Q2", Question:"What animal says 'Meow'?", Option_A:"Dog", Option_B:"Cat", Option_C:"Duck", Correct_Answer:"B", Question_Stars:"1"},
+            {Q_ID:"Q3", Question:"An elephant has a long...", Option_A:"Tail", Option_B:"Trunk", Option_C:"Hand", Correct_Answer:"B", Question_Stars:"3"}
+        ];
+
+        if(fill) fill.style.width = "100%";
         
-        // 4. Chạy hàm thiết lập riêng của màn hình đó (nếu có)
-        if (callback) callback();
-        
+        // Nạp xong xuôi thì ẩn thanh Loading và kích hoạt bật Popup Login lên liền
+        setTimeout(() => {
+            const bar = document.getElementById('loading-bar-container');
+            const popup = document.getElementById('login-popup');
+            if(bar) bar.style.display = "none";
+            if(popup) popup.style.display = "flex";
+        }, 600);
+
     } catch (error) {
-        console.error(`Không thể nạp màn hình: ${screenName}`, error);
+        const txt = document.getElementById('loading-text');
+        if(txt) txt.innerText = "Error connecting to Google Sheets! Check your link public.";
     }
 }
 
-// Helper dịch CSV thành Object
-function parseCSV(text) {
-    const lines = text.split(/\r?\n/).filter(line => line.trim() !== "");
-    if (lines.length === 0) return [];
-    const headers = lines[0].split(',').map(h => h.trim());
-    return lines.slice(1).map(line => {
-        const values = line.split(',');
-        let obj = {};
-        headers.forEach((h, i) => {
-            let val = values[i] ? values[i].trim() : "";
-            obj[h] = val.replace(/^"|"$/g, "");
+// Hàm chuyển đổi màn hình động bằng cách gọi lại loadScreen
+function changeScreen(scrId) {
+    if (scrId === 'menu') {
+        loadScreen('loading-menu', () => {
+            // Khi quay lại menu thì chui thẳng vào giao diện nút bấm luôn, bỏ qua bước login
+            document.getElementById('loading-bar-container').style.display = "none";
+            document.getElementById('login-popup').style.display = "none";
+            document.getElementById('menu-controls').style.display = "flex";
+            document.getElementById('menu-avatar-display').style.backgroundImage = `url('assets/Player_${gameState.gender === 'male' ? 'Male' : 'Female'}_Main.png')`;
+            document.getElementById('user-coins').innerText = gameState.coins;
         });
-        return obj;
-    });
-}
-
-// KHỞI CHẠY KHUNG ENGINEkhi vừa mở Web
-window.onload = function() {
-    // Đầu tiên là bắt buộc nạp màn hình loading-menu trước
-    loadScreen('loading-menu', initGameEngine);
-};
-
-// Hàm kích hoạt nạp data từ Sheet sau khi màn hình loading đã sẵn sàng
-async function initGameEngine() {
-    // Các logic điều khiển thanh loading và fetch dữ liệu từ Sheet thật
-    // Sẽ được gọi trực tiếp bằng các hàm trong file này để thao tác lên UI vừa nạp
-    triggerDataFetching();
-}
-
-function saveGameLocal() {
-    localStorage.setItem(`pkm_catch_${gameState.username}`, JSON.stringify(gameState));
+    }
+    if (scrId === 'battle') {
+        loadScreen('battle-stage', () => {
+            document.getElementById('user-coins').innerText = gameState.coins;
+            nextBattleTurn(); // Kích hoạt đổ xúc xắc ra quái trận đầu
+        });
+    }
+    if (scrId === 'collection') {
+        loadScreen('collection-book', () => {
+            currentBookPage = 0;
+            renderCollectionBook(); // Kích hoạt xếp bài lên trang sách
+        });
+    }
 }
