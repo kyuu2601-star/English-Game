@@ -13,18 +13,19 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start; /* 🚀 Đổi thành flex-start để neo logo tính từ đỉnh xuống */
     height: 100%;
-    gap: 10px; /* 👈 Giảm gap từ 20px xuống 10px để kéo Logo và Nút hít sát lại nhau */
     position: relative;
+    padding-top: 20px;           /* 📌 Neo Logo cố định cách cạnh trên cùng màn hình 20px */
+    box-sizing: border-box;
 }
 
-/* Thêm mới đoạn này để thu nhỏ Logo Mon English */
+/* Điều khiển Logo Mon English */
 .menu-content-core img {
-    width: 320px; /* 👈 Căn tỷ lệ vừa vặn một nửa màn hình (Fen tăng giảm số này theo ý muốn) */
+    width: 320px; 
     height: auto;
     object-fit: contain;
-    margin-bottom: -20px; /* 👈 Khoảng cách âm để hút cụm nút bên dưới lên sát logo */
+    margin-bottom: 20px;         /* Khoảng cách dương an toàn giúp đẩy cụm nút xuống, không bị lọt màn hình */
 }
 
 /* ==========================================================================
@@ -62,11 +63,11 @@
 }
 
 /* ==========================================================================
-   3. GIAO DIỆN MENU CHÍNH - ĐÃ ĐỒNG BỘ TÊN ASSET THẬT
+   3. GIAO DIỆN MENU CHÍNH (MAIN MENU CONTROLS)
    ========================================================================== */
 .menu-layout-box {
     display: flex; 
-    flex-direction: column; /* 👈 Xếp dọc lại để cụm nút và nhân vật canh chuẩn ngay giữa tâm */
+    flex-direction: column; 
     align-items: center;
     justify-content: center;
     gap: 15px;
@@ -94,9 +95,10 @@
 #btn-collection-menu { background-image: url('../../assets/Btn_Collection.png'); }
 #btn-collection-menu:active { background-image: url('../../assets/Btn_Collection_Pressed.png'); }
 
+/* 🧍 GIỮ NGUYÊN CẤU HÌNH CON ANDIL THEO YÊU CẦU CỦA FEN */
 .menu-char-preview {
-    width: auto; /* 👈 Phóng to chiều rộng nhân vật (Cũ là 160px) */
-    height: 320px; /* 👈 Phóng to chiều cao nhân vật (Cũ là 200px) */
+    width: auto; 
+    height: 320px; 
     background-size: contain;
     background-repeat: no-repeat;
     background-position: bottom center;
@@ -187,7 +189,6 @@
     width: 200px;
 }
 
-/* Nút CONFIRM - Đã đồng bộ về đúng phôi UI_Answer_Box thực tế */
 .btn-confirm-login {
     width: 270px;  
     height: 55px;  
@@ -203,7 +204,7 @@
     color: white; 
     font-weight: bold;
     text-transform: uppercase;
-    margin-top: 15px; 
+    margin-top: 15px;  
     padding: 0;
 }
 
