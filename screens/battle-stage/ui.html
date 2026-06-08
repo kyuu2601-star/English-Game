@@ -1,0 +1,41 @@
+<div class="screen-style-wrapper battle-screen-layout">
+    
+    <div class="top-nav-bar">
+        <button class="btn-mini btn-back" onclick="changeScreen('menu')"></button>
+        
+        <div class="coin-display">🪙 <span id="user-coins">0</span></div>
+        
+        <div class="right-minis">
+            <button class="btn-mini btn-mini-book" onclick="changeScreen('collection')"></button>
+            <button class="btn-mini btn-backpack"></button>
+            <button class="btn-mini btn-setting"></button>
+        </div>
+    </div>
+
+    <div id="battle-field" class="battle-stage">
+        <div id="smoke-vfx" class="vfx-smoke-effect"></div>
+        <div id="ball-vfx" class="vfx-ball-effect"></div>
+        <div id="shiny-particles" class="shiny-container"></div>
+
+        <div id="player-sprite" class="sprite-player animation-idle"></div>
+        
+        <div class="mob-node-box">
+            <div id="mob-sprite" class="sprite-mob animation-idle"></div>
+            
+            <div id="mob-nametag" class="mob-nametag-plate">
+                <span id="mob-name-text">LOADING...</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="battle-dialogue-ui">
+        <div id="question-text" class="question-zone">Choosing the best question for you...</div>
+        
+        <div class="answers-zone">
+            <button class="btn-answer" onclick="submitAnswer('A')"><span id="ans-A"></span></button>
+            <button class="btn-answer" onclick="submitAnswer('B')"><span id="ans-B"></span></button>
+            <button class="btn-answer" onclick="submitAnswer('C')"><span id="ans-C"></span></button>
+        </div>
+    </div>
+
+</div>
