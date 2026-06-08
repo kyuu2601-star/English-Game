@@ -16,7 +16,7 @@
     justify-content: flex-start; /* 🚀 Đổi thành flex-start để neo logo tính từ đỉnh xuống */
     height: 100%;
     position: relative;
-    padding-top: 20px;           /* 📌 Neo Logo cố định cách cạnh trên cùng màn hình 20px */
+    padding-top: 100px;           /* 📌 Neo Logo cố định cách cạnh trên cùng màn hình 20px */
     box-sizing: border-box;
 }
 
