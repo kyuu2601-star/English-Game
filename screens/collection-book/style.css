@@ -1,0 +1,135 @@
+/* CONTAINER BAO PHỦ TOÀN MÀN HÌNH BỘ SƯU TẬP */
+.book-screen-layout {
+    width: 100%;
+    height: 100%;
+    background: #111827; /* Nền tối bọc ngoài */
+}
+
+/* ỐP NỀN CUỐN SÁCH CỔ CỦA FEN */
+.book-container {
+    width: 100%;
+    height: 100%;
+    background: url('assets/Background_Collection.jpg') no-repeat center/cover;
+    position: relative;
+}
+
+/* ĐỊNH DẠNG NÚT HOME GÓC TRÊN TRÁI (2 TRẠNG THÁI) */
+.btn-home-style {
+    position: absolute;
+    top: 15px; left: 25px;
+    width: 50px; height: 50px;
+    border: none;
+    cursor: pointer;
+    background: url('assets/Btn_Home_Normal.png') no-repeat center/contain;
+    background-color: transparent;
+    z-index: 12;
+}
+.btn-home-style:active {
+    background-image: url('assets/Btn_Home_Pressed.png');
+}
+
+/* CHIA HỆ THỐNG LƯỚI GRID CHO 2 TRANG SÁCH GIẤY (MỖI BÊN 2 CỘT x 2 HÀNG) */
+.page-grid {
+    position: absolute;
+    top: 60px;
+    width: 400px;
+    height: 420px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 20px;
+    padding: 15px;
+    box-sizing: border-box;
+}
+.page-left { left: 75px; }
+.page-right { right: 75px; }
+
+/* PHÂN LỚP ĐÈ LAYERS TRÊN MỖI Ô THẺ QUÁI */
+.card-item {
+    position: relative;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+/* Ảnh con quái mặc định bị xám đen mờ (Chưa bắt được) */
+.card-item .mob-thumb {
+    width: 95px;
+    height: 95px;
+    object-fit: contain;
+    margin-top: 15px;
+    filter: grayscale(1);
+    opacity: 0.25;
+}
+/* Khi đã bắt được -> Sáng bừng ảnh quái gốc */
+.card-item.unlocked .mob-thumb {
+    filter: none;
+    opacity: 1;
+}
+
+/* Chữ Tên Quái (Mặc định hiện dấu chấm hỏi nếu chưa bắt được) */
+.card-title {
+    font-family: 'MyFredoka', sans-serif;
+    font-size: 0.95rem;
+    color: #1e293b;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+/* HUY HIỆU ĐẦU LÂU ĐẾM SỐ LƯỢNG GĂM GÓC DƯỚI TRÁI THẺ */
+.card-tag {
+    position: absolute;
+    bottom: 5px; left: 5px;
+    width: 70px; height: 45px;
+    background: url('assets/Tag_Icon.png') no-repeat center/contain;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 0.85rem;
+    font-weight: bold;
+    text-shadow: 1px 1px #000;
+}
+
+/* CỤM 2 NÚT ĐIỀU HƯỚNG LẬT TRANG SÁCH */
+.book-navigation-bar {
+    position: absolute;
+    bottom: 20px; right: 40px;
+    display: flex;
+    gap: 12px;
+    z-index: 15;
+}
+.btn-page-nav {
+    width: 65px;
+    height: 40px;
+    border: none;
+    cursor: pointer;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-color: transparent;
+}
+
+/* Nút quay về trang trước (Dùng ảnh gốc lật đối xứng trục X sang trái) */
+#btn-book-prev {
+    background-image: url('assets/Collection_Page_Btn.png');
+    transform: scaleX(-1); 
+}
+#btn-book-prev:active {
+    background-image: url('assets/Collection_Page_Pressed2.png');
+    transform: scaleX(-1); /* Giữ nguyên lật khi nhấn */
+}
+
+/* Nút lật sang trang tiếp theo */
+#btn-book-next {
+    background-image: url('assets/Collection_Page_Btn.png');
+}
+#btn-book-next:active {
+    background-image: url('assets/Collection_Page_Btn_Pressed1.png');
+}
