@@ -21,6 +21,7 @@ let currentMob = null;
 let currentQuestion = null;
 let currentBookPage = 0; 
 let selectedGenderTemp = ""; // Lưu tạm lúc click popup
+let shinyRainInterval = null; // Quản lý bộ đếm thời gian thả mưa sao Shiny ngẫu nhiên
 
 // ==========================================
 // ⚙️ HÀM CỐT LÕI: NẠP ĐỘNG UI TỪ THƯ MỤC RIÊNG
@@ -85,10 +86,8 @@ function saveGameLocal() {
 }
 
 // ==========================================
-// 🚀 SỬA ĐỔI: LUỒNG PRELOAD TẢI TRƯỚC TẤT CẢ ASSET RỒI MỚI VÀO GAME
+// 🚀 LUỒNG PRELOAD TẢI TRƯỚC TẤT CẢ ASSET RỒI MỚI VÀO GAME
 // ==========================================
-
-// Hàm này tự động chạy ngay khi màn hình Loading vừa hiện ra
 async function triggerDataFetching() {
     const fill = document.getElementById('loading-bar-fill');
     const txt = document.getElementById('loading-text');
@@ -109,7 +108,7 @@ async function triggerDataFetching() {
         if (fill) fill.style.width = "30%";
         if (txt) txt.innerText = "Analyzing game data...";
 
-        // 2. LÊN DANH SÁCH TẤT CẢ CÁC CỐT LÕI FILE ẢNH CẦN TẢI TRƯỚC (Dùng đường dẫn lùi cấp ra ngoài thư mục assets)
+        // 2. DANH SÁCH FILE ẢNH ĐỒNG BỘ THEO TÊN THỰC TẾ TRÊN GITHUB CỦA FEN
         let assetsToPreload = [
             '../../assets/Btn_Start.png',
             '../../assets/Btn_Start_Pressed.png',
@@ -174,19 +173,17 @@ async function triggerDataFetching() {
 
         function assetLoaded() {
             loadedCount++;
-            // Tiến trình tính từ mốc 30% đến 100% dựa trên số lượng ảnh thực tế tải về
             let progress = 30 + Math.floor((loadedCount / totalAssets) * 70);
             if (fill) fill.style.width = `${progress}%`;
             if (txt) txt.innerText = `Loading Assets: ${loadedCount}/${totalAssets} (Please wait...)`;
 
-            // Khi tất cả ảnh đã chui vào bộ nhớ đệm thành công!
             if (loadedCount === totalAssets) {
                 if (txt) txt.innerText = "All assets successfully loaded! Ready to Play.";
                 setTimeout(proceedToLogin, 600);
             }
         }
 
-        // Kích hoạt vòng lặp nạp ảnh ngầm, lỗi link ảnh quái vẫn đếm tiếp để tránh kẹt game
+        // Kích hoạt vòng lặp nạp ảnh ngầm
         assetsToPreload.forEach(url => {
             const img = new Image();
             img.src = url;
@@ -212,7 +209,6 @@ function proceedToLogin() {
 function changeScreen(scrId) {
     if (scrId === 'menu') {
         loadScreen('loading-menu', () => {
-            // Khi quay lại menu thì chui thẳng vào giao diện nút bấm luôn, bỏ qua bước login
             document.getElementById('loading-bar-container').style.display = "none";
             document.getElementById('login-popup').style.display = "none";
             document.getElementById('menu-controls').style.display = "flex";
@@ -223,13 +219,13 @@ function changeScreen(scrId) {
     if (scrId === 'battle') {
         loadScreen('battle-stage', () => {
             document.getElementById('user-coins').innerText = gameState.coins;
-            nextBattleTurn(); // Kích hoạt đổ xúc xắc ra quái trận đầu
+            nextBattleTurn(); 
         });
     }
     if (scrId === 'collection') {
         loadScreen('collection-book', () => {
             currentBookPage = 0;
-            renderCollectionBook(); // Kích hoạt xếp bài lên trang sách
+            renderCollectionBook(); 
         });
     }
 }
@@ -274,7 +270,6 @@ function confirmLogin() {
         globalMobList.forEach(m => gameState.captured[m.ID] = 0);
     }
 
-    // Hiển thị giao diện Menu chính
     const menuControls = document.getElementById('menu-controls');
     const avatarDisplay = document.getElementById('menu-avatar-display');
     const loginPopup = document.getElementById('login-popup');
@@ -291,12 +286,20 @@ function nextBattleTurn() {
     const mobSprite = document.getElementById('mob-sprite');
     if (!mobSprite) return;
 
+    // 🌧️ DỌN DẸP SẠCH SẼ: Tự động xóa bộ đếm mưa sao rơi của turn cũ để tránh lỗi chồng dồn hạt
+    if (shinyRainInterval) {
+        clearInterval(shinyRainInterval);
+        shinyRainInterval = null;
+    }
+
     mobSprite.style.display = "block";
     mobSprite.style.opacity = "1";
     mobSprite.style.transform = "scale(1) translateX(0)";
     document.getElementById('smoke-vfx').className = "vfx-smoke-effect";
     document.getElementById('ball-vfx').style.display = "none";
-    document.getElementById('shiny-particles').innerHTML = "";
+    
+    const container = document.getElementById('shiny-particles');
+    if (container) container.innerHTML = "";
 
     // Tỉ lệ sao: 1 sao (40%), 2 sao (30%), 3 sao (18%), 4 sao (9%), 5 sao (3%)
     let randStar = Math.random() * 100;
@@ -317,17 +320,16 @@ function nextBattleTurn() {
 
     if (isShinyRoll && shinyPool.length > 0) {
         currentMob = shinyPool[Math.floor(Math.random() * shinyPool.length)];
-        triggerShinyVFX();
+        triggerShinyVFX(); // Gọi cơn mưa sao rơi lùi nền ngầm
     } else {
         currentMob = normalPool.length > 0 ? normalPool[Math.floor(Math.random() * normalPool.length)] : pool[Math.floor(Math.random() * pool.length)];
     }
 
-    // Đổi cảnh nền map ngẫu nhiên
-    const maps = ['desert', 'forest', 'snow', 'volcano'];
+    // Đổi cảnh nền map ngẫu nhiên theo đúng bảng chữ hoa chữ thường tài sản thật
+    const maps = ['Desert', 'Forest', 'Snow', 'Volcano'];
     let randMap = maps[Math.floor(Math.random() * maps.length)];
     document.getElementById('battle-field').style.backgroundImage = `url('assets/BG_${randMap}.png')`;
     
-    // Gắn hình quái, phôi Nametag và nhân vật quay lưng
     mobSprite.style.backgroundImage = `url('${currentMob.Image}')`;
     document.getElementById('mob-nametag').style.backgroundImage = `url('assets/Nametag_lv${stars}.png')`;
     document.getElementById('mob-name-text').innerText = currentMob.Name;
@@ -344,17 +346,37 @@ function nextBattleTurn() {
     document.getElementById('ans-C').innerText = currentQuestion.Option_C;
 }
 
+// NÂNG CẤP: HỆ THỐNG MƯA SAO RƠI NGẪU NHIÊN XUYÊN SUỐT TRẬN ĐẤU CỦA QUÁI SHINY
 function triggerShinyVFX() {
     const container = document.getElementById('shiny-particles');
     if (!container) return;
-    for (let i = 0; i < 15; i++) {
+    
+    if (shinyRainInterval) clearInterval(shinyRainInterval);
+
+    // 🌧️ ĐÚNG 1 GIÂY (1000ms) TỰ ĐỘNG THẢ 1 HẠT SAO RƠI TỪ TRÊN TRỜI XUỐNG
+    shinyRainInterval = setInterval(() => {
+        // Biện pháp an toàn: Nếu chuyển màn hình (container bay màu khỏi UI), tự hủy đếm ngầm liền
+        if (!document.getElementById('shiny-particles')) {
+            clearInterval(shinyRainInterval);
+            return;
+        }
+
         let star = document.createElement('div');
         star.className = "shiny-star";
-        star.style.setProperty('--x', (Math.random() * 160 - 80) + 'px');
-        star.style.setProperty('--y', (Math.random() * 160 - 80) + 'px');
-        star.style.animationDelay = (Math.random() * 0.6) + 's';
+        
+        // Tọa độ nằm ngang X chạy ngẫu nhiên từ trái qua phải (0% -> 95%) dọc màn hình map
+        let randomX = Math.random() * 95; 
+        star.style.left = `${randomX}%`;
+        
+        // Tốc độ rơi ngẫu nhiên từ 2.5s đến 4s để các hạt rơi so le, tự nhiên hơn
+        let duration = 2.5 + Math.random() * 1.5;
+        star.style.setProperty('--fall-duration', `${duration}s`);
+        
         container.appendChild(star);
-    }
+        
+        // Hạt rơi tuột khỏi màn hình -> Tự hủy thẻ div để giải phóng RAM cho trình duyệt mượt mà
+        setTimeout(() => { star.remove(); }, duration * 1000);
+    }, 1000);
 }
 
 // Diễn hoạt animation bắt dính quái (Đúng) / chạy thoát (Sai)
@@ -394,7 +416,6 @@ function submitAnswer(chosen) {
         if (smoke) smoke.classList.add('play-smoke');
         
         if (mob) {
-            // CẬP NHẬT: Ép con quái phóng thẳng về BÊN TRÁI cực nhanh (0.3s) và biến mất
             mob.style.transition = "transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.2s";
             mob.style.transform = "translateX(-800px) scale(0.6)"; 
             mob.style.opacity = "0";
