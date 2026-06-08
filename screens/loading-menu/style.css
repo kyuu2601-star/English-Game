@@ -15,8 +15,16 @@
     align-items: center;
     justify-content: center;
     height: 100%;
-    gap: 20px;
+    gap: 10px; /* 👈 Giảm gap từ 20px xuống 10px để kéo Logo và Nút hít sát lại nhau */
     position: relative;
+}
+
+/* Thêm mới đoạn này để thu nhỏ Logo Mon English */
+.menu-content-core img {
+    width: 320px; /* 👈 Căn tỷ lệ vừa vặn một nửa màn hình (Fen tăng giảm số này theo ý muốn) */
+    height: auto;
+    object-fit: contain;
+    margin-bottom: -20px; /* 👈 Khoảng cách âm để hút cụm nút bên dưới lên sát logo */
 }
 
 /* ==========================================================================
@@ -57,10 +65,11 @@
    3. GIAO DIỆN MENU CHÍNH - ĐÃ ĐỒNG BỘ TÊN ASSET THẬT
    ========================================================================== */
 .menu-layout-box {
-    display: none; /* JS bật flex khi login xong */
-    gap: 40px;
+    display: flex; 
+    flex-direction: column; /* 👈 Xếp dọc lại để cụm nút và nhân vật canh chuẩn ngay giữa tâm */
     align-items: center;
     justify-content: center;
+    gap: 15px;
 }
 
 .menu-buttons-side {
@@ -86,11 +95,11 @@
 #btn-collection-menu:active { background-image: url('../../assets/Btn_Collection_Pressed.png'); }
 
 .menu-char-preview {
-    width: 160px;
-    height: 200px;
+    width: auto; /* 👈 Phóng to chiều rộng nhân vật (Cũ là 160px) */
+    height: 320px; /* 👈 Phóng to chiều cao nhân vật (Cũ là 200px) */
     background-size: contain;
     background-repeat: no-repeat;
-    background-position: bottom;
+    background-position: bottom center;
 }
 
 /* ==========================================================================
