@@ -149,19 +149,33 @@
 }
 
 .btn-confirm-login {
-    width: 200px;
-    height: 50px;
+    width: 270px;  /* Tăng chiều rộng lên một chút cho bằng kích thước nút đáp án bên Battle */
+    height: 55px;  /* Chiều cao chuẩn phôi hộp đáp án */
     border: none;
     cursor: pointer;
-    color: white;
-    font-family: 'MyFredoka';
-    font-size: 1.1rem;
-    font-weight: bold;
     background: url('assets/UI_Answer_Box_Normal.png') no-repeat center/contain;
-    background-color: transparent;
+    background-color: transparent; /* Triệt tiêu hoàn toàn màu xám mặc định của trình duyệt */
+    
+    /* Canh chữ CONFIRM lọt lòng vào ngay chính giữa tâm ảnh */
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    
+    /* Setup Font chữ mập Fredoka xịn của fen */
+    font-family: 'MyFredoka', sans-serif;
+    font-size: 1.2rem;
+    color: white; /* Đổi màu chữ theo ý fen (Ví dụ: #1e3a8a nếu muốn chữ màu xanh đen) */
+    font-weight: bold;
+    text-transform: uppercase;
+    
+    /* Khoảng cách đẩy nút xuống dưới cụm nhân vật cho thoáng */
+    margin-top: 15px; 
+    padding: 0;
 }
+
+/* HIỆU ỨNG KHI BÉ NHẤN CHUỘT VÀO: ĐỔI SANG PHÔI PRESSED LIỀN */
 .btn-confirm-login:active {
-    background-image: url('assets/UI_Answer_Box_Pressed.png');
+    background-image: url('assets/UI_Answer_Box_Pressed.png') !important;
 }
 
 /* Hoạt ảnh nhấp nhô nhẹ */
