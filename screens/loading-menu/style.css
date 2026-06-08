@@ -10,7 +10,7 @@
 }
 
 .menu-content-core {
-    display: flex;
+    display: none;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start; /* 🚀 Đổi thành flex-start để neo logo tính từ đỉnh xuống */
