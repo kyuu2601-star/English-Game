@@ -97,8 +97,8 @@
 
 /* 🧍 GIỮ NGUYÊN CẤU HÌNH CON ANDIL THEO YÊU CẦU CỦA FEN */
 .menu-char-preview {
-    width: auto; 
-    height: 320px; 
+    width: 400px; 
+    height: auto; 
     background-size: contain;
     background-repeat: no-repeat;
     background-position: bottom center;
