@@ -5,11 +5,11 @@
     background: #111827; /* Nền tối bọc ngoài */
 }
 
-/* ỐP NỀN CUỐN SÁCH CỔ CỦA FEN */
+/* ỐP NỀN CUỐN SÁCH CỔ CỦA FEN (Đã fix đường dẫn lùi cấp) */
 .book-container {
     width: 100%;
     height: 100%;
-    background: url('assets/Background_Collection.jpg') no-repeat center/cover;
+    background: url('../../assets/Background_Collection.jpg') no-repeat center/cover;
     position: relative;
 }
 
@@ -20,12 +20,12 @@
     width: 50px; height: 50px;
     border: none;
     cursor: pointer;
-    background: url('assets/Btn_Home_Normal.png') no-repeat center/contain;
+    background: url('../../assets/Btn_Home_Normal.png') no-repeat center/contain;
     background-color: transparent;
     z-index: 12;
 }
 .btn-home-style:active {
-    background-image: url('assets/Btn_Home_Pressed.png');
+    background-image: url('../../assets/Btn_Home_Pressed.png');
 }
 
 /* CHIA HỆ THỐNG LƯỚI GRID CHO 2 TRANG SÁCH GIẤY (MỖI BÊN 2 CỘT x 2 HÀNG) */
@@ -88,7 +88,7 @@
     position: absolute;
     bottom: 5px; left: 5px;
     width: 70px; height: 45px;
-    background: url('assets/Tag_Icon.png') no-repeat center/contain;
+    background: url('../../assets/Tag_Icon.png') no-repeat center/contain;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -118,18 +118,18 @@
 
 /* Nút quay về trang trước (Dùng ảnh gốc lật đối xứng trục X sang trái) */
 #btn-book-prev {
-    background-image: url('assets/Collection_Page_Btn.png');
+    background-image: url('../../assets/Collection_Page_Btn.png');
     transform: scaleX(-1); 
 }
 #btn-book-prev:active {
-    background-image: url('assets/Collection_Page_Pressed2.png');
+    background-image: url('../../assets/Collection_Page_Pressed2.png') !important;
     transform: scaleX(-1); /* Giữ nguyên lật khi nhấn */
 }
 
 /* Nút lật sang trang tiếp theo */
 #btn-book-next {
-    background-image: url('assets/Collection_Page_Btn.png');
+    background-image: url('../../assets/Collection_Page_Btn.png');
 }
 #btn-book-next:active {
-    background-image: url('assets/Collection_Page_Btn_Pressed1.png');
+    background-image: url('../../assets/Collection_Page_Btn_Pressed1.png') !important;
 }
