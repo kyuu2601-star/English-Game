@@ -8,12 +8,16 @@
     background: #000;
 }
 
+/* 🖼️ ĐÃ FIX: Ép ảnh nền Map phủ kín 100% toàn màn hình, xóa bỏ mảng đen */
 .battle-stage {
     width: 100%;
-    height: 385px;
-    position: relative;
+    height: 100%; 
+    position: absolute; 
+    top: 0;
+    left: 0;
     background-size: cover;
     background-position: center;
+    z-index: 1; 
 }
 
 /* ==========================================================================
@@ -68,41 +72,48 @@
 
 
 /* ==========================================================================
-   3. KHU VỰC NHÂN VẬT & QUÁI VẬT 512px (SPRITES NODES)
+   3. KHU VỰC NHÂN VẬT & CỤM QUÁI THU NHỎ (SPRITES NODES COMPONENT)
    ========================================================================== */
+/* 🧍 ĐÃ FIX: Đẩy Player chạm sát cạnh dưới đáy màn hình */
 .sprite-player {
     position: absolute;
-    bottom: 15px; left: 90px;
-    width: 180px; height: 260px;
+    bottom: 0px; 
+    left: 90px;
+    width: 180px; 
+    height: 260px;
     background-size: contain;
     background-repeat: no-repeat;
     background-position: bottom;
     z-index: 3;
 }
 
+/* 👾 ĐÃ FIX: Gom cụm quái và thanh máu sát lại gần nhau, hạ thấp vị trí cho thoáng */
 .mob-node-box {
     position: absolute;
-    top: 15px; right: 60px;
-    width: 512px; height: 580px;
+    top: 25px; 
+    right: 60px;
+    width: 400px; 
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start; 
+    gap: 0px; 
     z-index: 5;
 }
 
+/* ĐÃ FIX: Thu nhỏ kích thước quái xuống 380px để chống tràn hình cho quái 5 sao */
 .sprite-mob {
-    width: 512px;
-    height: 512px;
+    width: 380px; 
+    height: 380px;
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
 }
 
-/* THANH PHÔI NAMETAG DƯỚI CHÂN QUÁI */
+/* ❤️ ĐÃ FIX: Dùng margin âm kéo thanh Nametag/Máu hít sát dính chặt chân quái */
 .mob-nametag-plate {
-    width: 300px;
-    height: 75px;
+    width: 260px; 
+    height: 65px;
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
@@ -111,7 +122,7 @@
     align-items: center;
     padding: 0 15px;
     box-sizing: border-box;
-    margin-top: -15px;
+    margin-top: -20px; 
 }
 
 .mob-nametag-plate span {
@@ -125,15 +136,16 @@
 
 
 /* ==========================================================================
-   4. GIAO DIỆN HỘP CÂU HỎI & NÚT ĐÁP ÁN TIẾNG ANH
+   4. GIAO DIỆN HỘP CÂU HỎI & NÚT ĐÁP ÁN TIẾNG ANH LỌT LÒNG KHUNG
    ========================================================================== */
+/* 📦 ĐÃ FIX: Tăng padding lề trái/phải lên 80px để ép 3 nút lùi sâu vào trong lòng khung vải */
 .battle-dialogue-ui {
     position: absolute;
     bottom: 8px; left: 50%;
     transform: translateX(-50%);
     width: 980px; height: 170px;
     background: url('../../assets/UI_Question_Box.png') no-repeat center/contain;
-    padding: 15px 45px;
+    padding: 15px 80px; 
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -141,26 +153,39 @@
     z-index: 10;
 }
 
+/* 📝 ĐÃ FIX: Ép chữ câu hỏi vào tâm, giới hạn vùng 100px, tự bẻ dòng khi quá dài */
 .question-zone {
     height: 60px;
+    max-height: 100px; 
     font-family: 'MyPatrick', cursive;
     font-size: 1.85rem;
     color: #1e293b;
     font-weight: bold;
     display: flex;
-    align-items: center;
+    justify-content: center; 
+    align-items: center; 
+    text-align: center; 
+    width: 100%; 
+    word-break: break-word;
+    white-space: normal;
+    padding: 0 20px; 
+    box-sizing: border-box;
 }
 
+/* 🕹️ ĐÃ FIX: Chuyển sang center và dùng gap kiểm soát khoảng cách (spacing) giữa 3 nút */
 .answers-zone {
     height: 65px;
     display: flex;
-    justify-content: space-between;
+    justify-content: center; 
     align-items: center;
+    gap: 30px; 
+    width: 100%;
 }
 
+/* ĐÃ FIX: Hạ nhẹ size xuống 240px x 50px cho gọn gàng, bao lọt lòng khung */
 .btn-answer {
-    width: 270px;
-    height: 55px;
+    width: 240px; 
+    height: 50px; 
     border: none;
     cursor: pointer;
     color: white;
@@ -209,14 +234,13 @@
     z-index: 7;
 }
 
-/* CONTAINER PHỦ TOÀN CẢNH MAP - ĐÃ ĐƯỢC CHUYỂN THÀNH HỆ THỐNG MƯA SAO GĂM DƯỚI ĐÁY */
 .shiny-container {
     position: absolute;
     top: 0; left: 0;
     width: 100%; height: 385px;
     pointer-events: none;
     overflow: hidden;
-    z-index: 1; /* Nằm dưới Player, dưới Mob và dưới Khung UI hội thoại */
+    z-index: 1; 
 }
 
 .shiny-star {
