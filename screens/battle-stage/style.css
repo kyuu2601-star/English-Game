@@ -40,14 +40,14 @@
     background-repeat: no-repeat;
     background-color: transparent;
 }
-.btn-back { background-image: url('assets/Btn_Back_Normal.png'); }
-.btn-back:active { background-image: url('assets/Btn_Back_Pressed.png'); }
-.btn-mini-book { background-image: url('assets/Btn_Mini_Collection_Normal.png'); }
-.btn-mini-book:active { background-image: url('assets/Btn_Mini_Collection_Pressed.png'); }
-.btn-backpack { background-image: url('assets/Btn_Backpack_Normal.png'); }
-.btn-backpack:active { background-image: url('assets/Btn_Backpack_Pressed.png'); }
-.btn-setting { background-image: url('assets/Btn_Setting_Normal.png'); }
-.btn-setting:active { background-image: url('assets/Btn_Setting_Pressed.png'); }
+.btn-back { background-image: url('../../assets/Btn_Back_Normal.png'); }
+.btn-back:active { background-image: url('../../assets/Btn_Back_Pressed.png'); }
+.btn-mini-book { background-image: url('../../assets/Btn_Mini_Collection_Normal.png'); }
+.btn-mini-book:active { background-image: url('../../assets/Btn_Mini_Collection_Pressed.png'); }
+.btn-backpack { background-image: url('../../assets/Btn_Backpack_Normal.png'); }
+.btn-backpack:active { background-image: url('../../assets/Btn_Backpack_Pressed.png'); }
+.btn-setting { background-image: url('../../assets/Btn_Setting_Normal.png'); }
+.btn-setting:active { background-image: url('../../assets/Btn_Setting_Pressed.png'); }
 
 /* SÂN KHẤU CHIẾN ĐẤU (BACKGROUND ĐỔ RANDOM BẰNG JS) */
 .battle-stage {
@@ -125,7 +125,7 @@
     bottom: 8px; left: 50%;
     transform: translateX(-50%);
     width: 980px; height: 170px;
-    background: url('assets/UI_Question_Box.png') no-repeat center/contain;
+    background: url('../../assets/UI_Question_Box.png') no-repeat center/contain;
     padding: 15px 45px;
     box-sizing: border-box;
     display: flex;
@@ -158,14 +158,14 @@
     cursor: pointer;
     color: white;
     font-weight: bold;
-    background: url('assets/UI_Answer_Box_Normal.png') no-repeat center/contain;
+    background: url('../../assets/UI_Answer_Box_Normal.png') no-repeat center/contain;
     background-color: transparent;
     font-family: 'MyFredoka', sans-serif;
     font-size: 1.15rem;
     text-align: center;
 }
 .btn-answer:active {
-    background-image: url('assets/UI_Answer_Box_Pressed.png');
+    background-image: url('../../assets/UI_Answer_Box_Pressed.png');
 }
 
 /* EFFECT LAYERS - ĐÃ ĐƯỢC CANH CHỈNH LẠI TỌA ĐỘ VÀO GIỮA TÂM QUÁI BỰ */
@@ -173,7 +173,7 @@
     position: absolute;
     top: 120px; right: 166px;
     width: 300px; height: 300px;
-    background: url('assets/VFX_Smoke.png') no-repeat;
+    background: url('../../assets/VFX_Smoke.png') no-repeat;
     display: none;
     z-index: 6;
 }
@@ -206,7 +206,7 @@
 .shiny-star {
     position: absolute;
     width: 22px; height: 22px;
-    background: url('assets/VFX_Star_Shiny.png') no-repeat center/contain;
+    background: url('../../assets/VFX_Star_Shiny.png') no-repeat center/contain;
     animation: shinySpreadOut 0.9s infinite linear;
 }
 @keyframes shinySpreadOut {
