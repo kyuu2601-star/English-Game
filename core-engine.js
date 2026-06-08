@@ -85,40 +85,127 @@ function saveGameLocal() {
 }
 
 // ==========================================
-// 🚀 UPDATE: LUỒNG ĐIỀU KHIỂN HOẠT ĐỘNG SAU KHI NẠP UI (DATA THẬT)
+// 🚀 SỬA ĐỔI: LUỒNG PRELOAD TẢI TRƯỚC TẤT CẢ ASSET RỒI MỚI VÀO GAME
 // ==========================================
 
 // Hàm này tự động chạy ngay khi màn hình Loading vừa hiện ra
 async function triggerDataFetching() {
     const fill = document.getElementById('loading-bar-fill');
-    if (fill) fill.style.width = "30%";
+    const txt = document.getElementById('loading-text');
+    
+    if (fill) fill.style.width = "10%";
+    if (txt) txt.innerText = "Connecting to Google Sheets...";
     
     try {
-        // Kéo dữ liệu thực từ link Google Sheets của fen công khai dạng CSV
+        // 1. Kéo dữ liệu thực từ link Google Sheets của fen công khai dạng CSV
         const [mobsResponse, questionsResponse] = await Promise.all([
             fetch(MOBS_CSV_URL).then(res => res.text()),
             fetch(QUESTIONS_CSV_URL).then(res => res.text())
         ]);
 
-        if (fill) fill.style.width = "70%";
-        
         globalMobList = parseCSV(mobsResponse);
         globalQuestionList = parseCSV(questionsResponse);
 
-        if (fill) fill.style.width = "100%";
-        
-        // Nạp xong xuôi thì ẩn thanh Loading và kích hoạt bật Popup Login lên liền
-        setTimeout(() => {
-            const bar = document.getElementById('loading-bar-container');
-            const popup = document.getElementById('login-popup');
-            if (bar) bar.style.display = "none";
-            if (popup) popup.style.display = "flex";
-        }, 600);
+        if (fill) fill.style.width = "30%";
+        if (txt) txt.innerText = "Analyzing game data...";
+
+        // 2. LÊN DANH SÁCH TẤT CẢ CÁC CỐT LÕI FILE ẢNH CẦN TẢI TRƯỚC (Dùng đường dẫn lùi cấp ra ngoài thư mục assets)
+        let assetsToPreload = [
+            '../../assets/Btn_Start.png',
+            '../../assets/Btn_Start_Pressed.png',
+            '../../assets/Btn_Collection.png',
+            '../../assets/Btn_Collection_Pressed.png',
+            '../../assets/UI_Answer_Box.png',
+            '../../assets/UI_Answer_Box_Pressed.png',
+            '../../assets/UI_Question_Box.png',
+            '../../assets/Btn_Back.png',
+            '../../assets/Btn_Back_Pressed.png',
+            '../../assets/Btn_Collection_Icon.png',
+            '../../assets/Btn_Collection_Icon_Pressed.png',
+            '../../assets/Btn_Backpack_Icon.png',
+            '../../assets/Btn_Backpack_Icon_Pressed.png',
+            '../../assets/Btn_Setting_Icon.png',
+            '../../assets/Btn_Setting_Icon_Pressed.png',
+            '../../assets/Collection_Page_Btn.png',
+            '../../assets/Collection_Page_Btn_Pressed1.png',
+            '../../assets/Collection_Page_Btn_Pressed2.png',
+            '../../assets/Tag_Icon.png',
+            '../../assets/VFX_Smoke.png',
+            '../../assets/VFX_Ball_Open.png',
+            '../../assets/VFX_Ball_Close.png',
+            '../../assets/VFX_Star_Shiny.png',
+            '../../assets/Player_Male_Main.png',
+            '../../assets/Player_Female_Main.png',
+            '../../assets/Player_Male_Back.png',
+            '../../assets/Player_Female_Back.png',
+            '../../assets/Nametag_lv1.png',
+            '../../assets/Nametag_lv2.png',
+            '../../assets/Nametag_lv3.png',
+            '../../assets/Nametag_lv4.png',
+            '../../assets/Nametag_lv5.png',
+            '../../assets/BG_Desert.png',
+            '../../assets/BG_Forest.png',
+            '../../assets/BG_Snow.png',
+            '../../assets/BG_Volcano.png'
+        ];
+
+        // Tự động quét và gom thêm toàn bộ link ảnh Quái vật lấy từ Google Sheet
+        globalMobList.forEach(mob => {
+            if (mob.Image && mob.Image.trim() !== "") {
+                assetsToPreload.push(mob.Image);
+            }
+            // Gom luôn phôi thẻ bài theo cấp sao của quái trong Collection Book
+            assetsToPreload.push(`../../assets/Card_lv${mob.Stars}.png`);
+            assetsToPreload.push(`../../assets/Card_lv${mob.Stars}_S.png`);
+        });
+
+        // Lọc trùng danh sách cho nhẹ máy
+        assetsToPreload = [...new Set(assetsToPreload)];
+
+        // 3. TIẾN HÀNH BƠM ĐẨY TẢI NGẦM TẤT CẢ ẢNH VÀO BỘ NHỚ ĐỆM TRÌNH DUYỆT
+        let loadedCount = 0;
+        const totalAssets = assetsToPreload.length;
+
+        if (totalAssets === 0) {
+            if (fill) fill.style.width = "100%";
+            proceedToLogin();
+            return;
+        }
+
+        function assetLoaded() {
+            loadedCount++;
+            // Tiến trình tính từ mốc 30% đến 100% dựa trên số lượng ảnh thực tế tải về
+            let progress = 30 + Math.floor((loadedCount / totalAssets) * 70);
+            if (fill) fill.style.width = `${progress}%`;
+            if (txt) txt.innerText = `Loading Assets: ${loadedCount}/${totalAssets} (Please wait...)`;
+
+            // Khi tất cả ảnh đã chui vào bộ nhớ đệm thành công!
+            if (loadedCount === totalAssets) {
+                if (txt) txt.innerText = "All assets successfully loaded! Ready to Play.";
+                setTimeout(proceedToLogin, 600);
+            }
+        }
+
+        // Kích hoạt vòng lặp nạp ảnh ngầm, lỗi link ảnh quái vẫn đếm tiếp để tránh kẹt game
+        assetsToPreload.forEach(url => {
+            const img = new Image();
+            img.src = url;
+            img.onload = assetLoaded;
+            img.onerror = assetLoaded; 
+        });
 
     } catch (error) {
-        const txt = document.getElementById('loading-text');
         if (txt) txt.innerText = "Error connecting to Google Sheets! Check your link public.";
+        console.error(error);
     }
+}
+
+// Hàm phụ trợ chuyển tiếp sang Popup Login sau khi nạp xong xuôi asset
+function proceedToLogin() {
+    const bar = document.getElementById('loading-bar-container');
+    const popup = document.getElementById('login-popup');
+    if (bar) bar.style.display = "none";
+    if (popup) popup.style.display = "flex";
 }
 
 // Hàm chuyển đổi màn hình động bằng cách gọi lại loadScreen
@@ -148,7 +235,7 @@ function changeScreen(scrId) {
 }
 
 // ==========================================
-// 🕹️ CÁC LOGIC CHƠI VÀ ĐỔ XÚC XẮC KHÔNG ĐỔI
+// 🕹️ CÁC LOGIC CHƠI VÀ ĐỔ XÚX XẮC KHÔNG ĐỔI
 // ==========================================
 
 // Chọn giới tính trên Popup (Bật class sáng viền)
