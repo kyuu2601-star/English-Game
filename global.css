@@ -35,17 +35,20 @@ body {
     overflow: hidden;
 }
 
+/* Đảm bảo viewport bọc ngoài luôn hiển thị 100% kích thước và cho phép con đè lên nhau */
 #game-viewport {
     width: 100%;
     height: 100%;
     position: relative;
+    background-color: #000; /* Nền đen gốc để phòng hờ ảnh chưa tải kịp */
 }
 
-/* Các cấu hình dùng chung cho các màn hình (nếu có) */
+/* Ép tất cả các wrapper màn hình con bung lụa 100% không bị co rúm */
 .screen-style-wrapper {
     width: 100%;
     height: 100%;
     position: absolute;
     top: 0;
     left: 0;
+    box-sizing: border-box;
 }
