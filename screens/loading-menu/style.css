@@ -20,12 +20,19 @@
     box-sizing: border-box;
 }
 
-/* Điều khiển Logo Mon English */
+/* Logo */
 .menu-content-core img {
     width: 320px; 
     height: auto;
     object-fit: contain;
-    margin-bottom: 20px;         /* Khoảng cách dương an toàn giúp đẩy cụm nút xuống, không bị lọt màn hình */
+    margin-bottom: 20px;         
+    
+    /* Bộ chặn viền bóng mờ và viền xanh mặc định của trình duyệt */
+    outline: none !important;
+    border: none !important;
+    -webkit-tap-highlight-color: transparent; /* Chặn viền xanh trên điện thoại/máy tính bảng */
+    user-select: none;                        /* Chặn việc các bé đè chuột bôi đen tấm ảnh */
+    pointer-events: none;                     /* Chặn trình duyệt bắt tương tác click vào ảnh gây ra viền */
 }
 
 /* ==========================================================================
