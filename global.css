@@ -1,7 +1,9 @@
-/* NẠP CÁC BỘ FONT CHỮ OFFLINE TỪ THƯ MỤC ASSETS */
+/* ==========================================================================
+   1. NẠP CÁC BỘ FONT CHỮ OFFLINE TỪ THƯ MỤC ASSETS GỐC
+   ========================================================================== */
 @font-face {
     font-family: 'MyFredoka';
-    src: url('assets/Fredoka.ttf') format('truetype');
+    src: url('assets/Fredoka.ttf') format('truetype'); /* Giữ nguyên nếu file CSS này nằm ngang hàng index.html */
     font-weight: bold;
     font-style: normal;
 }
@@ -13,7 +15,9 @@
     font-style: normal;
 }
 
-/* THIẾT LẬP CHUNG TOÀN GAME */
+/* ==========================================================================
+   2. THIẾT LẬP CHUNG TOÀN GAME
+   ========================================================================== */
 body {
     margin: 0; padding: 0;
     background: #16a34a; /* Nền xanh lá bên ngoài khung game */
@@ -25,7 +29,9 @@ body {
     overflow: hidden;
 }
 
-/* KHUNG VIEWPORT GAME CHUẨN TỶ LỆ CỨNG NGANG 16:9 */
+/* ==========================================================================
+   3. KHUNG VIEWPORT GAME CHUẨN TỶ LỆ CỨNG NGANG 16:9 (1024x576)
+   ========================================================================== */
 .game-window {
     width: 1024px;
     height: 576px;
@@ -43,8 +49,12 @@ body {
     background-color: #000; /* Nền đen gốc để phòng hờ ảnh chưa tải kịp */
 }
 
-/* Ép tất cả các wrapper màn hình con bung lụa 100% không bị co rúm */
-.screen-style-wrapper {
+/* ==========================================================================
+   4. 🚀 ĐÃ FIX: ÉP TẤT CẢ WRAPPER CỦA CÁC SCREEN BUNG 100% KHÔNG BỊ CO RÚM
+   ========================================================================== */
+.screen-style-wrapper,
+.battle-screen-layout,
+.collection-screen-layout { /* 📌 Bổ sung thêm class của màn Battle và Book để tụi nó ăn chung thuộc tính tràn viền */
     width: 100%;
     height: 100%;
     position: absolute;
