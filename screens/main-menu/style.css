@@ -91,8 +91,8 @@
 
 .btn-main {
     /* 🎯 RESPONSIVE SCALE: Khóa phom dáng nút bấm co giãn theo vh */
-    width: 20vh !important;   /* 📌 Chiều ngang nút tự co giãn đều (Cũ: 200px) */
-    height: 6.6vh !important; /* 📌 Chiều cao nút tự co giãn đều (Cũ: 66px) */
+    width: 40vh !important;   /* 📌 Chiều ngang nút tự co giãn đều (Cũ: 200px) */
+    height: 13.2vh !important; /* 📌 Chiều cao nút tự co giãn đều (Cũ: 66px) */
     
     /* 🛡️ KHÓA TRẦN CHỐNG BỂ RESOLUTION: Giữ nguyên size chuẩn tối đa */
     max-width: 400px !important;
@@ -254,8 +254,8 @@
 /* 🎯 ĐÃ SỬA: Đưa về đường dẫn gốc 'assets/' */
 .btn-confirm-login {
     /* 🎯 RESPONSIVE BTN CONFIRM */
-    width: 27vh !important;  /* 📌 Tự scale độ rộng nút (Cũ: 270px) */
-    height: 5.5vh !important; /* 📌 Tự scale độ cao nút (Cũ: 55px) */
+    width: 40vh !important;  /* 📌 Tự scale độ rộng nút (Cũ: 270px) */
+    height: 9vh !important; /* 📌 Tự scale độ cao nút (Cũ: 55px) */
     max-width: 540px !important;
     max-height: 110px !important;
     
