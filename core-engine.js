@@ -6,10 +6,16 @@ const QUESTIONS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT-EF
 const LOGIN_API_URL = "https://script.google.com/macros/s/AKfycbxKUEwFeIimX4oa0Rfsng7cOAXwoq17OOpMkd985y7tJl93fJOFAFJg6krFpq0fCZo/exec";
 const CACHE_NAME = 'mon-english-v1'; 
 
-// Trạng thái lưu trữ dùng chung xuyên suốt các file JS mô-đun
+// 🎯 TẤT CẢ CHỈ SỐ ĐỂ TRỐNG/SỐ 0 ĐỂ GOOGLE SHEET NẠP XUỐNG
 let globalMobList = [];      
 let globalQuestionList = []; 
-let gameState = { username: "", coins: 0, gender: "", captured: {} };
+let gameState = { 
+    username: "", 
+    coins: 0, 
+    gender: "", 
+    captured: {},
+    energy: 0 
+};
 let currentMob = null;
 let currentQuestion = null;
 let currentBookPage = 0; 
@@ -29,7 +35,6 @@ async function handleGamePreloadAndVersionControl() {
     console.log("🚀 [Loading Engine] Bắt đầu tiến trình kiểm tra và tải nạp tài nguyên thực tế...");
     const cache = await caches.open(CACHE_NAME);
 
-    // 🎯 TẦNG 1: DANH SÁCH FILE CODE TĨNH
     const coreCodes = [
         './global.css',
         './core-engine.js',
@@ -40,7 +45,6 @@ async function handleGamePreloadAndVersionControl() {
         './screens/collection-book/ui.html', './screens/collection-book/style.css', './screens/collection-book/logic.js'
     ];
 
-    // 🎯 TẦNG 2: DANH SÁCH ASSET HÌNH ẢNH/FONT
     const staticAssets = [
         './assets/Fredoka.ttf', './assets/PatrickHand.ttf', './assets/Game_Logo.png', './assets/Background_Loading.png',
         './assets/BG_Desert.png', './assets/BG_Forest.png', './assets/BG_Snow.png', './assets/BG_Volcano.png',
@@ -198,7 +202,12 @@ function changeScreen(scrId) {
     if (scrId === 'battle') {
         loadScreen('battle-stage', () => {
             const coinText = document.getElementById('user-coins');
+            const energyText = document.getElementById('user-energy');
+            
             if (coinText) coinText.innerText = gameState.coins;
+            // Nạp UI Energy linh hoạt không dính cứng /20
+            if (energyText) energyText.innerText = gameState.energy; 
+            
             if (typeof nextBattleTurn === 'function') {
                 nextBattleTurn();
             }
@@ -233,6 +242,20 @@ function saveGameLocal() {
     localStorage.setItem(`pkm_catch_${gameState.username}`, JSON.stringify(gameState));
 }
 
+// 🎯 HÀM TRỪ NĂNG LƯỢNG (Chỉ hoạt động khi Energy > 0)
+function consumeEnergy() {
+    if (gameState.energy > 0) {
+        gameState.energy -= 1;
+        
+        const energyText = document.getElementById('user-energy');
+        if (energyText) energyText.innerText = gameState.energy; // Linh hoạt hiển thị số hiện tại
+        
+        saveGameLocal();
+        return true; 
+    }
+    return false; 
+}
+
 // ==========================================================================
 // 🔐 HỆ THỐNG ĐĂNG NHẬP & XỬ LÝ DỮ LIỆU TỪ SHEET (API FETCH)
 // ==========================================================================
@@ -254,21 +277,18 @@ async function loginGame(inputUsername, inputPassword) {
         if (result.success) {
             let userData = result.data;
 
-            // 1. Nạp data cơ bản
             gameState.username = userData.username;
             gameState.coins = parseInt(userData.coins) || 0;
 
-            // 2. 🎯 KIỂM TRA GIỚI TÍNH TÀI KHOẢN (TRỐNG CHO PHÉP TẠO MỚI)
             let genderChar = userData.gender ? userData.gender.toString().toUpperCase().trim() : "";
             if (genderChar === 'M' || genderChar === 'MALE') {
                 gameState.gender = 'male'; 
             } else if (genderChar === 'F' || genderChar === 'FEMALE') {
                 gameState.gender = 'female'; 
             } else {
-                gameState.gender = ''; // Để trống để báo hiệu là acc mới chưa chọn tướng
+                gameState.gender = ''; 
             }
 
-            // 3. Nạp túi quái vật (Dạng JSON)
             try {
                 let rawJSON = userData.captured ? userData.captured.toString().trim() : "{}";
                 if (rawJSON === "") rawJSON = "{}";
@@ -278,22 +298,22 @@ async function loginGame(inputUsername, inputPassword) {
                 gameState.captured = {};
             }
 
+            // 🎯 Lấy trực tiếp năng lượng từ Sheet. Nếu admin để trống thì mặc định là 0 (hoặc số fen tự set trên Sheet)
+            gameState.energy = parseInt(userData.energy) || 0;
+
             console.log("✅ ĐĂNG NHẬP THÀNH CÔNG! Dữ liệu hiện tại:", gameState);
 
-            // ⚠️ Chỉ lưu Local nếu tài khoản đã chốt tướng (gender khác rỗng). 
-            // Acc mới tinh thì chờ chọn tướng xong hàm finalize bên logic.js mới lưu
             if (gameState.gender !== '') {
                 saveGameLocal(); 
             }
 
             return true; 
         } else {
-            alert("❌ Đăng nhập thất bại: " + result.message);
+            console.warn("Đăng nhập thất bại:", result.message);
             return false;
         }
     } catch (error) {
         console.error("🚨 Lỗi Network:", error);
-        alert("Mất kết nối tới máy chủ. Vui lòng kiểm tra mạng!");
         return false;
     }
 }
