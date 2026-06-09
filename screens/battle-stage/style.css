@@ -71,7 +71,7 @@
     bottom: 0px; /* Neo thẳng sát cạnh dưới màn hình */
     left: 50%;
     transform: translateX(-50%);
-    width: 1000px;  /* Chiều dài 1000px */
+    width: 1500px;  /* Chiều dài 1000px */
     height: 350px;  /* Chiều cao 350px */
     /* 🎯 ĐÃ FIX: Chuyển về đường dẫn gốc assets/ */
     background: url('assets/UI_Question_Box.png') no-repeat center/contain;
@@ -90,7 +90,7 @@
     max-height: 120px; /* Khoảng trần cao nhất lọt lòng từ mốc 200px đến 320px đáy (320-200=120px) */
     
     font-family: 'MyPatrick', cursive;
-    font-size: 1.85rem;
+    font-size: 5rem;
     color: #000000; /* Màu chữ đen chuẩn chỉ */
     font-weight: bold;
     display: flex;
@@ -127,7 +127,7 @@
     background: url('assets/UI_Answer_Box.png') no-repeat center/contain;
     background-color: transparent;
     font-family: 'MyFredoka', sans-serif;
-    font-size: 1.3rem;
+    font-size: 5rem;
     text-align: center;
     outline: none;
 }
@@ -139,7 +139,7 @@
 #player-sprite {
     position: absolute;
     bottom: 0px; 
-    right: 50px;   /* Neo cách cạnh phải màn hình đúng 50px */
+    left: 50px;   /* Neo cách cạnh phải màn hình đúng 50px */
     width: 300px;  /* Chiều ngang 300px */
     height: 450px; /* Chiều cao 450px */
     background-size: contain;
@@ -151,7 +151,7 @@
 /* Mob Node bọc cụm quái: scale 200x200 neo ở giữa khung hình bên phải (tầm 500px từ đỉnh) */
 .mob-node-box {
     position: absolute;
-    top: 500px;    /* Neo cách cạnh trên màn hình tầm 500px */
+    bot: 500px;    /* Neo cách cạnh trên màn hình tầm 500px */
     right: 400px;   /* Đẩy lùi vào khu vực giữa khung hình bên phải */
     width: 200px;
     display: flex;
@@ -161,8 +161,8 @@
 }
 
 #mob-sprite {
-    width: 200px;  /* Scale đúng tỷ lệ 200px */
-    height: 200px; /* Scale đúng tỷ lệ 200px */
+    width: 400px;  /* Scale đúng tỷ lệ 200px */
+    height: 400px; /* Scale đúng tỷ lệ 200px */
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
@@ -171,8 +171,8 @@
 
 /* Thanh tên: nằm ngay sát con mob, ăn vào -50px của con mob và phải đè lên nó */
 #mob-nametag {
-    width: 180px;
-    height: 45px;
+    width: 360px;
+    height: 90px;
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
@@ -189,7 +189,7 @@
 
 #mob-name-text {
     font-family: 'MyFredoka', sans-serif;
-    font-size: 0.95rem;
+    font-size: 2rem;
     color: #ffffff;
     font-weight: bold;
     text-shadow: 1px 1px 2px #000;
