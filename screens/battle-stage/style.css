@@ -52,8 +52,8 @@
 }
 
 .btn-mini {
-    width: 240px;
-    height: 240px;
+    width: 10px;
+    height: 100px;
     border: none;
     cursor: pointer;
     background-size: contain;
@@ -68,8 +68,8 @@
 #btn-back-to-menu:active { background-image: url('assets/Btn_Back_Pressed.png') !important; }
 
 /* 2. Nút Sách bộ sưu tập (Collection Book) */
-#btn-collection-book { background-image: url('assets/Btn_Collection.png') !important; }
-#btn-collection-book:active { background-image: url('assets/Btn_Collection_Pressed.png') !important; }
+#btn-collection-book { background-image: url('assets/Btn_Collection_Icon.png') !important; }
+#btn-collection-book:active { background-image: url('assets/Btn_Collection_Icon_Pressed.png') !important; }
 
 /* 3. Nút Balo (Backpack) */
 #btn-backpack { background-image: url('assets/Btn_Backpack_Icon.png') !important; }
