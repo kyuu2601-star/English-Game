@@ -1,9 +1,50 @@
 /* ==========================================================================
-   1. LỚP PHỦ TIẾN TRÌNH LOADING (CONTAINER OVERLAY PHỦ TRÊN CÙNG)
+   1. NỀN SẢNH CHỜ & LOGO (HIỂN THỊ CHUẨN ĐỊNH DẠNG THEO REPO ASSETS)
+   ========================================================================== */
+/* Hình nền sảnh chờ phủ kín tỷ lệ cứng */
+.loading-menu-bg {
+    background: url('../../assets/Background_Loading.png') no-repeat center/cover !important;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0; 
+    left: 0;
+    z-index: 1; /* Nằm dưới đáy cùng */
+}
+
+/* Khung bọc trung tâm lo việc căn chỉnh Logo và nội dung */
+.menu-content-core {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    padding-top: 100px; /* Neo Logo cách cạnh trên màn hình đúng 100px */
+    box-sizing: border-box;
+    z-index: 5; /* Nằm trên hình nền nhưng vẫn dưới tấm rèm đen z-999 */
+}
+
+/* Khóa chết Logo: Sạch bóng viền, cấm tương tác kéo chuột hay click nhầm */
+.game-logo {
+    width: 320px;
+    height: auto;
+    object-fit: contain;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    pointer-events: none;
+    user-select: none;
+}
+
+/* ==========================================================================
+   2. LỚP PHỦ TIẾN TRÌNH LOADING (CONTAINER OVERLAY PHỦ TRÊN CÙNG)
    ========================================================================== */
 #loading-bar-container {
     position: absolute;
-    top: 0; left: 0;
+    top: 0; 
+    left: 0;
     width: 100%;
     height: 100%;
     background: #020617; /* Tấm màn tối phủ kín để che sảnh game bên dưới lúc đầu */
@@ -32,7 +73,8 @@
 
 .loading-bar-fill {
     position: absolute;
-    top: 0; left: 0;
+    top: 0; 
+    left: 0;
     height: 100%;
     width: 0%;
     background: linear-gradient(to right, #4ade80, #22c55e);
