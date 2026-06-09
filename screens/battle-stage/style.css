@@ -52,8 +52,8 @@
 }
 
 .btn-mini {
-    width: 48px;
-    height: 48px;
+    width: 96px;
+    height: 96px;
     border: none;
     cursor: pointer;
     background-size: contain;
@@ -71,10 +71,11 @@
     bottom: 0px; /* Neo thẳng sát cạnh dưới màn hình */
     left: 50%;
     transform: translateX(-50%);
-    width: 1500px;  /* Chiều dài 1000px */
+    width: 2000px;  /* Chiều dài 1000px */
     height: 350px;  /* Chiều cao 350px */
     /* 🎯 ĐÃ FIX: Chuyển về đường dẫn gốc assets/ */
-    background: url('assets/UI_Question_Box.png') no-repeat center/contain;
+    background: url('assets/UI_Question_Box.png') no-repeat !important;
+    background-size: 100% 100% !important;
     box-sizing: border-box;
     z-index: 800;   /* Z-layer ưu tiên 2: Dưới nút bấm nhưng trên quái/tướng */
 }
@@ -90,7 +91,7 @@
     max-height: 120px; /* Khoảng trần cao nhất lọt lòng từ mốc 200px đến 320px đáy (320-200=120px) */
     
     font-family: 'MyPatrick', cursive;
-    font-size: 5rem;
+    font-size: 3rem;
     color: #000000; /* Màu chữ đen chuẩn chỉ */
     font-weight: bold;
     display: flex;
@@ -105,7 +106,7 @@
 /* Các câu trả lời: dài 300px, cao 100px, neo cách màn hình 50px (cạnh dưới) và cách nhau 20px */
 .answers-zone {
     position: absolute;
-    bottom: 50px; /* Neo cách đáy màn hình đúng 50px */
+    bottom: 20px; /* Neo cách đáy màn hình đúng 50px */
     left: 50%;
     transform: translateX(-50%);
     display: flex;
@@ -127,7 +128,7 @@
     background: url('assets/UI_Answer_Box.png') no-repeat center/contain;
     background-color: transparent;
     font-family: 'MyFredoka', sans-serif;
-    font-size: 5rem;
+    font-size: 2.2rem;
     text-align: center;
     outline: none;
 }
@@ -140,8 +141,8 @@
     position: absolute;
     bottom: 0px; 
     left: 50px;   /* Neo cách cạnh phải màn hình đúng 50px */
-    width: 300px;  /* Chiều ngang 300px */
-    height: 450px; /* Chiều cao 450px */
+    width: 400px;  /* Chiều ngang 300px */
+    height: auto; /* Chiều cao 450px */
     background-size: contain;
     background-repeat: no-repeat;
     background-position: bottom center;
@@ -151,8 +152,8 @@
 /* Mob Node bọc cụm quái: scale 200x200 neo ở giữa khung hình bên phải (tầm 500px từ đỉnh) */
 .mob-node-box {
     position: absolute;
-    bot: 500px;    /* Neo cách cạnh trên màn hình tầm 500px */
-    right: 400px;   /* Đẩy lùi vào khu vực giữa khung hình bên phải */
+    bot: 400px;    /* Neo cách cạnh trên màn hình tầm 500px */
+    right: 200px;   /* Đẩy lùi vào khu vực giữa khung hình bên phải */
     width: 200px;
     display: flex;
     flex-direction: column;
@@ -161,8 +162,8 @@
 }
 
 #mob-sprite {
-    width: 400px;  /* Scale đúng tỷ lệ 200px */
-    height: 400px; /* Scale đúng tỷ lệ 200px */
+    width: 300px;  /* Scale đúng tỷ lệ 200px */
+    height: 300px; /* Scale đúng tỷ lệ 200px */
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
