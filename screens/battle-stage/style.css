@@ -73,7 +73,8 @@
     transform: translateX(-50%);
     width: 1000px;  /* Chiều dài 1000px */
     height: 350px;  /* Chiều cao 350px */
-    background: url('../../assets/UI_Question_Box.png') no-repeat center/contain;
+    /* 🎯 ĐÃ FIX: Chuyển về đường dẫn gốc assets/ */
+    background: url('assets/UI_Question_Box.png') no-repeat center/contain;
     box-sizing: border-box;
     z-index: 800;   /* Z-layer ưu tiên 2: Dưới nút bấm nhưng trên quái/tướng */
 }
@@ -122,7 +123,8 @@
     cursor: pointer;
     color: white;
     font-weight: bold;
-    background: url('../../assets/UI_Answer_Box.png') no-repeat center/contain;
+    /* 🎯 ĐÃ FIX: Chuyển về đường dẫn gốc assets/ */
+    background: url('assets/UI_Answer_Box.png') no-repeat center/contain;
     background-color: transparent;
     font-family: 'MyFredoka', sans-serif;
     font-size: 1.3rem;
@@ -231,7 +233,8 @@
     right: 350px;
     width: 300px;
     height: 300px;
-    background: url('../../assets/vfx_smoke.png') no-repeat;
+    /* 🎯 ĐÃ FIX: Chuyển về assets/ và đồng bộ đúng tên file viết hoa VFX_Smoke.png */
+    background: url('assets/VFX_Smoke.png') no-repeat;
     display: none;
     z-index: 750; /* Z-layer ưu tiên 2 trên mob */
 }
@@ -259,7 +262,8 @@
 .shiny-star {
     position: absolute;
     width: 24px; height: 24px;
-    background: url('../../assets/VFX_Star_Shiny.png') no-repeat center/contain;
+    /* 🎯 ĐÃ FIX: Chuyển về đường dẫn gốc assets/ */
+    background: url('assets/VFX_Star_Shiny.png') no-repeat center/contain;
     top: -30px;
     opacity: 0;
     animation: shinyRainFall var(--fall-duration) linear forwards;
