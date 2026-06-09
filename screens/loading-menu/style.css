@@ -1,5 +1,5 @@
 /* ==========================================================================
-   1. MÀN HÌNH NẠP TÀI NGUYÊN (ÉP PHẲNG LAYER ĐỂ CHỐNG ĐÈ ẢNH)
+   1. MÀN HÌNH NẠP TÀI NGUYÊN (QUẢN LÝ LAYOUT TỔNG TRÀN KHUNG)
    ========================================================================== */
 #loading-bar-container {
     position: absolute;
@@ -7,10 +7,10 @@
     left: 0;
     width: 100%;
     height: 100%;
-    /* Khóa chết ảnh nền nằm ở đáy cùng của container này */
+    /* 🎯 GIỮ NGUYÊN: Khóa chết ảnh nền nằm ở đáy cùng của container này */
     background: url('assets/Background_Loading.png') no-repeat center/cover !important;
     
-    /* 📌 QUAN TRỌNG: Chuyển sang relative để làm điểm tựa tọa độ cho Logo và Thanh Loading */
+    /* 📌 QUAN TRỌNG: Làm điểm tựa tọa độ vững chắc cho Logo và Thanh Loading */
     position: relative; 
     
     z-index: 999; 
@@ -18,20 +18,22 @@
 }
 
 /* ==========================================================================
-   2. 🔥 ĐÃ SỬA: ÉP LOGO CAO 500PX PHẢI NỔI LÊN TRÊN HÌNH NỀN
+   2. 🔥 ĐÃ SỬA: ĐỒNG BỘ THẺ DIV LOGO CAO 500PX, HIỆN ĐỒNG BỘ VỚI NỀN
    ========================================================================== */
-.game-logo {
+/* Đổi tên class từ .game-logo sang .game-logo-css để khớp 100% với file ui.html mới */
+.game-logo-css {
     position: absolute;
     top: 20px; /* Neo cách lề trên màn hình 20px cho đẹp bố cục */
     left: 50%;
     transform: translateX(-50%); /* Căn giữa hoàn hảo theo chiều ngang */
     
     height: 500px !important; /* 📌 Khóa chết chiều cao Logo đúng 500px theo ý fen */
-    width: auto;
-    object-fit: contain;
+    width: 600px !important;  /* 🔥 ĐÃ BỔ SUNG: Cấp chiều rộng cho thẻ div để phôi ảnh background hiển thị bứt phá */
     
-    /* 🔥 ĐÂY RỒI: Cấp quyền ưu tiên hiển thị tối cao nội bộ để Logo trồi lên trên, 
-       bắt buộc tấm nền Background_Loading phải nằm rạp xuống dưới nó */
+    /* 🔥 ĐÃ BỔ SUNG: Nạp ảnh Logo trực tiếp qua CSS giúp kích nạp song song với hình nền từ mili-giây đầu tiên */
+    background: url('assets/Game_Logo.png') no-repeat center/contain;
+    
+    /* 🔥 ĐÃ SỬA: Đẩy hẳn lên tầng hiển thị cao để Background_Loading buộc phải nằm dưới nó */
     z-index: 99; 
     
     border: none !important;
@@ -42,7 +44,7 @@
 }
 
 /* ==========================================================================
-   3. 🔥 ĐÃ SỬA: SÚT THANH LOADING XUỐNG ĐÁY VÀ NEO CÁCH CẠNH DƯỚI ĐÚNG 50PX
+   3. 🔥 GIỮ NGUYÊN: KHÓA CHẾT THANH LOADING CÁCH CẠNH DƯỚI ĐÚNG 50PX
    ========================================================================== */
 .loading-bar-bg {
     position: absolute;
