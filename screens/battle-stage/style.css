@@ -22,38 +22,44 @@
 /* ==========================================================================
    2. TOP NAV & BỘ NÚT MINI GÓC TRÊN PHẢI (Z-INDEX ƯU TIÊN 1: >900)
    ========================================================================== */
-/* Thanh hiển thị xu neo cách lề trên 10px */
+/* Thanh hiển thị xu neo cách lề co giãn theo vh/vw */
 .coin-display-wrapper {
     position: absolute;
-    top: 10px; 
-    left: 10px; /* Neo cách lề 10px */
+    top: 1vh !important;   /* 📌 Thay thế top: 10px cứng */
+    left: 1vw !important;  /* 📌 Thay thế left: 10px cứng */
     z-index: 950; /* Z-layer ưu tiên 1 */
 }
 
 .coin-display {
     background: rgba(0, 0, 0, 0.65);
     color: #facc15;
-    padding: 6px 16px;
+    padding: 0.6vh 1.6vw !important; /* 📌 Thu phóng padding linh hoạt theo khung tab */
     border-radius: 20px;
-    font-size: 1.3rem;
+    font-size: 2.5vh !important;     /* 📌 Font chữ tự thu nhỏ/phóng to mượt mà (Cũ: 1.3rem) */
     font-weight: bold;
     font-family: 'MyFredoka', sans-serif;
     border: 2px solid #facc15;
 }
 
-/* Các btn neo ở phía trên góc phải màn hình, cách cạnh trái khoảng 20px, cách nhau 12px */
+/* Các btn neo ở phía trên góc phải màn hình, co giãn khoảng cách biên tự động */
 .top-nav-bar-right {
     position: absolute;
-    top: 10px;
-    right: 20px; /* Neo cách lề phải (cạnh trái cụm nút) 20px */
+    top: 1vh !important;     /* 📌 Thay thế top: 10px cứng */
+    right: 2vw !important;   /* 📌 Thay thế right: 20px cứng */
     display: flex;
-    gap: 12px;   /* Mỗi cái cách nhau đúng 12px */
+    gap: 0.8vw !important;   /* 📌 Khoảng cách cách nhau tự co giãn theo chiều ngang (Cũ: 12px) */
     z-index: 950; /* Z-layer ưu tiên 1 */
 }
 
 .btn-mini {
-    width: 100px;
-    height: 100px;
+    /* 🎯 RESPONSIVE SCALE: Tự động tính toán kích thước theo vh */
+    width: 10vh !important;  /* 📌 Lấy 10% chiều cao màn hình làm size tiêu chuẩn (Cũ: 100px) */
+    height: 10vh !important;
+    
+    /* 🛡️ KHÓA TRẦN CHỐNG BỂ RESOLUTION */
+    max-width: 100px !important;
+    max-height: 100px !important;
+    
     border: none;
     cursor: pointer;
     background-size: contain;
@@ -61,7 +67,6 @@
     background-color: transparent;
     outline: none;
 }
-/* 🔥 THÊM MỚI TOÀN BỘ ĐOẠN NÀY VÀO SAU .BTN-MINI ĐỂ HIỆN ẢNH NÚT */
 
 /* 1. Nút Quay về Sảnh (Back) */
 #btn-back-to-menu { background-image: url('assets/Btn_Back.png') !important; }
@@ -82,33 +87,42 @@
 /* ==========================================================================
    3. KHUNG CÂU HỎI & ĐÁP ÁN (Z-INDEX ƯU TIÊN 2: ~800 & ƯU TIÊN 1: ~900)
    ========================================================================== */
-/* Khung câu hỏi giữ scale chiều dài 1000px, cao 350px, neo thẳng sát cạnh dưới màn hình */
+/* Khung câu hỏi giữ nguyên tỷ lệ, co giãn mượt theo chiều cao vh */
 .battle-dialogue-ui {
     position: absolute;
     bottom: 0px; /* Neo thẳng sát cạnh dưới màn hình */
     left: 50%;
     transform: translateX(-50%);
-    width: 1000px;  /* Chiều dài 1000px */
-    height: 350px;  /* Chiều cao 350px */
-    /* 🎯 ĐÃ FIX: Chuyển về đường dẫn gốc assets/ */
+    
+    /* 🎯 RESPONSIVE SCALE HOÀN HẢO THEO TỶ LỆ GỐC */
+    height: 35vh !important;                    /* 📌 Chiếm 35% chiều cao màn hình (Cũ: 350px) */
+    width: calc(35vh * 2.857) !important;       /* 📌 Tự suy ra chiều dài theo tỷ lệ gốc 1000/350 ~ 2.857 */
+    
+    /* 🛡️ KHÓA TRẦN ĐỘ PHÂN GIẢI GỐC */
+    max-width: 1000px !important;
+    max-height: 350px !important;
+    
     background: url('assets/UI_Question_Box.png') no-repeat !important;
     background-size: 100% 100% !important;
     box-sizing: border-box;
     z-index: 800;   /* Z-layer ưu tiên 2: Dưới nút bấm nhưng trên quái/tướng */
 }
 
-/* Câu hỏi neo tại vị trí đáy màn hình 200px, cao tối đa 320px, ngang 950px ngay giữa khung */
+/* Câu hỏi neo lọt lòng khít khao bên trên bệ đáp án */
 .question-zone {
     position: absolute;
-    bottom: 200px; /* Neo tính từ đáy màn hình lên 200px */
+    bottom: 20vh !important;   /* 📌 Tỷ lệ co giãn theo vh (Cũ: 200px tính từ đáy) */
     left: 50%;
     transform: translateX(-50%);
-    width: 950px;  /* Chiều ngang 950px đặt ngay giữa */
+    
+    /* 🎯 RESPONSIVE CO GIÃN THEO KHUNG CHÂN */
+    width: 95% !important;     /* 📌 Thay thế width: 950px cứng để tự động lọt lòng khi bóp nhỏ tab */
+    max-width: 950px !important;
     height: auto;
-    max-height: 120px; /* Khoảng trần cao nhất lọt lòng từ mốc 200px đến 320px đáy (320-200=120px) */
+    max-height: 12vh !important; /* 📌 Khống chế khoảng trần động theo vh (Cũ: 120px) */
     
     font-family: 'MyPatrick', cursive;
-    font-size: 3rem;
+    font-size: 5.5vh !important; /* 📌 Font chữ câu hỏi tự bóp nhỏ khi scale màn hình nhỏ (Cũ: 3rem) */
     color: #000000; /* Màu chữ đen chuẩn chỉ */
     font-weight: bold;
     display: flex;
@@ -120,32 +134,37 @@
     z-index: 910;  /* Z-layer ưu tiên 1 */
 }
 
-/* Các câu trả lời: dài 300px, cao 100px, neo cách màn hình 50px (cạnh dưới) và cách nhau 20px */
+/* Các câu trả lời: dài 300px, cao 100px, neo tự co giãn khoảng cách đáy */
 .answers-zone {
     position: absolute;
-    bottom: 20px; /* Neo cách đáy màn hình đúng 50px */
+    bottom: 2vh !important; /* 📌 Thay thế bottom: 20px cứng để không bị đè viền khi kéo nhỏ */
     left: 50%;
     transform: translateX(-50%);
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 20px;    /* Mỗi nút cách nhau đúng 20px */
+    gap: 2vw !important;    /* 📌 Khoảng cách giữa các hộp đáp án scale động theo vw (Cũ: 20px) */
     width: 100%;
     z-index: 910; /* Z-layer ưu tiên 1 */
 }
 
 .btn-answer {
-    width: 300px;  /* Chiều dài đúng 300px */
-    height: 100px; /* Chiều cao đúng 100px */
+    /* 🎯 RESPONSIVE SCALE BOX ĐÁP ÁN THEO TỶ LỆ CHUẨN 3:1 */
+    height: 10vh !important;              /* 📌 Chiều cao chiếm 10% vh (Cũ: 100px) */
+    width: calc(10vh * 3) !important;     /* 📌 Chiều dài tự tính theo tỷ lệ gốc 300/100 = 3 */
+    
+    /* 🛡️ KHÓA TRẦN CHỐNG VỠ PHÔI ẢNH */
+    max-width: 300px !important;
+    max-height: 100px !important;
+    
     border: none;
     cursor: pointer;
     color: white;
     font-weight: bold;
-    /* 🎯 ĐÃ FIX: Chuyển về đường dẫn gốc assets/ */
     background: url('assets/UI_Answer_Box.png') no-repeat center/contain;
     background-color: transparent;
     font-family: 'MyFredoka', sans-serif;
-    font-size: 2.2rem;
+    font-size: 4vh !important;            /* 📌 Chữ đáp án tự thu nhỏ theo hộp (Cũ: 2.2rem) */
     text-align: center;
     outline: none;
 }
@@ -153,26 +172,36 @@
 /* ==========================================================================
    4. NHÂN VẬT & QUÁI VẬT (Z-INDEX ƯU TIÊN 3: ~600)
    ========================================================================== */
-/* Nhân vật: cao 450, ngang 300, neo cách cạnh phải màn hình 50px */
+/* Nhân vật Tướng: Giữ nguyên form dáng tỷ lệ đứng sàn 400x600 */
 #player-sprite {
     position: absolute;
     bottom: 0px;
     right: auto !important;
-    left: 50px !important;   /* Neo cách cạnh phải màn hình đúng 50px */
-    width: 400px;  /* Chiều ngang 300px */
-    height: 600px; /* Chiều cao 450px */
+    left: 4vw !important;      /* 📌 Thay thế left: 50px sang phần trăm chiều rộng màn hình */
+    
+    /* 🎯 RESPONSIVE KHÓA TỶ LỆ CHÂN DÀI 400x600 CHUẨN ĐÉT */
+    height: 60vh !important;   /* 📌 Chiếm tối đa 60% chiều cao màn hình dọc (Cũ: 600px) */
+    width: calc(60vh * 0.666) !important; /* 📌 Tự tính chiều ngang theo tỷ lệ ảnh gốc (400/600 = 0.666) */
+    
+    /* 🛡️ PHANH HÃM TRẦN ĐỘ PHÂN GIẢI GỐC */
+    max-width: 400px !important;
+    max-height: 600px !important;
+    
     background-size: contain;
     background-repeat: no-repeat;
     background-position: bottom center;
     z-index: 600;  /* Z-layer ưu tiên 3: Nằm dưới khung câu hỏi */
 }
 
-/* Mob Node bọc cụm quái: scale 200x200 neo ở giữa khung hình bên phải (tầm 500px từ đỉnh) */
+/* Mob Node bọc cụm quái: Tự động lùi tịnh tiến linh hoạt theo vh/vw */
 .mob-node-box {
     position: absolute;
-    bottom: 330px;    /* Neo cách cạnh trên màn hình tầm 500px */
-    right: 200px;   /* Đẩy lùi vào khu vực giữa khung hình bên phải */
-    width: 200px;
+    bottom: 33vh !important;   /* 📌 Thay thế bottom: 330px cứng giúp đứng vững trên sàn thoại */
+    right: 12vw !important;    /* 📌 Thay thế right: 200px cứng để né gông biên phải tab */
+    
+    width: 20vw !important;    /* 📌 Co giãn độ rộng bọc theo vw (Cũ: 200px) */
+    max-width: 200px !important;
+    
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -180,18 +209,30 @@
 }
 
 #mob-sprite {
-    width: 350px;  /* Scale đúng tỷ lệ 200px */
-    height: 350px; /* Scale đúng tỷ lệ 200px */
+    /* 🎯 RESPONSIVE KHÓA CHẾT TỶ LỆ VUÔNG 1:1 */
+    height: 35vh !important;   /* 📌 Thu phóng vuông vắn theo chiều dọc vh (Cũ: 350px) */
+    width: 35vh !important;
+    
+    /* 🛡️ GIỚI HẠN TRẦN */
+    max-width: 350px !important;
+    max-height: 350px !important;
+    
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
     transition: transform 0.5s linear, opacity 0.4s ease;
 }
 
-/* Thanh tên: nằm ngay sát con mob, ăn vào -50px của con mob và phải đè lên nó */
+/* Thanh tên quái: Hít chặt chân quái vật đè lên đồng bộ % */
 #mob-nametag {
-    width: 300px;
-    height: 75px;
+    /* 🎯 RESPONSIVE THEO PHÔI GỐC 300x75 */
+    height: 7.5vh !important;            /* 📌 Chiều cao co giãn (Cũ: 75px) */
+    width: calc(7.5vh * 4) !important;   /* 📌 Tự tính chiều ngang theo tỷ lệ gốc 4 lần (300/75 = 4) */
+    
+    /* 🛡️ GIỚI HẠN TRẦN */
+    max-width: 300px !important;
+    max-height: 75px !important;
+    
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
@@ -200,7 +241,7 @@
     align-items: center;
     box-sizing: border-box;
     
-    margin-top: -80px; /* 📌 Ép ăn gian âm ngược lên -50px đè lên chân con quái vật */
+    margin-top: -8vh !important; /* 📌 Ép ăn gian âm ngược lên theo vh đè chân quái vật (Cũ: -80px) */
     position: relative;
     z-index: 700;      /* Z-layer ưu tiên 2: Đè lên trên con Mob */
     transition: opacity 0.3s ease;
@@ -208,7 +249,7 @@
 
 #mob-name-text {
     font-family: 'MyFredoka', sans-serif;
-    font-size: 2rem;
+    font-size: 2.2vh !important; /* 📌 Font chữ tên quái tự co giãn lọt lòng bệ đỡ (Cũ: 2rem) */
     color: #ffffff;
     font-weight: bold;
     text-shadow: 1px 1px 2px #000;
@@ -223,8 +264,15 @@
     top: 25%;
     left: 50%;
     transform: translate(-50%, -50%) scale(0);
-    width: 1000px; /* Kích thước vàng 1000px */
-    height: 200px; /* Kích thước vàng 200px */
+    
+    /* 🎯 RESPONSIVE TỶ LỆ CHUẨN 5:1 PHỦ TRÊN ĐẦU GAME */
+    height: 20vh !important;            /* 📌 Chiều cao co giãn (Cũ: 200px) */
+    width: calc(20vh * 5) !important;   /* 📌 Chiều ngang tự suy ra 5 lần (1000/200 = 5) */
+    
+    /* 🛡️ PHANH TRẦN */
+    max-width: 1000px !important;
+    max-height: 200px !important;
+    
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
@@ -232,27 +280,39 @@
     z-index: 999; /* 🔥 Z-layer ưu tiên 1: Đè lên trên đầu tất cả mọi thứ */
 }
 
-/* Quả cầu bắt quái (Bố trí găm giữa tim con quái) */
+/* Quả cầu bắt quái (Bố trí găm giữa tim con quái đồng bộ tọa độ .mob-node-box) */
 #ball-vfx {
     position: absolute;
-    bottom: 400px;
-    right: 200px;
-    width: 120px;
-    height: 120px;
+    bottom: 40vh !important; /* 📌 Đồng bộ nâng hạ theo vh trận đấu (Cũ: 400px) */
+    right: 12vw !important;  /* 📌 Đồng bộ tọa độ ngang với con quái (Cũ: 200px) */
+    
+    /* 🎯 RESPONSIVE VUÔNG LỌT LÒNG 1:1 */
+    width: 12vh !important;  /* 📌 Thu phóng theo chiều dọc vh (Cũ: 120px) */
+    height: 12vh !important;
+    
+    /* 🛡️ GIỚI HẠN TRẦN */
+    max-width: 120px !important;
+    max-height: 120px !important;
+    
     background-size: contain;
     background-repeat: no-repeat;
     display: none;
-    /* Kiểm soát phân tầng bằng JS: Mở ưu tiên 2 (z-850), Đóng ưu tiên 3 (z-840) */
 }
 
 /* Hiệu ứng khói tẩu thoát anim fbf vfx_smoke */
 #smoke-vfx {
     position: absolute;
-    bottom: 350px;
-    right: 200px;
-    width: 400px;
-    height: 400px;
-    /* 🎯 ĐÃ FIX: Chuyển về assets/ và đồng bộ đúng tên file viết hoa VFX_Smoke.png */
+    bottom: 35vh !important; /* 📌 Đồng bộ theo chân quái vật (Cũ: 350px) */
+    right: 12vw !important;  /* 📌 Đồng bộ theo tâm quái vật (Cũ: 200px) */
+    
+    /* 🎯 RESPONSIVE KHÓA KHUNG ANIMATION SHEETS VUÔNG 1:1 */
+    width: 40vh !important;  /* 📌 Thu phóng đồng bộ theo vh (Cũ: 400px) */
+    height: 40vh !important;
+    
+    /* 🛡️ GIỚI HẠN TRẦN */
+    max-width: 400px !important;
+    max-height: 400px !important;
+    
     background: url('assets/VFX_Smoke.png') no-repeat;
     display: none;
     z-index: 750; /* Z-layer ưu tiên 2 trên mob */
@@ -263,9 +323,10 @@
     animation: runSmokeSheet 0.5s steps(6) forwards;
 }
 
+/* ⚠️ CHÚ Ý GIỮ NGUYÊN HOÀN TOÀN TRỤC HOẠT ẢNH CỨNG CỦA SPRITESHEET FILE */
 @keyframes runSmokeSheet {
     from { background-position: 0 0; }
-    to { background-position: -1800px 0; }
+    to { background-position: -1800px 0; } /* Khóa cứng pixel dịch bước của phôi ảnh gốc */
 }
 
 /* 🌧️ CƠN MƯA SAO RƠI SHINY (Ưu tiên 2.5: z-index 650 - Trên Mob, Player nhưng DƯỚI TOÀN BỘ UI) */
@@ -280,10 +341,10 @@
 
 .shiny-star {
     position: absolute;
-    width: 30px; height: 30px;
-    /* 🎯 ĐÃ FIX: Chuyển về đường dẫn gốc assets/ */
+    width: 3vh !important;  /* 📌 Thay thế kích thước ngôi sao 30px cứng bằng 3% vh */
+    height: 3vh !important;
     background: url('assets/VFX_Star_Shiny.png') no-repeat center/contain;
-    top: -30px;
+    top: -4vh !important;   /* 📌 Ép ghim ẩn trên đầu lề đỉnh màn hình */
     opacity: 0;
     animation: shinyRainFall var(--fall-duration) linear forwards;
 }
