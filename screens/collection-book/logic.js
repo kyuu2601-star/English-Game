@@ -44,16 +44,16 @@ function renderCollectionBook() {
         // Nếu đã bắt được (count > 0) thì kích hoạt class 'unlocked' để sáng bừng lên
         card.className = `card-item ${count > 0 ? 'unlocked' : ''}`;
         
-        // 🎯 BẪY BẢO VỆ CHÍ MẠNG 2: Xử lý dứt điểm trường hợp cột Stars trên Sheet bị trống hoặc lỗi khoảng trắng
+        // 🎯 GIỮ NGUYÊN HOÀN TOÀN LOGIC CŨ + THÊM BẪY SẠCH RÁC KHOẢNG TRẮNG CỘT STARS
         let starLevel = mob.Stars ? mob.Stars.trim() : "";
         if (starLevel === "" || isNaN(starLevel)) {
-            starLevel = "1"; // Nếu dữ liệu lỗi, ép về phôi level 1 để giao diện không bị sập hay nổ 404
+            starLevel = "1"; // Nếu rỗng hoặc lỗi khoảng trắng, ép về phôi Card_lv1 mặc định để tránh sập 404
         }
         
         let imgName = isShiny ? `Card_lv${starLevel}_S.png` : `Card_lv${starLevel}.png`;
         
-        // 🎯 ĐÃ FIX ĐƯỜNG DẪN: Chọc thẳng vào thư mục asset nội bộ nằm trong main của screen theo cấu trúc mới
-        card.style.backgroundImage = `url('screens/collection-book/assets/${imgName}')`;
+        // 🎯 GIỮ NGUYÊN ĐƯỜNG DẪN GỐC ĐANG CHẠY TỐT CỦA FEN
+        card.style.backgroundImage = `url('assets/${imgName}')`;
 
         // Bơm đẩy cấu trúc HTML của tấm thẻ
         card.innerHTML = `
