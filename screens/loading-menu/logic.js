@@ -75,14 +75,20 @@ async function triggerDataFetching() {
             'assets/BG_Volcano.png'
         ];
 
-        // 🎯 ĐÃ SỬA: Gom link ảnh quái, phôi card lv từ Sheet chuẩn hóa tiền tố assets/
+        // 🎯 BẪY BẢO VỆ CHỐNG LỖI 404 KHI DỮ LIỆU GOOGLE SHEETS BỊ TRỐNG SỐ SAO
         globalMobList.forEach(mob => {
             if (mob.Image && mob.Image.trim() !== "") {
                 let cleanUrl = mob.Image.trim();
-                fullAssetsList.push(cleanUrl);
+        fullAssetsList.push(cleanUrl);
             }
-            fullAssetsList.push(`assets/Card_lv${mob.Stars}.png`);
-            fullAssetsList.push(`assets/Card_lv${mob.Stars}_S.png`);
+    
+            // Kiểm tra xem cột Stars có giá trị số hợp lệ từ 1-5 hay không
+            let starLevel = mob.Stars ? mob.Stars.trim() : "";
+            if (starLevel !== "" && !isNaN(starLevel)) {
+                // Chỉ khi có số sao hợp lệ mới nạp phôi thẻ vào hàng đợi cache
+                fullAssetsList.push(`screens/collection-book/assets/Card_lv${starLevel}.png`);
+                fullAssetsList.push(`screens/collection-book/assets/Card_lv${starLevel}_S.png`);
+            }
         });
 
         // Tự động quét sạch dấu cách trống gớm ghiếc thay bằng dấu gạch dưới _
