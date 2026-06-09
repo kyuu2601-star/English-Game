@@ -112,8 +112,8 @@
 }
 
 .menu-char-preview {
-    width: 300px; /* Thêm chiều ngang cố định để khung bao bọc ôm trọn phôi ảnh */
-    height: 500px;       /* 📌 NHÂN VẬT CAO ĐÚNG 500PX */
+    width: 400px; /* Thêm chiều ngang cố định để khung bao bọc ôm trọn phôi ảnh */
+    height: 600px;       /* 📌 NHÂN VẬT CAO ĐÚNG 500PX */
     background-size: contain;
     background-repeat: no-repeat;
     background-position: bottom center;
@@ -122,24 +122,27 @@
 /* Bệ đỡ Nametag_lv5 */
 /* 🎯 ĐÃ SỬA: Đưa về đường dẫn gốc 'assets/' */
 .player-nametag-wrapper {
-    width: 220px;
-    height: 55px;
+    width: 440px;
+    height: 110px;
     background: url('assets/Nametag_lv5.png') no-repeat center/contain;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: -10px;   
+    margin-top: -20px;   
     box-sizing: border-box;
 }
 
 #player-name-text {
     font-family: 'MyFredoka', sans-serif;
-    font-size: 1.1rem;
+    font-size: 2.5rem;
     color: #ffffff;      /* 📌 MÀU CHỮ TRẮNG TINH KHÔI */
     font-weight: bold;
     text-transform: uppercase;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8); 
-    text-align: center;
+    text-align: left;         /* 👈 ĐỔI TỪ: center -> THÀNH: left để canh lề trái */
+    padding-left: 50px;       /* 👈 THÊM MỚI: Đẩy chữ cách cạnh lề trái đúng 50px */
+    /* Nếu muốn an toàn không sợ chữ dài quá làm vỡ khung bệ đỡ, thêm dòng này (tùy chọn) */
+    box-sizing: border-box;
 }
 
 
