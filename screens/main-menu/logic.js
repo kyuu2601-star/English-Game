@@ -35,8 +35,8 @@ function enterMainMenuDirectly() {
     const avatarDisplay = document.getElementById('menu-avatar-display');
     const nameText = document.getElementById('player-name-text');
 
-    // Nạp phôi ảnh tướng 500px lùi cấp và ghi tên lên bệ Nametag_lv5
-    if (avatarDisplay) avatarDisplay.style.backgroundImage = `url('../../assets/Player_${gameState.gender === 'male' ? 'Male' : 'Female'}_Main.png')`;
+    // 🎯 ĐÃ SỬA: Đưa về đường dẫn gốc 'assets/' để chống lỗi trắng ảnh tướng trên GitHub Pages
+    if (avatarDisplay) avatarDisplay.style.backgroundImage = `url('assets/Player_${gameState.gender === 'male' ? 'Male' : 'Female'}_Main.png')`;
     if (nameText) nameText.innerText = gameState.username;
 
     // Kích hoạt hiển thị cụm nút Start/Collection và nhân vật lên màn hình
@@ -115,19 +115,19 @@ function openGenderSelectionStage() {
     const popupContent = document.querySelector('.login-popup-content');
     if (!popupContent) return;
 
-    // Trả lại nguyên bản cụm chọn tướng Andil / Alice cho fen check flow chọn nhân vật
+    // 🎯 ĐÃ SỬA: Chuẩn hóa toàn bộ ảnh thẻ Andil / Alice về tiền tố 'assets/'
     popupContent.innerHTML = `
         <h3>CHOOSE YOUR CHARACTER</h3>
         <div class="character-select-row">
             <div id="char-card-male" class="char-select-card" onclick="pickGender('male')">
-                <img src="../../assets/Player_Male_Main.png" alt="Male">
+                <img src="assets/Player_Male_Main.png" alt="Male">
                 <p>ANDIL</p>
             </div>
             
             <div style="font-family: 'MyFredoka'; font-weight: bold; color: #854d0e; font-size: 1.2rem;">VS</div>
 
             <div id="char-card-female" class="char-select-card" onclick="pickGender('female')">
-                <img src="../../assets/Player_Female_Main.png" alt="Female">
+                <img src="assets/Player_Female_Main.png" alt="Female">
                 <p>ALICE</p>
             </div>
         </div>
@@ -155,16 +155,19 @@ function finalizeNewPlayerSetup() {
 
     gameState.gender = selectedGenderTemp;
     
+    // Tạo sẵn phôi dữ liệu quái vật để hệ thống đọc/ghi không bị crash
+    let freshCaptured = {};
+    globalMobList.forEach(m => { if (m.ID) freshCaptured[m.ID] = 0; });
+
     // Nếu không phải là account hờ Kyuu thì mới cấp phôi rác rỗng để lưu trữ
     if (gameState.username !== "Kyuu") {
         gameState.coins = 0;
-        gameState.captured = {};
-        globalMobList.forEach(m => { if (m.ID) gameState.captured[m.ID] = 0; });
+        gameState.captured = freshCaptured;
         saveGameLocal(); // Lưu chặt vào Local Storage để lần sau mở máy tắt luôn popup login
     } else {
-        // Acc hờ Kyuu thì chỉ để test flow chọn tướng, gán tạm để hiện hình chứ cấm lưu rác vào máy
+        // 🎯 ĐÃ SỬA: Cấp phôi danh sách quái hờ cho tài khoản Kyuu để tránh lỗi crash tập tin khi click xem bộ sưu tập
         gameState.coins = 999;
-        gameState.captured = {};
+        gameState.captured = freshCaptured;
     }
 
     // Tắt phắt popup, giải phóng sảnh chính hiện nút và tướng 500px lên chào đón
