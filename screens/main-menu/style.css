@@ -11,13 +11,13 @@
     overflow: hidden;
 }
 
-/* 🧭 GÓC TRÊN BÊN PHẢI: Neo cách cạnh phải màn hình, 2 nút cách nhau 20px */
+/* 🧭 GÓC TRÊN BÊN PHẢI: Bộ nút mini cách cạnh phải 50px, cách nhau 20px */
 .menu-top-right-nav {
     position: absolute;
     top: 20px;
-    right: 50px; /* 📌 Neo cách cạnh phải màn hình 50px */
+    right: 50px; 
     display: flex;
-    gap: 20px;   /* 📌 2 nút mini cách nhau đúng 20px */
+    gap: 20px;   
     z-index: 15;
 }
 
@@ -50,32 +50,30 @@
     justify-content: flex-start; 
     height: 100%;
     position: relative;
-    padding-top: 100px; /* 📌 NEO LOGO: Luôn cách cạnh trên cùng màn hình đúng 100px */
+    padding-top: 100px; /* 📌 LOGO CÁCH TRẦN ĐÚNG 100PX */
     box-sizing: border-box;
     z-index: 5;
 }
 
-/* 🚀 ĐÃ FIX: Logo sạch bóng viền, bóng mờ, cấm hover hay tương tác chuột */
+/* Logo sạch bóng viền, cấm hover hay tương tác kéo chuột */
 .game-logo-main {
     width: 320px; 
     height: auto;
     object-fit: contain;
-    
-    margin-bottom: 50px; /* 📌 CỰM BTN NEO CÁCH LOGO: Luôn duy trì khoảng cách cách logo đúng 50px */
-    
+    margin-bottom: 50px; /* 📌 CỤM BTN CÁCH LOGO ĐÚNG 50PX */
     border: none !important;
     box-shadow: none !important;
     outline: none !important;
-    pointer-events: none; /* Khóa chết tương tác, cấm hover, cấm click */
-    user-select: none;    /* Cấm đè chuột kéo bôi đen ảnh */
+    pointer-events: none; 
+    user-select: none;    
 }
 
-/* 🕹️ CỤM NÚT GIAO DIỆN CHÍNH: 2 nút Start và Collection cách nhau 20px */
+/* Cụm nút sảnh: 2 nút dọc cách nhau đúng 20px */
 .menu-buttons-side {
-    display: flex;
+    display: none; /* Mặc định ẩn ngầm, JS sẽ kích hoạt hiển thị dạng 'flex' sau khi xác thực */
     flex-direction: column;
     align-items: center;
-    gap: 20px; /* 📌 2 nút Start và Collection cách nhau đúng 20px */
+    gap: 20px; 
 }
 
 .btn-main {
@@ -90,31 +88,35 @@
     outline: none;
 }
 
+#btn-start { background-image: url('../../assets/Btn_Start.png'); }
+#btn-start:active { background-image: url('../../assets/Btn_Start_Pressed.png'); }
+
+#btn-collection-menu { background-image: url('../../assets/Btn_Collection.png'); }
+#btn-collection-menu:active { background-image: url('../../assets/Btn_Collection_Pressed.png'); }
+
 
 /* ==========================================================================
    3. NHÂN VẬT ĐỨNG PHẢI 500PX & NAMETAG_LV5 CHỮ TRẮNG
    ========================================================================== */
-/* Khung hộp bọc tổ hợp tướng và tên bên phải */
 .menu-right-char-zone {
     position: absolute;
-    right: 80px;         /* Đẩy lùi sang bên phải màn hình */
-    bottom: 150px;       /* 📌 NEO CÁCH ĐÁY: Chân nhân vật neo cách đáy đúng 150px */
-    display: flex;
+    right: 80px;         
+    bottom: 150px;       /* 📌 CHÂN NHÂN VẬT CÁCH ĐÁY ĐÚNG 150PX */
+    display: none;       /* Mặc định ẩn ngầm, JS sẽ bật 'flex' cùng lúc với bộ nút sảnh */
     flex-direction: column;
     align-items: center;
     z-index: 10;
 }
 
-/* 🧍 CẤU HÌNH NHÂN VẬT CAO ĐÚNG 500PX THEO FEEDBACK */
 .menu-char-preview {
     width: auto; 
-    height: 500px;       /* 📌 Chiều cao nhân vật bự chảng đúng mốc 500px */
+    height: 500px;       /* 📌 NHÂN VẬT CAO ĐÚNG 500PX */
     background-size: contain;
     background-repeat: no-repeat;
     background-position: bottom center;
 }
 
-/* ❤️ BỆ ĐỠ NAMETAG_LV5 DƯỚI CHÂN NHÂN VẬT */
+/* Bệ đỡ Nametag_lv5 */
 .player-nametag-wrapper {
     width: 220px;
     height: 55px;
@@ -122,17 +124,88 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: -10px;   /* Ăn gian nhẹ đè lên chân nhân vật nhìn cho nghệ thuật */
+    margin-top: -10px;   
     box-sizing: border-box;
 }
 
-/* Chữ hiển thị tên người chơi lọt lòng trong bệ nametag */
 #player-name-text {
     font-family: 'MyFredoka', sans-serif;
     font-size: 1.1rem;
-    color: #ffffff;      /* 📌 MÀU CHỮ TRẮNG tinh khôi nổi bật trên bệ đỏ nametag_lv5 */
+    color: #ffffff;      /* 📌 MÀU CHỮ TRẮNG TINH KHÔI */
     font-weight: bold;
     text-transform: uppercase;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8); /* Thêm bóng mờ nhẹ để chữ dễ đọc */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8); 
     text-align: center;
+}
+
+
+/* ==========================================================================
+   4. POPUP ĐĂNG NHẬP CHỌN TƯỚNG (LOGIN POPUP MODAL)
+   ========================================================================== */
+.modal-overlay {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.75);
+    display: none; /* Kiểm soát đóng mở độc lập từ JS */
+    justify-content: center;
+    align-items: center;
+    z-index: 100; 
+}
+
+.login-popup-content {
+    background: #fef08a;
+    border: 6px solid #ca8a04;
+    border-radius: 24px;
+    padding: 25px;
+    width: 720px;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.login-popup-content h3 {
+    color: #854d0e; font-size: 1.6rem; margin-top: 0;
+    font-family: 'MyFredoka', sans-serif;
+}
+
+.character-select-row {
+    display: flex; justify-content: space-between; align-items: center; margin: 25px 0; gap: 15px;
+}
+
+.char-select-card {
+    background: white; border: 4px solid transparent; border-radius: 16px; padding: 10px;
+    cursor: pointer; width: 140px; transition: all 0.25s ease;
+}
+
+.char-select-card:hover { transform: scale(1.05); border-color: #fbbf24; box-shadow: 0 0 20px #fbbf24; }
+.char-select-card.selected { border-color: #22c55e; box-shadow: 0 0 20px #22c55e; background: #dcfce7; }
+.char-select-card img { width: 100%; height: 150px; object-fit: contain; }
+.char-select-card p { margin: 8px 0 0 0; font-weight: bold; color: #475569; font-size: 0.9rem; }
+
+.input-center-zone input {
+    padding: 12px 20px; font-size: 1.25rem; border-radius: 30px; border: 4px solid #ca8a04;
+    text-align: center; outline: none; font-family: 'MyFredoka'; width: 200px;
+}
+
+.btn-confirm-login {
+    width: 270px; height: 55px; border: none; cursor: pointer;
+    background: url('../../assets/UI_Answer_Box.png') no-repeat center/contain;
+    background-color: transparent; display: inline-flex; justify-content: center; align-items: center;
+    font-family: 'MyFredoka', sans-serif; font-size: 1.2rem; color: white; font-weight: bold;
+    text-transform: uppercase; margin-top: 15px; padding: 0;
+}
+
+.btn-confirm-login:active { background-image: url('../../assets/UI_Answer_Box_Pressed.png') !important; }
+
+
+/* ==========================================================================
+   5. HOẠT ẢNH HOẠT HỌA NHẸ (ANIMATIONS SYSTEM)
+   ========================================================================== */
+.animation-idle {
+    animation: menuBreath 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes menuBreath {
+    0% { transform: translateY(0) scaleY(1); }
+    100% { transform: translateY(-5px) scaleY(1.03); }
 }
