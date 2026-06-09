@@ -172,8 +172,8 @@
 
 /* Thanh tên: nằm ngay sát con mob, ăn vào -50px của con mob và phải đè lên nó */
 #mob-nametag {
-    width: 360px;
-    height: 90px;
+    width: 320px;
+    height: 80px;
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
@@ -182,7 +182,7 @@
     align-items: center;
     box-sizing: border-box;
     
-    margin-top: -50px; /* 📌 Ép ăn gian âm ngược lên -50px đè lên chân con quái vật */
+    margin-top: -80px; /* 📌 Ép ăn gian âm ngược lên -50px đè lên chân con quái vật */
     position: relative;
     z-index: 700;      /* Z-layer ưu tiên 2: Đè lên trên con Mob */
     transition: opacity 0.3s ease;
