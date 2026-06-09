@@ -1,5 +1,5 @@
 /* ==========================================================================
-   1. MÀN HÌNH NẠP TÀI NGUYÊN (BUNG LỤA FULLSCREEN + ĐÃ NẰM CHUNG CONTAINER)
+   1. MÀN HÌNH NẠP TÀI NGUYÊN (ÉP PHẲNG LAYER ĐỂ CHỐNG ĐÈ ẢNH)
    ========================================================================== */
 #loading-bar-container {
     position: absolute;
@@ -7,48 +7,64 @@
     left: 0;
     width: 100%;
     height: 100%;
-    /* 🎯 ĐÃ FIX: Chuyển thẳng ảnh nền sảnh chờ vào đây để hiện hình ngay lập tức, không lo bị rèm che */
+    /* Khóa chết ảnh nền nằm ở đáy cùng của container này */
     background: url('assets/Background_Loading.png') no-repeat center/cover !important;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    /* 📌 CĂN CHỈNH: Trục dọc đẩy các phần tử giãn ra 2 đầu (Logo ở đỉnh, thanh nạp ở đáy) */
-    justify-content: space-between; 
-    box-sizing: border-box;
-    padding: 60px 0 80px 0; /* Cách trần 60px cho thoáng Logo, cách lề đáy đúng 80px để neo thanh loading */
-    z-index: 999; /* Đảm bảo đè lên sảnh game chính lúc pre-load */
-    transition: opacity 0.8s ease-out; /* Hiệu ứng tan biến mượt mà khi nạp đủ 100% */
+    
+    /* 📌 QUAN TRỌNG: Chuyển sang relative để làm điểm tựa tọa độ cho Logo và Thanh Loading */
+    position: relative; 
+    
+    z-index: 999; 
+    transition: opacity 0.8s ease-out;
 }
 
 /* ==========================================================================
-   2. KHÓA CỨNG LOGO KHỔ LỚN HEIGHT 500PX
+   2. 🔥 ĐÃ SỬA: ÉP LOGO CAO 500PX PHẢI NỔI LÊN TRÊN HÌNH NỀN
    ========================================================================== */
 .game-logo {
-    height: 500px; /* 📌 ĐÃ SỬA: Ép cứng chiều cao Logo đạt chuẩn 500px theo yêu cầu */
-    width: auto;   /* Chiều ngang tự động co giãn theo tỷ lệ ảnh gốc để cấm bóp méo hình */
+    position: absolute;
+    top: 20px; /* Neo cách lề trên màn hình 20px cho đẹp bố cục */
+    left: 50%;
+    transform: translateX(-50%); /* Căn giữa hoàn hảo theo chiều ngang */
+    
+    height: 500px !important; /* 📌 Khóa chết chiều cao Logo đúng 500px theo ý fen */
+    width: auto;
     object-fit: contain;
+    
+    /* 🔥 ĐÂY RỒI: Cấp quyền ưu tiên hiển thị tối cao nội bộ để Logo trồi lên trên, 
+       bắt buộc tấm nền Background_Loading phải nằm rạp xuống dưới nó */
+    z-index: 99; 
+    
     border: none !important;
     box-shadow: none !important;
     outline: none !important;
-    pointer-events: none; /* Khóa chết cấm kéo thả chuột nhầm */
+    pointer-events: none; 
     user-select: none;
 }
 
 /* ==========================================================================
-   3. THANH TIẾN TRÌNH CỐT LÕI (ĐÃ BỊ ĐẨY XUỐNG ĐÁY MÀN HÌNH)
+   3. 🔥 ĐÃ SỬA: SÚT THANH LOADING XUỐNG ĐÁY VÀ NEO CÁCH CẠNH DƯỚI ĐÚNG 50PX
    ========================================================================== */
 .loading-bar-bg {
+    position: absolute;
+    /* 📌 KHÓA CHẾT TỌA ĐỘ: Ép thanh loading bám chặt vào cạnh dưới màn hình, 
+       cách lề đúng 50px, không cho phép bất kỳ thuộc tính nào đẩy nó lên trên đỉnh được nữa */
+    bottom: 50px !important; 
+    left: 50%;
+    transform: translateX(-50%); /* Căn giữa hoàn hảo theo chiều ngang */
+    
     width: 450px;
     height: 26px;
-    background: rgba(0, 0, 0, 0.75); /* Tăng độ tối nền thanh một chút cho nổi bật trên map */
+    background: rgba(0, 0, 0, 0.75); 
     border-radius: 15px;
     border: 3px solid #1e3a8a;
-    position: relative;
     overflow: hidden;
-    display: flex;
+    display: flex; /* Flex này chỉ dùng để căn chữ loading lọt lòng bên trong nó */
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); /* Thêm bóng đổ nhẹ cho thanh nạp thêm sinh động */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    
+    /* Đảm bảo thanh nạp nằm ở tầng trên cùng sát cánh với Logo */
+    z-index: 100; 
 }
 
 .loading-bar-fill {
@@ -66,7 +82,7 @@
     z-index: 3;
     color: white;
     font-size: 0.85rem;
-    text-shadow: 1px 1px #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000; /* Nẹp thêm viền chữ đen bao quanh chữ trắng chống tiệp màu nền */
+    text-shadow: 1px 1px #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
     font-family: 'MyFredoka', sans-serif;
     font-weight: bold;
 }
