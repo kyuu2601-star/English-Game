@@ -88,7 +88,7 @@
     bottom: 0px; /* Neo thẳng sát cạnh dưới màn hình */
     left: 50%;
     transform: translateX(-50%);
-    width: 1400px;  /* Chiều dài 1000px */
+    width: 1000px;  /* Chiều dài 1000px */
     height: 350px;  /* Chiều cao 350px */
     /* 🎯 ĐÃ FIX: Chuyển về đường dẫn gốc assets/ */
     background: url('assets/UI_Question_Box.png') no-repeat !important;
@@ -170,7 +170,7 @@
 /* Mob Node bọc cụm quái: scale 200x200 neo ở giữa khung hình bên phải (tầm 500px từ đỉnh) */
 .mob-node-box {
     position: absolute;
-    bot: 400px;    /* Neo cách cạnh trên màn hình tầm 500px */
+    bot: 300px;    /* Neo cách cạnh trên màn hình tầm 500px */
     right: 200px;   /* Đẩy lùi vào khu vực giữa khung hình bên phải */
     width: 200px;
     display: flex;
@@ -180,8 +180,8 @@
 }
 
 #mob-sprite {
-    width: 300px;  /* Scale đúng tỷ lệ 200px */
-    height: 300px; /* Scale đúng tỷ lệ 200px */
+    width: 350px;  /* Scale đúng tỷ lệ 200px */
+    height: 350px; /* Scale đúng tỷ lệ 200px */
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
