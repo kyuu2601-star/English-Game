@@ -4,7 +4,7 @@
 const MOBS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT-EFZn4iPTyVHW35NtYDWCwVH5mt6Vuw9kbAFNMm8CkLXzu31QdoK7vW18NdlKLXKKgZIH9YYFKqoh/pub?gid=0&single=true&output=csv";
 const QUESTIONS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT-EFZn4iPTyVHW35NtYDWCwVH5mt6Vuw9kbAFNMm8CkLXzu31QdoK7vW18NdlKLXKKgZIH9YYFKqoh/pub?gid=991631725&single=true&output=csv";
 const LOGIN_API_URL = "https://script.google.com/macros/s/AKfycbxKUEwFeIimX4oa0Rfsng7cOAXwoq17OOpMkd985y7tJl93fJOFAFJg6krFpq0fCZo/exec";
-const CACHE_NAME = 'mon-english-v1'; // 🎯 ĐỒNG BỘ CHUẨN KHO CACHE CỦA FEN
+const CACHE_NAME = 'mon-english-v1'; 
 
 // Trạng thái lưu trữ dùng chung xuyên suốt các file JS mô-đun
 let globalMobList = [];      
@@ -29,7 +29,7 @@ async function handleGamePreloadAndVersionControl() {
     console.log("🚀 [Loading Engine] Bắt đầu tiến trình kiểm tra và tải nạp tài nguyên thực tế...");
     const cache = await caches.open(CACHE_NAME);
 
-    // 🎯 TẦNG 1: DANH SÁCH FILE CODE TĨNH (ÉP BUỘC TẢI MỚI 100% TỪ GITHUB MỖI LẦN LOAD GAME)
+    // 🎯 TẦNG 1: DANH SÁCH FILE CODE TĨNH
     const coreCodes = [
         './global.css',
         './core-engine.js',
@@ -40,7 +40,7 @@ async function handleGamePreloadAndVersionControl() {
         './screens/collection-book/ui.html', './screens/collection-book/style.css', './screens/collection-book/logic.js'
     ];
 
-    // 🎯 TẦNG 2: DANH SÁCH ASSET HÌNH ẢNH/FONT (Hệ quy chiếu: Quét so sánh, thiếu mới tải bù)
+    // 🎯 TẦNG 2: DANH SÁCH ASSET HÌNH ẢNH/FONT
     const staticAssets = [
         './assets/Fredoka.ttf', './assets/PatrickHand.ttf', './assets/Game_Logo.png', './assets/Background_Loading.png',
         './assets/BG_Desert.png', './assets/BG_Forest.png', './assets/BG_Snow.png', './assets/BG_Volcano.png',
@@ -54,7 +54,6 @@ async function handleGamePreloadAndVersionControl() {
         './assets/Popup_Captured.png', './assets/Popup_Missed.png', './assets/VFX_Ball_Open.png', './assets/VFX_Ball_Close.png', './assets/VFX_Smoke.png', './assets/VFX_Star_Shiny.png'
     ];
 
-    // Tự động gộp toàn bộ link ảnh quái vật thực tế vừa fetch được từ file Sheets vào mảng Asset
     if (globalMobList && globalMobList.length > 0) {
         globalMobList.forEach(mob => {
             if (mob.Image && !staticAssets.includes(mob.Image)) {
@@ -63,27 +62,22 @@ async function handleGamePreloadAndVersionControl() {
         });
     }
 
-    // 🚀 TIẾN TRÌNH KHÓA CHẶT TRANG LOADING ĐỂ TẢI ĐỒNG LOẠT
     let totalTasks = coreCodes.length; 
     let completedTasks = 0;
 
-    // Hàm cập nhật tiến độ, tính % thực tế dựa trên số lượng file nạp
     function updateProgress() {
         completedTasks++;
         let percent = Math.floor((completedTasks / totalTasks) * 100);
         console.log(`⏳ [Loading Progress] Đang tải tài nguyên: ${percent}%`);
         
-        // Găm nẹp cập nhật text hiển thị % lên UI nếu file ui.html của loading-menu có thẻ này
         const progressText = document.getElementById('loading-progress-text');
         if (progressText) {
             progressText.innerText = `Loading... ${percent}%`;
         }
     }
 
-    // 1. Thực thi Tầng 1: Cưỡng bức tải mới 100% đống Code/CSS từ mạng về đè thẳng vào cache
     const codePromises = coreCodes.map(async (url) => {
         try {
-            // Sử dụng cờ { cache: 'reload' } để ép trình duyệt bỏ qua cache, lấy bản mới nhất trên GitHub về
             const response = await fetch(url, { cache: 'reload' });
             if (response.status === 200) {
                 await cache.put(url, response);
@@ -95,19 +89,16 @@ async function handleGamePreloadAndVersionControl() {
         }
     });
 
-    // Đợi đống Code/CSS nạp xong xuôi rồi mới tính toán số lượng Asset thực tế cần nạp bù
     await Promise.all(codePromises);
 
-    // 2. Thực thi Tầng 2: So sánh xem Asset nào chưa có trong máy thì mới ném vào hàng chờ tải bù
     const assetsToDownload = [];
     for (const url of staticAssets) {
         const hasCache = await cache.match(url);
         if (!hasCache) {
-            assetsToDownload.push(url); // File này máy user chưa có -> Bắt buộc tải
+            assetsToDownload.push(url); 
         }
     }
 
-    // Cập nhật lại tổng số task bằng cách cộng dồn số asset thiếu thực tế vào
     if (assetsToDownload.length > 0) {
         totalTasks += assetsToDownload.length;
 
@@ -121,25 +112,20 @@ async function handleGamePreloadAndVersionControl() {
             }
         });
 
-        // Khóa chặt màn hình Loading, đợi bằng được đống asset tải bù này chạy xong hoàn toàn
         await Promise.all(assetPromises);
     }
 
-    // 🎉 HOÀN THÀNH TẤT CẢ: Bộ đếm đạt 100%, tất cả code mới và asset thiếu đã nằm im trong ổ cứng
     console.log("🌟 [Pre-load] HOÀN THÀNH 100%! Game đã sẵn sàng khởi chạy.");
-    
-    // ĐỦ ĐIỀU KIỆN TỐI CAO -> Tắt rèm Loading, cho phép bước thẳng vào sảnh chính!
     changeScreen('menu');
 }
 
 // ==========================================
-// 🏗️ HÀM KHỞI CHẠY LÕI HỆ THỐNG (GAME ENGINE INIT)
+// 🏗️ HÀM KHỞI CHẠY LÕI HỆ THỐNG
 // ==========================================
 async function initGameEngine() {
     try {
         console.log("📥 [Engine] Fetching data from Google Sheets...");
         
-        // Fetch song song cả 2 link CSV từ Google Sheets về cùng một lúc cho nhanh
         const [mobsResponse, questionsResponse] = await Promise.all([
             fetch(MOBS_CSV_URL),
             fetch(QUESTIONS_CSV_URL)
@@ -148,24 +134,21 @@ async function initGameEngine() {
         const mobsText = await mobsResponse.text();
         const questionsText = await questionsResponse.text();
 
-        // Parse dữ liệu chữ thành mảng Object JavaScript dùng chung
         globalMobList = parseCSV(mobsText);
         globalQuestionList = parseCSV(questionsText);
 
         console.log(`✅ Loaded ${globalMobList.length} Mobs and ${globalQuestionList.length} Questions.`);
 
-        // 🎯 KÍCH HOẠT HÀM KIỂM SOÁT TÀI NGUYÊN TỰ ĐỘNG SO SÁNH TRƯỚC KHI VÀO GAME
         await handleGamePreloadAndVersionControl();
 
     } catch (error) {
         console.error("🚨 Lỗi chí mạng khi khởi chạy Game Engine:", error);
-        // Nếu sập mạng không fetch được Sheets thì vẫn cố cứu cánh cho vào thẳng menu để xài cache offline
         changeScreen('menu');
     }
 }
 
 // ==========================================
-// ⚙️ BỘ NẠP ĐỘNG: TỰ ĐỘNG NHÚNG FILE LOGIC.JS RIÊNG BIỆT
+// ⚙️ BỘ NẠP ĐỘNG & ĐIỀU HƯỚNG ROUTE
 // ==========================================
 async function loadScreen(screenName, callback) {
     const viewport = document.getElementById('game-viewport');
@@ -199,11 +182,7 @@ async function loadScreen(screenName, callback) {
     }
 }
 
-// ==========================================
-// 🧭 BỘ ĐIỀU HƯỚNG TỔNG (ROUTE MANAGER)
-// ==========================================
 function changeScreen(scrId) {
-    // Tự động dọn sạch vòng lặp mưa sao rơi của quái Shiny khi rời trận đấu
     if (shinyRainInterval) {
         clearInterval(shinyRainInterval);
         shinyRainInterval = null;
@@ -211,7 +190,6 @@ function changeScreen(scrId) {
 
     if (scrId === 'menu') {
         loadScreen('main-menu', () => {
-            // Gọi lại hàm khởi tạo sảnh chính có trong screens/main-menu/logic.js
             if (typeof initMainMenuLogic === 'function') {
                 initMainMenuLogic();
             }
@@ -219,7 +197,6 @@ function changeScreen(scrId) {
     }
     if (scrId === 'battle') {
         loadScreen('battle-stage', () => {
-            // Nạp tiền lên UI và kích hoạt lượt đấu mới trong screens/battle-stage/logic.js
             const coinText = document.getElementById('user-coins');
             if (coinText) coinText.innerText = gameState.coins;
             if (typeof nextBattleTurn === 'function') {
@@ -229,7 +206,6 @@ function changeScreen(scrId) {
     }
     if (scrId === 'collection') {
         loadScreen('collection-book', () => {
-            // Reset trang sách về 0 và vẽ lưới thẻ trong screens/collection-book/logic.js
             currentBookPage = 0;
             if (typeof renderCollectionBook === 'function') {
                 renderCollectionBook();
@@ -266,7 +242,6 @@ async function loginGame(inputUsername, inputPassword) {
 
         const response = await fetch(LOGIN_API_URL, {
             method: 'POST',
-            // 🎯 BÍ KÍP: Bắt buộc dùng text/plain để lách luật kiểm duyệt CORS của trình duyệt
             headers: { 'Content-Type': 'text/plain;charset=utf-8' },
             body: JSON.stringify({
                 username: inputUsername,
@@ -283,14 +258,14 @@ async function loginGame(inputUsername, inputPassword) {
             gameState.username = userData.username;
             gameState.coins = parseInt(userData.coins) || 0;
 
-            // 2. Dịch Gender (M/F) thành ID nhân vật game
+            // 2. 🎯 KIỂM TRA GIỚI TÍNH TÀI KHOẢN (TRỐNG CHO PHÉP TẠO MỚI)
             let genderChar = userData.gender ? userData.gender.toString().toUpperCase().trim() : "";
-            if (genderChar === 'M') {
-                gameState.gender = 'andil'; 
-            } else if (genderChar === 'F') {
-                gameState.gender = 'alice'; 
+            if (genderChar === 'M' || genderChar === 'MALE') {
+                gameState.gender = 'male'; 
+            } else if (genderChar === 'F' || genderChar === 'FEMALE') {
+                gameState.gender = 'female'; 
             } else {
-                gameState.gender = 'andil'; // Mặc định
+                gameState.gender = ''; // Để trống để báo hiệu là acc mới chưa chọn tướng
             }
 
             // 3. Nạp túi quái vật (Dạng JSON)
@@ -304,11 +279,14 @@ async function loginGame(inputUsername, inputPassword) {
             }
 
             console.log("✅ ĐĂNG NHẬP THÀNH CÔNG! Dữ liệu hiện tại:", gameState);
-            
-            // Tự động lưu cache Local luôn cho chắc cốp
-            saveGameLocal();
 
-            return true; // Trả về true để hàm UI biết mà đóng Popup
+            // ⚠️ Chỉ lưu Local nếu tài khoản đã chốt tướng (gender khác rỗng). 
+            // Acc mới tinh thì chờ chọn tướng xong hàm finalize bên logic.js mới lưu
+            if (gameState.gender !== '') {
+                saveGameLocal(); 
+            }
+
+            return true; 
         } else {
             alert("❌ Đăng nhập thất bại: " + result.message);
             return false;
@@ -321,7 +299,7 @@ async function loginGame(inputUsername, inputPassword) {
 }
 
 // ==========================================
-// 🚀 BOOTSTRAP: KHỞI ĐỘNG GAME TRỰC TIẾP TỪ LOADING MENU
+// 🚀 BOOTSTRAP: KHỞI ĐỘNG GAME 
 // ==========================================
 window.onload = function() {
     loadScreen('loading-menu', () => {
