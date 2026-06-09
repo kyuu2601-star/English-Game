@@ -52,6 +52,7 @@ function openLoginCredentialsPopup() {
     if (!loginPopup || !popupContent) return;
 
     // Tái cấu trúc ruột của Popup thành form nhập Tên + Mật khẩu chuẩn theo yêu cầu
+    // 🎯 ĐÃ SỬA: Thêm dòng text "Liên hệ Admin" ẩn sẵn ngay dưới nút LOGIN
     popupContent.innerHTML = `
         <h3>MON ENGLISH - USER LOGIN</h3>
         <div style="display: flex; flex-direction: column; align-items: center; gap: 15px; margin: 25px 0;">
@@ -63,6 +64,7 @@ function openLoginCredentialsPopup() {
             </div>
         </div>
         <button id="btn-login-submit" class="btn-confirm-login" onclick="handleAccountAuthentication()">LOGIN</button>
+        <p id="login-error-text" style="color: #ef4444; font-family: 'MyFredoka', sans-serif; font-size: 1.2rem; font-weight: bold; margin-top: 5px; display: none; text-shadow: 1px 1px 0 #fff;">Sai thông tin. Vui lòng liên hệ Admin!</p>
     `;
     
     loginPopup.style.display = "flex";
@@ -73,11 +75,21 @@ async function handleAccountAuthentication() {
     const nameInput = document.getElementById('login-input-username');
     const passInput = document.getElementById('login-input-password');
     const loginBtn = document.getElementById('btn-login-submit');
+    const errorText = document.getElementById('login-error-text');
     
     const username = nameInput ? nameInput.value.trim() : "";
     const password = passInput ? passInput.value.trim() : "";
 
-    if (!username || !password) { alert("Please fill in both Name and Password!"); return; }
+    // Ẩn text lỗi đi mỗi khi bắt đầu bấm nút lại
+    if (errorText) errorText.style.display = "none";
+
+    if (!username || !password) { 
+        if (errorText) {
+            errorText.innerText = "Vui lòng nhập đủ Name và Password!";
+            errorText.style.display = "block";
+        }
+        return; 
+    }
 
     // Đổi trạng thái nút bấm tránh spam click
     if (loginBtn) {
@@ -99,10 +111,14 @@ async function handleAccountAuthentication() {
             enterMainMenuDirectly();
         }
     } else {
-        // Nếu API báo sai Pass/User -> Mở lại nút để nhập lại
+        // Nếu API báo sai Pass/User -> Mở lại nút để nhập lại và hiện cảnh báo đỏ
         if (loginBtn) {
             loginBtn.innerText = "LOGIN";
             loginBtn.disabled = false;
+        }
+        if (errorText) {
+            errorText.innerText = "Sai thông tin. Vui lòng liên hệ Admin!";
+            errorText.style.display = "block";
         }
     }
 }
