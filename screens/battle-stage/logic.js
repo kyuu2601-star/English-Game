@@ -6,6 +6,13 @@ function nextBattleTurn() {
     const mobSprite = document.getElementById('mob-sprite');
     const mobTag = document.getElementById('mob-nametag');
     const popupBanner = document.getElementById('result-popup-banner');
+
+    const topNav = document.querySelector('.menu-top-right-nav'); // Hoặc id/class của cụm nút góc phải bên battle
+    if (topNav) {
+        topNav.style.display = "flex"; // Ép cụm nút bung ra dạng flex để hiện lên góc phải
+    }
+    
+    if (!mobSprite || !mobTag) return;
     
     if (!mobSprite || !mobTag) return;
 
