@@ -16,45 +16,43 @@
 }
 
 /* ==========================================================================
-   2. THIẾT LẬP CHUNG TOÀN GAME
+   2. THIẾT LẬP CHUNG TOÀN MÀN HÌNH (THẢ XÍCH TRÀN KHUNG)
    ========================================================================== */
-body {
-    margin: 0; padding: 0;
-    background: #16a34a; /* Nền xanh lá bên ngoài khung game */
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0; 
+    padding: 0;
+    background: #020617; /* Đổi sang tông nền tối mặc định của hệ thống */
     font-family: 'MyFredoka', sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
     overflow: hidden;
 }
 
 /* ==========================================================================
-   3. KHUNG VIEWPORT GAME CHUẨN TỶ LỆ CỨNG NGANG 16:9 (1024x576)
+   3. 🔥 ĐÃ SỬA: BIẾN GAME WINDOW THÀNH RESPONSIVE (BỎ ĐỘ RỘNG CỨNG 16:9)
    ========================================================================== */
 .game-window {
-    width: 1024px;
-    height: 576px;
-    background: #000;
+    width: 100%;       /* 📌 Tự động bung lụa theo toàn bộ chiều ngang thiết bị */
+    height: 100%;      /* 📌 Tự động bung lụa theo toàn bộ chiều cao thiết bị */
     position: relative;
-    box-shadow: 0 25px 60px rgba(0,0,0,0.4);
     overflow: hidden;
+    box-shadow: none;  /* Loại bỏ bóng viền đổ bóng cũ vì đã tràn viền hoàn toàn */
 }
 
-/* Đảm bảo viewport bọc ngoài luôn hiển thị 100% kích thước và cho phép con đè lên nhau */
+/* Viewport tổng luôn chiếm trọn 100% không gian màn hình */
 #game-viewport {
     width: 100%;
     height: 100%;
     position: relative;
-    background-color: #000; /* Nền đen gốc để phòng hờ ảnh chưa tải kịp */
+    background-color: #000; /* Nền đen gốc phòng hờ ảnh chưa tải kịp */
 }
 
 /* ==========================================================================
-   4. 🚀 ĐÃ FIX: ÉP TẤT CẢ WRAPPER CỦA CÁC SCREEN BUNG 100% KHÔNG BỊ CO RÚM
+   4. ÉP TẤT CẢ CÁC WRAPPER MÀN HÌNH CON TRÀN VIỀN TUYỆT ĐỐI
    ========================================================================== */
 .screen-style-wrapper,
 .battle-screen-layout,
-.collection-screen-layout { /* 📌 Bổ sung thêm class của màn Battle và Book để tụi nó ăn chung thuộc tính tràn viền */
+.collection-screen-layout { 
     width: 100%;
     height: 100%;
     position: absolute;
