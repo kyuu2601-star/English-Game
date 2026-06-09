@@ -210,12 +210,12 @@
 
 #mob-sprite {
     /* 🎯 RESPONSIVE KHÓA CHẾT TỶ LỆ VUÔNG 1:1 */
-    height: 35vh !important;   /* 📌 Thu phóng vuông vắn theo chiều dọc vh (Cũ: 350px) */
-    width: 35vh !important;
+    height: 45vh !important;   /* 📌 Thu phóng vuông vắn theo chiều dọc vh (Cũ: 350px) */
+    width: 45vh !important;
     
     /* 🛡️ GIỚI HẠN TRẦN */
-    max-width: 350px !important;
-    max-height: 350px !important;
+    max-width: 450px !important;
+    max-height: 450px !important;
     
     background-size: contain;
     background-repeat: no-repeat;
@@ -284,7 +284,7 @@
 #ball-vfx {
     position: absolute;
     bottom: 40vh !important; /* 📌 Đồng bộ nâng hạ theo vh trận đấu (Cũ: 400px) */
-    right: 12vw !important;  /* 📌 Đồng bộ tọa độ ngang với con quái (Cũ: 200px) */
+    right: 40vw !important;  /* 📌 Đồng bộ tọa độ ngang với con quái (Cũ: 200px) */
     
     /* 🎯 RESPONSIVE VUÔNG LỌT LÒNG 1:1 */
     width: 12vh !important;  /* 📌 Thu phóng theo chiều dọc vh (Cũ: 120px) */
