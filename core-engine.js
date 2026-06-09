@@ -3,6 +3,7 @@
 // ==========================================================================
 const MOBS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT-EFZn4iPTyVHW35NtYDWCwVH5mt6Vuw9kbAFNMm8CkLXzu31QdoK7vW18NdlKLXKKgZIH9YYFKqoh/pub?gid=0&single=true&output=csv";
 const QUESTIONS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT-EFZn4iPTyVHW35NtYDWCwVH5mt6Vuw9kbAFNMm8CkLXzu31QdoK7vW18NdlKLXKKgZIH9YYFKqoh/pub?gid=991631725&single=true&output=csv";
+const LOGIN_API_URL = "https://script.google.com/macros/s/AKfycbxKUEwFeIimX4oa0Rfsng7cOAXwoq17OOpMkd985y7tJl93fJOFAFJg6krFpq0fCZo/exec";
 const CACHE_NAME = 'mon-english-v1'; // 🎯 ĐỒNG BỘ CHUẨN KHO CACHE CỦA FEN
 
 // Trạng thái lưu trữ dùng chung xuyên suốt các file JS mô-đun
@@ -256,7 +257,72 @@ function saveGameLocal() {
     localStorage.setItem(`pkm_catch_${gameState.username}`, JSON.stringify(gameState));
 }
 
-// Vừa mở Web là kích hoạt gọi lớp rèm phủ Loading chạy tiến trình nạp
+// ==========================================================================
+// 🔐 HỆ THỐNG ĐĂNG NHẬP & XỬ LÝ DỮ LIỆU TỪ SHEET (API FETCH)
+// ==========================================================================
+async function loginGame(inputUsername, inputPassword) {
+    try {
+        console.log("🔄 Đang kết nối tới máy chủ Google Sheets...");
+
+        const response = await fetch(LOGIN_API_URL, {
+            method: 'POST',
+            // 🎯 BÍ KÍP: Bắt buộc dùng text/plain để lách luật kiểm duyệt CORS của trình duyệt
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({
+                username: inputUsername,
+                password: inputPassword
+            })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            let userData = result.data;
+
+            // 1. Nạp data cơ bản
+            gameState.username = userData.username;
+            gameState.coins = parseInt(userData.coins) || 0;
+
+            // 2. Dịch Gender (M/F) thành ID nhân vật game
+            let genderChar = userData.gender ? userData.gender.toString().toUpperCase().trim() : "";
+            if (genderChar === 'M') {
+                gameState.gender = 'andil'; 
+            } else if (genderChar === 'F') {
+                gameState.gender = 'alice'; 
+            } else {
+                gameState.gender = 'andil'; // Mặc định
+            }
+
+            // 3. Nạp túi quái vật (Dạng JSON)
+            try {
+                let rawJSON = userData.captured ? userData.captured.toString().trim() : "{}";
+                if (rawJSON === "") rawJSON = "{}";
+                gameState.captured = JSON.parse(rawJSON);
+            } catch (e) {
+                console.warn("⚠️ Cột Captured_List sai định dạng JSON. Reset túi đồ về 0.");
+                gameState.captured = {};
+            }
+
+            console.log("✅ ĐĂNG NHẬP THÀNH CÔNG! Dữ liệu hiện tại:", gameState);
+            
+            // Tự động lưu cache Local luôn cho chắc cốp
+            saveGameLocal();
+
+            return true; // Trả về true để hàm UI biết mà đóng Popup
+        } else {
+            alert("❌ Đăng nhập thất bại: " + result.message);
+            return false;
+        }
+    } catch (error) {
+        console.error("🚨 Lỗi Network:", error);
+        alert("Mất kết nối tới máy chủ. Vui lòng kiểm tra mạng!");
+        return false;
+    }
+}
+
+// ==========================================
+// 🚀 BOOTSTRAP: KHỞI ĐỘNG GAME TRỰC TIẾP TỪ LOADING MENU
+// ==========================================
 window.onload = function() {
     loadScreen('loading-menu', () => {
         if (typeof initGameEngine === 'function') {
