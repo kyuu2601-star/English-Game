@@ -3,7 +3,7 @@
 // ==========================================================================
 const MOBS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT-EFZn4iPTyVHW35NtYDWCwVH5mt6Vuw9kbAFNMm8CkLXzu31QdoK7vW18NdlKLXKKgZIH9YYFKqoh/pub?gid=0&single=true&output=csv";
 const QUESTIONS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT-EFZn4iPTyVHW35NtYDWCwVH5mt6Vuw9kbAFNMm8CkLXzu31QdoK7vW18NdlKLXKKgZIH9YYFKqoh/pub?gid=991631725&single=true&output=csv";
-const LOGIN_API_URL = "https://script.google.com/macros/s/AKfycbz114FGF8pNVGn_pFJOX9TnVltYFnpb0b4j0jffIVcBpV2LzbfsqmjPgNhvPZ2N8FY/exec";
+const LOGIN_API_URL = "https://script.google.com/macros/s/AKfycbzkXP46IjCrgdRjFq9hH1mQ8YHljlsUJWwk63wYIDjkaZ5S0Ua9Juox9CokgFt0MKs/exec";
 const CACHE_NAME = 'mon-english-v1'; 
 
 // 🎯 TẤT CẢ CHỈ SỐ ĐỂ TRỐNG/SỐ 0 ĐỂ GOOGLE SHEET NẠP XUỐNG
@@ -205,7 +205,6 @@ function changeScreen(scrId) {
             const energyText = document.getElementById('user-energy');
             
             if (coinText) coinText.innerText = gameState.coins;
-            // Nạp UI Energy linh hoạt không dính cứng /20
             if (energyText) energyText.innerText = gameState.energy; 
             
             if (typeof nextBattleTurn === 'function') {
@@ -242,15 +241,16 @@ function saveGameLocal() {
     localStorage.setItem(`pkm_catch_${gameState.username}`, JSON.stringify(gameState));
 }
 
-// 🎯 HÀM TRỪ NĂNG LƯỢNG (Chỉ hoạt động khi Energy > 0)
+// 🎯 HÀM TRỪ NĂNG LƯỢNG KÈM LƯU LÊN SHEET
 function consumeEnergy() {
     if (gameState.energy > 0) {
         gameState.energy -= 1;
         
         const energyText = document.getElementById('user-energy');
-        if (energyText) energyText.innerText = gameState.energy; // Linh hoạt hiển thị số hiện tại
+        if (energyText) energyText.innerText = gameState.energy; 
         
         saveGameLocal();
+        saveGameToSheet(); // 🚀 Bắn lệnh đồng bộ lên Sheet ngay và luôn
         return true; 
     }
     return false; 
@@ -259,14 +259,17 @@ function consumeEnergy() {
 // ==========================================================================
 // 🔐 HỆ THỐNG ĐĂNG NHẬP & XỬ LÝ DỮ LIỆU TỪ SHEET (API FETCH)
 // ==========================================================================
+
+// 🔓 1. HÀM ĐĂNG NHẬP (Nhận Data)
 async function loginGame(inputUsername, inputPassword) {
     try {
-        console.log("🔄 Đang kết nối tới máy chủ Google Sheets...");
+        console.log("🔄 Đang kết nối tới máy chủ Google Sheets (Login)...");
 
         const response = await fetch(LOGIN_API_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'text/plain;charset=utf-8' },
             body: JSON.stringify({
+                action: "login", // 🎯 Đã gài thêm cờ phân loại
                 username: inputUsername,
                 password: inputPassword
             })
@@ -298,7 +301,6 @@ async function loginGame(inputUsername, inputPassword) {
                 gameState.captured = {};
             }
 
-            // 🎯 Lấy trực tiếp năng lượng từ Sheet. Nếu admin để trống thì mặc định là 0 (hoặc số fen tự set trên Sheet)
             gameState.energy = parseInt(userData.energy) || 0;
 
             console.log("✅ ĐĂNG NHẬP THÀNH CÔNG! Dữ liệu hiện tại:", gameState);
@@ -313,8 +315,44 @@ async function loginGame(inputUsername, inputPassword) {
             return false;
         }
     } catch (error) {
-        console.error("🚨 Lỗi Network:", error);
+        console.error("🚨 Lỗi Network Login:", error);
         return false;
+    }
+}
+
+// 💾 2. HÀM LƯU DỮ LIỆU (Ghi đè Data)
+async function saveGameToSheet() {
+    // Chỉ lưu khi tài khoản đã xác thực rõ ràng
+    if (!gameState.username || gameState.username === "") return;
+
+    try {
+        // Ép kiểu chữ cho chuẩn form M/F
+        let sheetGender = "";
+        if (gameState.gender === 'male') sheetGender = "M";
+        else if (gameState.gender === 'female') sheetGender = "F";
+
+        const response = await fetch(LOGIN_API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({
+                action: "save", // 🎯 Cờ ra lệnh Ghi đè
+                username: gameState.username,
+                coins: gameState.coins,
+                gender: sheetGender,
+                captured: JSON.stringify(gameState.captured), // Chuyển túi đồ thành chuỗi Text
+                energy: gameState.energy
+            })
+        });
+
+        const result = await response.json();
+        
+        if (result.success) {
+            console.log("☁️ Đã sao lưu Cloud thành công!");
+        } else {
+            console.warn("☁️ Lỗi sao lưu Cloud:", result.message);
+        }
+    } catch (error) {
+        console.error("🚨 Lỗi Network Save:", error);
     }
 }
 
