@@ -17,12 +17,27 @@ function nextBattleTurn() {
     mobTag.style.opacity = "1";
     mobTag.style.zIndex = "700"; // Trả về z-layer ưu tiên 2 mặc định
     
-    if (popupBanner) { popupBanner.style.display = "none"; popupBanner.style.transform = "translate(-50%, -50%) scale(0)"; }
-    document.getElementById('smoke-vfx').className = "";
-    document.getElementById('smoke-vfx').style.display = "none";
-    document.getElementById('ball-vfx').style.display = "none";
+    if (popupBanner) { 
+        popupBanner.style.display = "none"; 
+        popupBanner.style.transform = "translate(-50%, -50%) scale(0)"; 
+    }
     
-    if (shinyRainInterval) { clearInterval(shinyRainInterval); shinyRainInterval = null; }
+    const smokeVfx = document.getElementById('smoke-vfx');
+    if (smokeVfx) {
+        smokeVfx.className = "";
+        smokeVfx.style.display = "none";
+    }
+    
+    const ballVfx = document.getElementById('ball-vfx');
+    if (ballVfx) {
+        ballVfx.style.display = "none";
+    }
+    
+    if (shinyRainInterval) { 
+        clearInterval(shinyRainInterval); 
+        shinyRainInterval = null; 
+    }
+    
     const container = document.getElementById('shiny-particles');
     if (container) container.innerHTML = "";
 
@@ -53,13 +68,17 @@ function nextBattleTurn() {
     // Đổi map nền ngẫu nhiên
     const maps = ['Desert', 'Forest', 'Snow', 'Volcano'];
     let randMap = maps[Math.floor(Math.random() * maps.length)];
-    document.getElementById('battle-field').style.backgroundImage = `url('../../assets/BG_${randMap}.png')`;
+    
+    // 🎯 ĐÃ FIX: Đưa về đường dẫn gốc 'assets/'
+    document.getElementById('battle-field').style.backgroundImage = `url('assets/BG_${randMap}.png')`;
     
     // Đổ phôi dữ liệu lên giao diện
     mobSprite.style.backgroundImage = `url('${currentMob.Image}')`;
-    mobTag.style.backgroundImage = `url('../../assets/Nametag_lv${stars}.png')`;
+    
+    // 🎯 ĐÃ FIX: Đưa về đường dẫn gốc 'assets/' cho thẻ tên quái và ảnh nhân vật quay lưng
+    mobTag.style.backgroundImage = `url('assets/Nametag_lv${stars}.png')`;
     document.getElementById('mob-name-text').innerText = currentMob.Name;
-    document.getElementById('player-sprite').style.backgroundImage = `url('../../assets/Player_${gameState.gender === 'male' ? 'Male' : 'Female'}_Back.png')`;
+    document.getElementById('player-sprite').style.backgroundImage = `url('assets/Player_${gameState.gender === 'male' ? 'Male' : 'Female'}_Back.png')`;
 
     // Trích xuất câu hỏi đồng cấp sao
     let qPool = globalQuestionList.filter(q => parseInt(q.Question_Stars) === stars);
@@ -107,14 +126,16 @@ function submitAnswer(chosen) {
         // 🟢 TRƯỜNG HỢP ĐÚNG: CAPTURED FLOW
         // ==========================================
         // 1. Hiện popup Captured (Ưu tiên 1 - z-index 999)
-        popupBanner.style.backgroundImage = "url('../../assets/Popup_Captured.png')";
+        // 🎯 ĐÃ FIX: Đưa về đường dẫn gốc 'assets/'
+        popupBanner.style.backgroundImage = "url('assets/Popup_Captured.png')";
         popupBanner.style.display = "block";
         popupBanner.style.transform = "translate(-50%, -50%) scale(1)";
         popupBanner.style.zIndex = "999";
 
         // 2. Xuất hiện quả cầu Ball Open (Ưu tiên 2 - z-index 850)
         if (ball) {
-            ball.style.backgroundImage = "url('../../assets/VFX_Ball_Open.png')";
+            // 🎯 ĐÃ FIX: Đưa về đường dẫn gốc 'assets/'
+            ball.style.backgroundImage = "url('assets/VFX_Ball_Open.png')";
             ball.style.display = "block";
             ball.style.zIndex = "850";
         }
@@ -129,7 +150,8 @@ function submitAnswer(chosen) {
         // 4. Đúng 0.2s (200ms) sau, tắt quả cầu Open đi, hiển thị quả cầu Close (Ưu tiên 3 - z-index 840)
         setTimeout(() => {
             if (ball) {
-                ball.style.backgroundImage = "url('../../assets/VFX_Ball_Close.png')";
+                // 🎯 ĐÃ FIX: Đưa về đường dẫn gốc 'assets/'
+                ball.style.backgroundImage = "url('assets/VFX_Ball_Close.png')";
                 ball.style.zIndex = "840";
             }
             
@@ -139,7 +161,8 @@ function submitAnswer(chosen) {
                 gameState.captured[currentMob.ID] += 1;
                 if (!isFirstTime) {
                     gameState.coins += (parseInt(currentMob.Stars) * 10);
-                    document.getElementById('user-coins').innerText = gameState.coins;
+                    const coinDisplay = document.getElementById('user-coins');
+                    if (coinDisplay) coinDisplay.innerText = gameState.coins;
                 }
                 saveGameLocal(); 
                 nextBattleTurn();
@@ -151,7 +174,8 @@ function submitAnswer(chosen) {
         // 🔴 TRƯỜNG HỢP SAI: MISSED FLOW
         // ==========================================
         // 1. Hiện popup Missed (Ưu tiên 1 - z-index 999)
-        popupBanner.style.backgroundImage = "url('../../assets/Popup_Missed.png')";
+        // 🎯 ĐÃ FIX: Đưa về đường dẫn gốc 'assets/'
+        popupBanner.style.backgroundImage = "url('assets/Popup_Missed.png')";
         popupBanner.style.display = "block";
         popupBanner.style.transform = "translate(-50%, -50%) scale(1)";
         popupBanner.style.zIndex = "999";
