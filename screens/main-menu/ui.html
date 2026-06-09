@@ -1,7 +1,7 @@
 <div class="loading-menu-bg">
     <div class="menu-top-right-nav">
-        <button id="btn-backpack" class="btn-mini-menu"></button>
-        <button id="btn-setting" class="btn-mini-menu"></button>
+        <button id="btn-backpack" class="btn-mini-menu" onclick="console.log('Open Backpack')"></button>
+        <button id="btn-setting" class="btn-mini-menu" onclick="console.log('Open Setting')"></button>
     </div>
 
     <div class="menu-content-core">
@@ -22,25 +22,18 @@
 
     <div id="login-popup" class="modal-overlay">
         <div class="login-popup-content">
-            <h3>WRITE YOUR NAME & CHOOSE YOUR CHARACTER</h3>
+            <h3>MON ENGLISH - USER LOGIN</h3>
             
-            <div class="character-select-row">
-                <div id="char-card-male" class="char-select-card" onclick="pickGender('male')">
-                    <img src="../../assets/Player_Male_Main.png" alt="Male Character">
-                    <p>ANDIL</p>
-                </div>
-                
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 15px; margin: 25px 0;">
                 <div class="input-center-zone">
-                    <input type="text" id="input-username" placeholder="Your Name..." maxlength="15">
+                    <input type="text" id="login-input-username" placeholder="Enter Username..." maxlength="15" style="width: 260px;">
                 </div>
-
-                <div id="char-card-female" class="char-select-card" onclick="pickGender('female')">
-                    <img src="../../assets/Player_Female_Main.png" alt="Female Character">
-                    <p>ALICE</p>
+                <div class="input-center-zone">
+                    <input type="password" id="login-input-password" placeholder="Enter Password..." maxlength="15" style="width: 260px; border-color: #ca8a04;">
                 </div>
             </div>
 
-            <button class="btn-confirm-login" onclick="confirmLogin()">CONFIRM</button>
+            <button class="btn-confirm-login" onclick="handleAccountAuthentication()">LOGIN</button>
         </div>
     </div>
 </div>
