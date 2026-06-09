@@ -117,6 +117,7 @@
     background-size: contain;
     background-repeat: no-repeat;
     background-position: bottom center;
+    z-index: 5;
 }
 
 /* Bệ đỡ Nametag_lv5 */
@@ -130,6 +131,7 @@
     align-items: center;
     margin-top: -20px;   
     box-sizing: border-box;
+    z-index: 10;
 }
 
 #player-name-text {
@@ -143,6 +145,7 @@
     padding-left: 50px;       /* 👈 THÊM MỚI: Đẩy chữ cách cạnh lề trái đúng 50px */
     /* Nếu muốn an toàn không sợ chữ dài quá làm vỡ khung bệ đỡ, thêm dòng này (tùy chọn) */
     box-sizing: border-box;
+    z-index: 12;
 }
 
 
