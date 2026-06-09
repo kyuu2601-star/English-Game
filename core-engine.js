@@ -51,7 +51,7 @@ async function loadScreen(screenName, callback) {
 }
 
 // ==========================================
-// 🧭 BỘ ĐIỀU HƯỚNG TỔNG (ROUTE MANAGER - ĐÃ CỨU SỐNG KHỎI 404 CRASH)
+// 🧭 BỘ ĐIỀU HƯỚNG TỔNG (ROUTE MANAGER)
 // ==========================================
 function changeScreen(scrId) {
     // Tự động dọn sạch vòng lặp mưa sao rơi của quái Shiny khi rời trận đấu
