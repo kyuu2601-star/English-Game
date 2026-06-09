@@ -195,7 +195,7 @@
     
     /* 🎯 RESPONSIVE POPUP: Tự bóp khi màn hình nhỏ, tối đa rộng 720px */
     width: 90vw !important;
-    max-width: 720px !important; 
+    max-width: 1000px !important; 
     
     text-align: center;
     box-sizing: border-box;
