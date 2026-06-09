@@ -95,7 +95,7 @@
     height: 100%;
     
     /* 🎯 ÉP TỶ LỆ THEO % KHÔNG GIAN: Khóa chiều cao lọt lòng ô lưới */
-    max-height: 48% !important; 
+    max-height: 100% !important; 
     max-width: 250px;
     
     /* 🎯 TRIỆT TIÊU MARGIN TỰ DO: Ép hít cứng hàng ngang, không cho tự tiện nhảy dọc */
@@ -108,8 +108,8 @@
 
 /* Ảnh quái vật bự chảng tự scale % lọt lòng tâm thẻ */
 .mob-thumb {
-    width: 75%;  
-    height: 75%; 
+    width: 100%;  
+    height: 100%; 
     object-fit: contain;
     position: absolute;
     top: 50%; left: 50%;
@@ -119,13 +119,12 @@
 /* Chữ tên quái vật nẹp viền thẻ */
 .card-title {
     position: absolute;
-    bottom: 5%;
+    top: 5%;
     font-family: 'MyFredoka', sans-serif;
     font-size: 0.95rem;
     color: #1e293b;
     font-weight: bold;
     text-align: center;
-    background: rgba(255, 255, 255, 0.85);
     padding: 2px 8px;
     border-radius: 10px;
 }
