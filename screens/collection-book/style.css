@@ -24,14 +24,11 @@
     top: 50%; left: 50%;
     transform: translate(-50%, -50%);
     
-    /* 🎯 ĐÃ ĐỔI: Nạp chuẩn ảnh phôi cuốn sách trần của fen */
     background: url('assets/Collection_Book.png') no-repeat center/contain;
     
-    /* Ép tỷ lệ vàng 16:9 tự co giãn theo chiều cao màn hình */
     height: 85vh !important;
-    width: calc(85vh * 1.777) !important; /* Hệ số 1.777 đảm bảo chuẩn form tỷ lệ 1920/1080 */
+    width: calc(85vh * 1.777) !important; 
     
-    /* 🛡️ RÀNG BUỘC TRẦN TỐI ĐA: Khóa chết kích thước lớn nhất khi màn hình quá to */
     max-width: 1920px !important;
     max-height: 1080px !important;
     
@@ -39,7 +36,7 @@
 }
 
 /* ==========================================================================
-   2. HAI TRANG SÁCH & LƯỚI THẺ BÀI (FORM 250x400 THẲNG HÀNG TẬP LỰ)
+   2. HỆ QUY CHIẾU CUỐN SÁCH & ĐỊNH VỊ ĐỘC LẬP TỪNG SLOT (TỶ LỆ 400x600)
    ========================================================================== */
 .book-container {
     position: absolute;
@@ -52,38 +49,18 @@
     max-height: 1080px !important;
 
     background: url('assets/ui/Collection_Book.png') no-repeat center/contain;
-    
-    display: flex;
-    justify-content: space-between; 
-    padding: 0; 
-    box-sizing: border-box;
     z-index: 5;
     
-    /* 🎯 KHÓA LỀ CON: Cho đống thẻ thụt vào trong lòng trang giấy */
-    padding-top: 10%;
-    padding-bottom: 12%;
-    padding-left: 7%;
-    padding-right: 7%;
+    /* Vô hiệu hóa flex/grid cũ để các slot con tự do găm tọa độ absolute */
+    display: block !important; 
 }
 
-/* Lưới chứa 4 thẻ bài trên một trang sách (Layout 2x2) */
-.book-page-grid {
-    width: 45%; /* Bóp nhẹ lại để né lề gáy sách */
-    height: 100%;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(2, 1fr);
-    gap: 4% 5%; /* Hàng 4%, Cột 5% giúp thẻ khít lề */
-    
-    /* 🎯 ÉP THẲNG HÀNG CHỐNG TRỒI SỤT: Căn tất cả các ô grid đều tắp theo đỉnh lề trên */
-    align-items: start; 
-}
-
-/* Khung viền của từng tấm thẻ bài quái vật (Tỷ lệ gốc 250x400) */
+/* 🎯 ĐỊNH VỊ CHUNG CHO TẤT CẢ THẺ BÀI QUÁI VẬT */
 .card-item {
-    position: relative;
-    background-size: 100% 100%;
+    position: absolute; /* Ép về định vị tuyệt đối để chạy theo tọa độ riêng biệt */
+    background-size: contain; 
     background-repeat: no-repeat;
+    background-position: center;
     border-radius: 12px;
     display: flex;
     justify-content: center;
@@ -91,21 +68,49 @@
     opacity: 0.3; 
     transition: opacity 0.3s ease;
     
-    width: 100%;
-    height: 100%;
+    /* 📐 CÂN ĐỐI KÍCH THƯỚC: Chiều ngang chiếm 13.5% tổng chiều rộng cuốn sách */
+    width: 13.5% !important;
+    max-width: 250px; 
     
-    /* 🎯 ÉP TỶ LỆ THEO % KHÔNG GIAN: Khóa chiều cao lọt lòng ô lưới */
-    max-height: 100% !important; 
-    max-width: 250px;
+    /* 🎯 ÉP TỶ LỆ VÀNG 400x600 CỦA FEN: Tự tính chiều cao chuẩn đét, chống bóp méo */
+    aspect-ratio: 400 / 600 !important; 
+    height: auto !important;
+    max-height: none !important;
     
-    /* 🎯 TRIỆT TIÊU MARGIN TỰ DO: Ép hít cứng hàng ngang, không cho tự tiện nhảy dọc */
-    margin: 0 auto !important; 
+    margin: 0 !important; /* Xóa margin auto cũ */
 }
 
 .card-item.unlocked {
     opacity: 1;
 }
 
+/* 👾 VỊ TRÍ ĐỊNH VỊ CHI TIẾT CHO CẢ 8 SLOT THẺ (TÍNH THEO % LỌT LÒNG CUỐN SÁCH) */
+/* --------------------------------------------------------------------------
+   👉 TRANG TRÁI (Slot 1 đến 4): Hệ lề left nằm từ 8.5% đến 25.5%
+   -------------------------------------------------------------------------- */
+/* Hàng Trên */
+.slot-1 { top: 12% !important; left: 8.5% !important; }
+.slot-2 { top: 12% !important; left: 25.5% !important; }
+
+/* Hàng Dưới */
+.slot-3 { top: 51% !important; left: 8.5% !important; }
+.slot-4 { top: 51% !important; left: 25.5% !important; }
+
+/* --------------------------------------------------------------------------
+   👉 TRANG PHẢI (Slot 5 đến 8): Hệ lề left nhảy sang bên kia gáy sách từ 58% đến 75%
+   -------------------------------------------------------------------------- */
+/* Hàng Trên */
+.slot-5 { top: 12% !important; left: 58% !important; }
+.slot-6 { top: 12% !important; left: 75% !important; }
+
+/* Hàng Dưới */
+.slot-7 { top: 51% !important; left: 58% !important; }
+.slot-8 { top: 51% !important; left: 75% !important; }
+
+
+/* ==========================================================================
+   3. CÁC THÀNH PHẦN TRONG THẺ BÀI (ẢNH MOBS & CHỮ)
+   ========================================================================== */
 /* Ảnh quái vật bự chảng tự scale % lọt lòng tâm thẻ */
 .mob-thumb {
     width: 100%;  
@@ -146,7 +151,7 @@
 }
 
 /* ==========================================================================
-   3. BỘ 2 NÚT DI CHUYỂN TRANG X3 SIZE - NEO SÁT ĐÁY 2 GÓC TRÁI PHẢI MÀN HÌNH
+   4. BỘ 2 NÚT DI CHUYỂN TRANG X3 SIZE - NEO RÌA TRÁI PHẢI ĐÁY MÀN HÌNH
    ========================================================================== */
 .book-pagination-zone {
     position: static; 
@@ -154,17 +159,13 @@
 
 .btn-page-turn {
     position: absolute;
-    
-    /* 🎯 ĐÃ PHÁ VÌ TRÍ CŨ: Đóng đinh sát lề đáy màn hình cách 40px */
-    bottom: 40px !important;
+    bottom: 0px !important;
     top: auto !important;
     transform: none !important;
     
-    /* 🎯 TĂNG SIZE X3 ĐỒNG BỘ: Dùng 24vh để tự scale to đùng theo màn hình user */
     width: 24vh !important;
     height: 24vh !important;
     
-    /* Phanh bóp trần chống vỡ phôi ảnh nút */
     max-width: 180px !important;  
     max-height: 180px !important;
     
@@ -180,7 +181,7 @@
 
 /* Nút PREVIOUS: Ghim chết lề đáy góc TRÁI màn hình */
 #btn-prev-page {
-    left: 40px !important;
+    left: -1px !important;
     right: auto !important;
     background-image: url('assets/Collection_Previous_Btn.png') !important;
 }
@@ -190,7 +191,7 @@
 
 /* Nút NEXT: Ghim chết lề đáy góc PHẢI màn hình */
 #btn-next-page {
-    right: 40px !important;
+    right: -1px !important;
     left: auto !important;
     background-image: url('assets/Collection_Next_Btn.png') !important;
 }
@@ -199,12 +200,10 @@
 }
 
 /* ==========================================================================
-   4. BỘ NÚT BATTLE & HOME NEO DỌC CẠNH PHẢI MÀN HÌNH (DỊCH LÊN TRÁNH ĐÈ THẺ)
+   5. BỘ NÚT BATTLE & HOME NEO DỌC CẠNH PHẢI MÀN HÌNH
    ========================================================================== */
 .collection-top-left-nav {
     position: absolute;
-    
-    /* 🎯 ĐÃ DỊCH CHUYỂN CAO LÊN: Đẩy lên top 25% để né không gian thẻ bài trang phải */
     top: 25% !important;
     right: 40px !important; 
     left: auto !important;  
