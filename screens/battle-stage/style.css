@@ -61,6 +61,23 @@
     background-color: transparent;
     outline: none;
 }
+/* 🔥 THÊM MỚI TOÀN BỘ ĐOẠN NÀY VÀO SAU .BTN-MINI ĐỂ HIỆN ẢNH NÚT */
+
+/* 1. Nút Quay về Sảnh (Back) */
+#btn-back-to-menu { background-image: url('assets/Btn_Back.png') !important; }
+#btn-back-to-menu:active { background-image: url('assets/Btn_Back_Pressed.png') !important; }
+
+/* 2. Nút Sách bộ sưu tập (Collection Book) */
+#btn-collection-book { background-image: url('assets/Btn_Collection.png') !important; }
+#btn-collection-book:active { background-image: url('assets/Btn_Collection_Pressed.png') !important; }
+
+/* 3. Nút Balo (Backpack) */
+#btn-backpack { background-image: url('assets/Btn_Backpack_Icon.png') !important; }
+#btn-backpack:active { background-image: url('assets/Btn_Backpack_Icon_Pressed.png') !important; }
+
+/* 4. Nút Cài đặt (Setting) */
+#btn-setting { background-image: url('assets/Btn_Setting_Icon.png') !important; }
+#btn-setting:active { background-image: url('assets/Btn_Setting_Icon_Pressed.png') !important; }
 
 /* ==========================================================================
    3. KHUNG CÂU HỎI & ĐÁP ÁN (Z-INDEX ƯU TIÊN 2: ~800 & ƯU TIÊN 1: ~900)
