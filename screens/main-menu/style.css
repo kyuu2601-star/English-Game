@@ -23,8 +23,8 @@
 }
 
 .btn-mini-menu {
-    width: 48px;
-    height: 48px;
+    width: 120px;
+    height: 120px;
     border: none;
     cursor: pointer;
     background-size: contain;
@@ -112,8 +112,10 @@
 }
 
 .menu-char-preview {
-    width: 400px; /* Thêm chiều ngang cố định để khung bao bọc ôm trọn phôi ảnh */
-    height: 600px;       /* 📌 NHÂN VẬT CAO ĐÚNG 500PX */
+    height: 65vh !important;       /* 👈 ĐỔI TỪ: 600px -> THÀNH: 65vh (Luôn chiếm tối đa 65% chiều cao màn hình) */
+    width: calc(65vh * 0.66) !important; /* 👈 ĐỔI TỪ: 400px -> THÀNH: Tự tính toán chiều ngang theo tỷ lệ ảnh gốc (400/600 ~ 0.66) */
+    max-height: 600px !important;  /* Khi màn hình quá to, nhân vật cũng không được vượt quá 600px */
+    max-width: 400px !important;   /* Khi màn hình quá to, chiều ngang không được vượt quá 400px */
     background-size: contain;
     background-repeat: no-repeat;
     background-position: bottom center;
