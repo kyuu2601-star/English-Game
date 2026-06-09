@@ -1,16 +1,17 @@
-<div class="screen-style-wrapper book-screen-layout">
+<div class="collection-screen-layout">
+    <div class="collection-top-left-nav">
+        <button id="btn-back-to-menu" class="btn-nav-book btn-back-main" onclick="changeScreen('menu')"></button>
+        <button id="btn-go-to-battle" class="btn-nav-book btn-battle-main" onclick="changeScreen('battle')"></button>
+    </div>
+
     <div class="book-container">
+        <div id="grid-page-left" class="book-page-grid"></div>
         
-        <button class="btn-home-style" onclick="changeScreen('menu')"></button>
-        
-        <div class="page-grid page-left" id="grid-page-left"></div>
+        <div id="grid-page-right" class="book-page-grid"></div>
+    </div>
 
-        <div class="page-grid page-right" id="grid-page-right"></div>
-
-        <div class="book-navigation-bar">
-            <button id="btn-book-prev" class="btn-page-nav" onclick="prevBookPage()"></button>
-            <button id="btn-book-next" class="btn-page-nav" onclick="nextBookPage()"></button>
-        </div>
-
+    <div id="book-pagination-controls" class="book-pagination-zone">
+        <button id="btn-prev-page" class="btn-page-turn" onclick="prevBookPage()">PREVIOUS</button>
+        <button id="btn-next-page" class="btn-page-turn" onclick="nextBookPage()">NEXT</button>
     </div>
 </div>
