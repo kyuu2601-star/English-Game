@@ -35,7 +35,7 @@ function renderCollectionBook() {
     let pageItems = globalMobList.slice(startIdx, startIdx + 8);
 
     pageItems.forEach((mob, index) => {
-        if (!mob.ID) return; // Bảo vệ: Bỏ qua các dòng rác nếu lỡ gõ dư trên Google Sheets
+        if (!mob.ID) return; // Bảo vệ 1: Bỏ qua các dòng rác nếu lỡ gõ dư trên Google Sheets
 
         let isShiny = /[a-zA-Z]$/.test(mob.ID);
         let count = gameState.captured[mob.ID] || 0;
@@ -44,11 +44,16 @@ function renderCollectionBook() {
         // Nếu đã bắt được (count > 0) thì kích hoạt class 'unlocked' để sáng bừng lên
         card.className = `card-item ${count > 0 ? 'unlocked' : ''}`;
         
-        // Nạp phôi ảnh nền thẻ bài lùi cấp chuẩn
-        let imgName = isShiny ? `Card_lv${mob.Stars}_S.png` : `Card_lv${mob.Stars}.png`;
+        // 🎯 BẪY BẢO VỆ CHÍ MẠNG 2: Xử lý dứt điểm trường hợp cột Stars trên Sheet bị trống hoặc lỗi khoảng trắng
+        let starLevel = mob.Stars ? mob.Stars.trim() : "";
+        if (starLevel === "" || isNaN(starLevel)) {
+            starLevel = "1"; // Nếu dữ liệu lỗi, ép về phôi level 1 để giao diện không bị sập hay nổ 404
+        }
         
-        // 🎯 ĐÃ FIX: Chuyển về đường dẫn gốc 'assets/' để chống lỗi 404 trên GitHub Pages
-        card.style.backgroundImage = `url('assets/${imgName}')`;
+        let imgName = isShiny ? `Card_lv${starLevel}_S.png` : `Card_lv${starLevel}.png`;
+        
+        // 🎯 ĐÃ FIX ĐƯỜNG DẪN: Chọc thẳng vào thư mục asset nội bộ nằm trong main của screen theo cấu trúc mới
+        card.style.backgroundImage = `url('screens/collection-book/assets/${imgName}')`;
 
         // Bơm đẩy cấu trúc HTML của tấm thẻ
         card.innerHTML = `
