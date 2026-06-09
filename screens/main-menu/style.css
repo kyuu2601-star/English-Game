@@ -38,6 +38,7 @@
     background-color: transparent;
     -webkit-tap-highlight-color: transparent;
     outline: none;
+    z-index: 90;
 }
 
 /* 🎯 ĐÃ SỬA: Đồng bộ đúng tên file thực tế có hậu tố _Icon chuẩn chỉnh trên Repo */
