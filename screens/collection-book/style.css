@@ -39,30 +39,44 @@
 }
 
 /* ==========================================================================
-   2. HAI TRANG SÁCH & LƯỚI THẺ BÀI (FORM 250x400 SCALE THEO BIÊN ĐỘ %)
+   2. HAI TRANG SÁCH & LƯỚI THẺ BÀI (FORM 250x400 THẲNG HÀNG TẬP LỰ)
    ========================================================================== */
-/* Khung chứa 2 trang sách lọt lòng: Định vị tuyệt đối bằng % của cuốn sách */
 .book-container {
     position: absolute;
-    top: 10%;     
-    bottom: 12%;  
-    left: 7%;     
-    right: 7%;    
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    
+    width: calc(85vh * 1.777) !important;
+    height: 85vh !important;
+    max-width: 1920px !important;
+    max-height: 1080px !important;
+
+    background: url('assets/ui/Collection_Book.png') no-repeat center/contain;
+    
     display: flex;
-    justify-content: space-between;
-    gap: 6%; /* Chừa khoảng không làm gáy sách ở giữa */
+    justify-content: space-between; 
+    padding: 0; 
     box-sizing: border-box;
-    z-index: 10;
+    z-index: 5;
+    
+    /* 🎯 KHÓA LỀ CON: Cho đống thẻ thụt vào trong lòng trang giấy */
+    padding-top: 10%;
+    padding-bottom: 12%;
+    padding-left: 7%;
+    padding-right: 7%;
 }
 
 /* Lưới chứa 4 thẻ bài trên một trang sách (Layout 2x2) */
 .book-page-grid {
-    width: 47%;
+    width: 45%; /* Bóp nhẹ lại để né lề gáy sách */
     height: 100%;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(2, 1fr);
-    gap: 4%; /* Khoảng cách giữa các thẻ tự co giãn theo % */
+    gap: 4% 5%; /* Hàng 4%, Cột 5% giúp thẻ khít lề */
+    
+    /* 🎯 ÉP THẲNG HÀNG CHỐNG TRỒI SỤT: Căn tất cả các ô grid đều tắp theo đỉnh lề trên */
+    align-items: start; 
 }
 
 /* Khung viền của từng tấm thẻ bài quái vật (Tỷ lệ gốc 250x400) */
@@ -77,12 +91,15 @@
     opacity: 0.3; 
     transition: opacity 0.3s ease;
     
-    /* 🎯 ÉP TỶ LỆ KHÓA CHẾT: Giữ form dáng 250x400 nhưng tự co giãn lọt lòng lưới */
     width: 100%;
     height: 100%;
+    
+    /* 🎯 ÉP TỶ LỆ THEO % KHÔNG GIAN: Khóa chiều cao lọt lòng ô lưới */
+    max-height: 48% !important; 
     max-width: 250px;
-    max-height: 400px;
-    margin: auto; /* Căn giữa lòng ô lưới */
+    
+    /* 🎯 TRIỆT TIÊU MARGIN TỰ DO: Ép hít cứng hàng ngang, không cho tự tiện nhảy dọc */
+    margin: 0 auto !important; 
 }
 
 .card-item.unlocked {
@@ -119,7 +136,7 @@
     top: 4%; right: 4%;
     background: url('assets/Tag_Icon.png') no-repeat center/contain;
     width: 14%; 
-    aspect-ratio: 1/1; /* Giữ nguyên hình vuông cho tag */
+    aspect-ratio: 1/1; 
     display: flex;
     justify-content: center;
     align-items: center;
@@ -130,23 +147,27 @@
 }
 
 /* ==========================================================================
-   3. BỘ 2 NÚT DI CHUYỂN TRANG NEO Ở 2 GÓC MÀN HÌNH (SCALE THEO VH)
+   3. BỘ 2 NÚT DI CHUYỂN TRANG X3 SIZE - NEO SÁT ĐÁY 2 GÓC TRÁI PHẢI MÀN HÌNH
    ========================================================================== */
-/* Dẹp bỏ cái zone cũ ở giữa, ép 2 nút dạt ra 2 biên màn hình độc lập */
 .book-pagination-zone {
-    position: static; /* Phá bỏ khung bọc cũ */
+    position: static; 
 }
 
 .btn-page-turn {
     position: absolute;
-    top: 50%;
-    transform: translateY(-50%); /* Căn giữa dọc màn hình */
     
-    /* Tự động scale kích thước nút dựa theo vh màn hình */
-    width: 8vh !important;
-    height: 8vh !important;
-    max-width: 80px;  /* Không cho to quá mức */
-    max-height: 80px;
+    /* 🎯 ĐÃ PHÁ VÌ TRÍ CŨ: Đóng đinh sát lề đáy màn hình cách 40px */
+    bottom: 40px !important;
+    top: auto !important;
+    transform: none !important;
+    
+    /* 🎯 TĂNG SIZE X3 ĐỒNG BỘ: Dùng 24vh để tự scale to đùng theo màn hình user */
+    width: 24vh !important;
+    height: 24vh !important;
+    
+    /* Phanh bóp trần chống vỡ phôi ảnh nút */
+    max-width: 180px !important;  
+    max-height: 180px !important;
     
     border: none;
     cursor: pointer;
@@ -158,18 +179,20 @@
     z-index: 30;
 }
 
-/* Nút PREVIOUS: Neo cứng rìa TRÁI màn hình cách 20px */
+/* Nút PREVIOUS: Ghim chết lề đáy góc TRÁI màn hình */
 #btn-prev-page {
-    left: 20px !important;
+    left: 40px !important;
+    right: auto !important;
     background-image: url('assets/Collection_Previous_Btn.png') !important;
 }
 #btn-prev-page:active {
     background-image: url('assets/Collection_Previous_Btn_Pressed.png') !important;
 }
 
-/* Nút NEXT: Neo cứng rìa PHẢI màn hình cách 20px */
+/* Nút NEXT: Ghim chết lề đáy góc PHẢI màn hình */
 #btn-next-page {
-    right: 20px !important;
+    right: 40px !important;
+    left: auto !important;
     background-image: url('assets/Collection_Next_Btn.png') !important;
 }
 #btn-next-page:active {
@@ -177,27 +200,27 @@
 }
 
 /* ==========================================================================
-   4. BỘ NÚT BATTLE & HOME NEO DỌC CẠNH PHẢI MÀN HÌNH (SCALE THEO VH)
+   4. BỘ NÚT BATTLE & HOME NEO DỌC CẠNH PHẢI MÀN HÌNH (DỊCH LÊN TRÁNH ĐÈ THẺ)
    ========================================================================== */
 .collection-top-left-nav {
     position: absolute;
-    top: 50%;
-    right: 40px !important; /* 📌 Neo sát cạnh PHẢI màn hình cách lề 40px */
-    left: auto !important;  /* Hủy bỏ lệnh lề trái cũ */
-    transform: translateY(-50%); /* Căn giữa dọc màn hình */
+    
+    /* 🎯 ĐÃ DỊCH CHUYỂN CAO LÊN: Đẩy lên top 25% để né không gian thẻ bài trang phải */
+    top: 25% !important;
+    right: 40px !important; 
+    left: auto !important;  
+    transform: none !important;
     
     display: flex;
-    flex-direction: column; /* 📌 Xếp hàng dọc theo yêu cầu */
-    gap: 15px !important;   /* 📌 Khoảng cách giữa 2 nút đúng 15px */
+    flex-direction: column; 
+    gap: 15px !important;   
     z-index: 40;
 }
 
 .btn-nav-book {
-    /* 🎯 TỰ ĐỘNG SCALE: Tính kích thước theo vh màn hình của user */
     width: 11vh !important;
     height: 11vh !important;
     
-    /* 🛡️ KHÓA TRẦN TỐI ĐA: Lớn nhất đúng bằng 120x120px */
     max-width: 120px !important;
     max-height: 120px !important;
     
