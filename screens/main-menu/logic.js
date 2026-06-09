@@ -28,7 +28,7 @@ function initMainMenuLogic() {
     openLoginCredentialsPopup();
 }
 
-// 🔓 HÀM 1: ĐI THẲNG VÀO SẢNH (Dành cho user cũ đã lưu trên máy)
+// 🔓 HÀM 1: ĐI THẲNG VÀO SẢNH (Dành cho user cũ đã lưu trên máy hoặc đăng nhập thành công)
 function enterMainMenuDirectly() {
     const menuControls = document.getElementById('menu-controls');
     const charZone = document.querySelector('.menu-right-char-zone');
@@ -62,52 +62,49 @@ function openLoginCredentialsPopup() {
                 <input type="password" id="login-input-password" placeholder="Enter Password..." maxlength="15" style="width: 260px; border-color: #ca8a04;">
             </div>
         </div>
-        <button class="btn-confirm-login" onclick="handleAccountAuthentication()">LOGIN</button>
+        <button id="btn-login-submit" class="btn-confirm-login" onclick="handleAccountAuthentication()">LOGIN</button>
     `;
     
     loginPopup.style.display = "flex";
 }
 
-// 🔐 HÀM 3: XỬ LÝ XÁC THỰC (Check Account ảo Kyuu / Hoặc Acc Local Storage cũ)
-function handleAccountAuthentication() {
+// 🔐 HÀM 3: XỬ LÝ XÁC THỰC KẾT HỢP API GOOGLE SHEETS
+async function handleAccountAuthentication() {
     const nameInput = document.getElementById('login-input-username');
     const passInput = document.getElementById('login-input-password');
+    const loginBtn = document.getElementById('btn-login-submit');
     
     const username = nameInput ? nameInput.value.trim() : "";
     const password = passInput ? passInput.value.trim() : "";
 
     if (!username || !password) { alert("Please fill in both Name and Password!"); return; }
 
-    // 🕵️ CHỖ KIỂM TRA TÀI KHOẢN HỜ (FAKE ACCOUNT THEO Ý FEN)
-    if (username === "Kyuu" && password === "123") {
-        alert("🔑 Fake Account Kyuu Connected! (Flow test gender activation)");
-        gameState.username = "Kyuu";
-        openGenderSelectionStage(); // Tài khoản hờ chưa có tướng -> Bật màn hình chọn Boy/Girl để fen check flow
-        return;
+    // Đổi trạng thái nút bấm tránh spam click
+    if (loginBtn) {
+        loginBtn.innerText = "LOADING...";
+        loginBtn.disabled = true;
     }
 
-    // Kiểm tra xem cái Tên này đã từng có dữ liệu lưu trữ trên hệ thống Local Storage của máy chưa
-    let localSaved = localStorage.getItem(`pkm_catch_${username}`);
-    
-    if (localSaved) {
-        // Tài khoản cũ quay lại đổi máy (hoặc nhập lại thông tin) -> Đăng nhập vào thẳng game luôn!
-        try {
-            let parsed = JSON.parse(localSaved);
-            gameState.username = username;
-            gameState.gender = parsed.gender || "male"; // Cứ lấy giới tính cũ đã lưu
-            gameState.coins = parsed.coins || 0;
-            gameState.captured = parsed.captured || {};
-            
+    // 🎯 GỌI HÀM FETCH API GOOGLE SHEETS TỪ CORE ENGINE
+    const isLoginSuccess = await loginGame(username, password);
+
+    if (isLoginSuccess) {
+        // Kiểm tra xem giới tính (Gender) lấy về từ Sheet có bị trống hay không
+        if (gameState.gender === "" || !gameState.gender) {
+            // 👉 TH1: TÀI KHOẢN MỚI TINH (Gender trống) -> Chuyển sang bước chọn nhân vật Nam/Nữ
+            openGenderSelectionStage();
+        } else {
+            // 👉 TH2: TÀI KHOẢN CŨ ĐÃ CHƠI (Có sẵn Gender) -> Đóng popup, vào thẳng sảnh chơi
             document.getElementById('login-popup').style.display = "none";
             enterMainMenuDirectly();
-            saveGameLocal();
-            return;
-        } catch (e) { console.error(e); }
+        }
+    } else {
+        // Nếu API báo sai Pass/User -> Mở lại nút để nhập lại
+        if (loginBtn) {
+            loginBtn.innerText = "LOGIN";
+            loginBtn.disabled = false;
+        }
     }
-
-    // Nếu là một cái Tên mới tinh chưa từng xuất hiện trên máy -> Khởi tạo làm tài khoản mới
-    gameState.username = username;
-    openGenderSelectionStage(); // Bật màn hình chọn 2 nhân vật Boy/Girl
 }
 
 // 🧍 HÀM 4: BẬT GIAO DIỆN CHỌN NHÂN VẬT (GENDER SELECTION BOX)
@@ -115,7 +112,6 @@ function openGenderSelectionStage() {
     const popupContent = document.querySelector('.login-popup-content');
     if (!popupContent) return;
 
-    // 🎯 ĐÃ SỬA: Chuẩn hóa toàn bộ ảnh thẻ Andil / Alice về tiền tố 'assets/'
     popupContent.innerHTML = `
         <h3>CHOOSE YOUR CHARACTER</h3>
         <div class="character-select-row">
@@ -149,28 +145,26 @@ function pickGender(g) {
     if (g === 'female' && cardFemale) cardFemale.classList.add('selected');
 }
 
-// 🏁 HÀM 5: CHÍNH THỨC CHỐT NHÂN VẬT & LƯU LOCAL STORAGE MÁY
+// 🏁 HÀM 5: CHÍNH THỨC CHỐT NHÂN VẬT & LƯU LẠI
 function finalizeNewPlayerSetup() {
     if (!selectedGenderTemp) { alert("Please click to choose either Andil or Alice!"); return; }
 
     gameState.gender = selectedGenderTemp;
     
-    // Tạo sẵn phôi dữ liệu quái vật để hệ thống đọc/ghi không bị crash
+    // Tạo sẵn phôi dữ liệu quái vật rỗng để hệ thống đọc/ghi không bị crash
     let freshCaptured = {};
-    globalMobList.forEach(m => { if (m.ID) freshCaptured[m.ID] = 0; });
-
-    // Nếu không phải là account hờ Kyuu thì mới cấp phôi rác rỗng để lưu trữ
-    if (gameState.username !== "Kyuu") {
-        gameState.coins = 0;
-        gameState.captured = freshCaptured;
-        saveGameLocal(); // Lưu chặt vào Local Storage để lần sau mở máy tắt luôn popup login
-    } else {
-        // 🎯 ĐÃ SỬA: Cấp phôi danh sách quái hờ cho tài khoản Kyuu để tránh lỗi crash tập tin khi click xem bộ sưu tập
-        gameState.coins = 999;
-        gameState.captured = freshCaptured;
+    if (globalMobList && globalMobList.length > 0) {
+        globalMobList.forEach(m => { if (m.ID) freshCaptured[m.ID] = 0; });
     }
 
-    // Tắt phắt popup, giải phóng sảnh chính hiện nút và tướng 500px lên chào đón
+    // Thiết lập thông số ban đầu cho tài khoản mới tinh
+    gameState.coins = gameState.coins || 0; // Nếu trên sheet có sẵn tiền thì giữ, không thì bằng 0
+    gameState.captured = (Object.keys(gameState.captured).length > 0) ? gameState.captured : freshCaptured;
+    
+    // Lưu chặt vào bộ nhớ máy để lần sau mở trình duyệt là tự vào thẳng sảnh không hiện popup
+    saveGameLocal();
+
+    // Tắt popup, giải phóng sảnh chính hiện nút và tướng lên chào đón
     document.getElementById('login-popup').style.display = "none";
     enterMainMenuDirectly();
 }
