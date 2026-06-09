@@ -170,7 +170,7 @@
 /* Mob Node bọc cụm quái: scale 200x200 neo ở giữa khung hình bên phải (tầm 500px từ đỉnh) */
 .mob-node-box {
     position: absolute;
-    bot: 260px;    /* Neo cách cạnh trên màn hình tầm 500px */
+    bottom: 330px;    /* Neo cách cạnh trên màn hình tầm 500px */
     right: 200px;   /* Đẩy lùi vào khu vực giữa khung hình bên phải */
     width: 200px;
     display: flex;
@@ -190,8 +190,8 @@
 
 /* Thanh tên: nằm ngay sát con mob, ăn vào -50px của con mob và phải đè lên nó */
 #mob-nametag {
-    width: 320px;
-    height: 80px;
+    width: 300px;
+    height: 75px;
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
@@ -235,10 +235,10 @@
 /* Quả cầu bắt quái (Bố trí găm giữa tim con quái) */
 #ball-vfx {
     position: absolute;
-    top: 550px;
-    right: 470px;
-    width: 60px;
-    height: 60px;
+    bottom: 400px;
+    right: 200px;
+    width: 120px;
+    height: 120px;
     background-size: contain;
     background-repeat: no-repeat;
     display: none;
@@ -248,10 +248,10 @@
 /* Hiệu ứng khói tẩu thoát anim fbf vfx_smoke */
 #smoke-vfx {
     position: absolute;
-    top: 450px;
-    right: 350px;
-    width: 300px;
-    height: 300px;
+    bottom: 350px;
+    right: 200px;
+    width: 400px;
+    height: 400px;
     /* 🎯 ĐÃ FIX: Chuyển về assets/ và đồng bộ đúng tên file viết hoa VFX_Smoke.png */
     background: url('assets/VFX_Smoke.png') no-repeat;
     display: none;
@@ -280,7 +280,7 @@
 
 .shiny-star {
     position: absolute;
-    width: 24px; height: 24px;
+    width: 30px; height: 30px;
     /* 🎯 ĐÃ FIX: Chuyển về đường dẫn gốc assets/ */
     background: url('assets/VFX_Star_Shiny.png') no-repeat center/contain;
     top: -30px;
