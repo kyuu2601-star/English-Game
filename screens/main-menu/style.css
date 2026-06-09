@@ -173,7 +173,7 @@
 }
 
 .character-select-row {
-    display: flex; justify-content: space-between; align-items: center; margin: 25px 0; gap: 15px;
+    display: flex; justify-content: center; align-items: center; margin: 25px 0; gap: 50px;
 }
 
 .char-select-card {
