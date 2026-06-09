@@ -254,8 +254,8 @@
 /* 🎯 ĐÃ SỬA: Đưa về đường dẫn gốc 'assets/' */
 .btn-confirm-login {
     /* 🎯 RESPONSIVE BTN CONFIRM */
-    width: 40vh !important;  /* 📌 Tự scale độ rộng nút (Cũ: 270px) */
-    height: 9vh !important; /* 📌 Tự scale độ cao nút (Cũ: 55px) */
+    width: 54vh !important;  /* 📌 Tự scale độ rộng nút (Cũ: 270px) */
+    height: 11vh !important; /* 📌 Tự scale độ cao nút (Cũ: 55px) */
     max-width: 540px !important;
     max-height: 110px !important;
     
