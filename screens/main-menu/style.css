@@ -28,8 +28,8 @@
     height: 12vh !important;
     
     /* 🛡️ KHÓA TRẦN CHỐNG BỂ RESOLUTION: Không cho phóng quá size ảnh gốc */
-    max-width: 120px !important;
-    max-height: 120px !important;
+    max-width: 240px !important;
+    max-height: 240px !important;
     
     border: none;
     cursor: pointer;
@@ -69,7 +69,7 @@
 /* Logo sạch bóng viền, tự scale mượt và phanh lại ở 320px */
 .game-logo-main {
     width: 32vh !important;       /* 📌 Chiều ngang co giãn linh hoạt theo tỷ lệ (Cũ: 320px) */
-    max-width: 320px !important;  /* 🛡️ Khóa cứng size gốc bảo vệ resolution nét căng */
+    max-width: 640px !important;  /* 🛡️ Khóa cứng size gốc bảo vệ resolution nét căng */
     height: auto;
     object-fit: contain;
     
@@ -95,8 +95,8 @@
     height: 6.6vh !important; /* 📌 Chiều cao nút tự co giãn đều (Cũ: 66px) */
     
     /* 🛡️ KHÓA TRẦN CHỐNG BỂ RESOLUTION: Giữ nguyên size chuẩn tối đa */
-    max-width: 200px !important;
-    max-height: 66px !important;
+    max-width: 400px !important;
+    max-height: 132px !important;
     
     border: none;
     cursor: pointer;
@@ -256,8 +256,8 @@
     /* 🎯 RESPONSIVE BTN CONFIRM */
     width: 27vh !important;  /* 📌 Tự scale độ rộng nút (Cũ: 270px) */
     height: 5.5vh !important; /* 📌 Tự scale độ cao nút (Cũ: 55px) */
-    max-width: 270px !important;
-    max-height: 55px !important;
+    max-width: 540px !important;
+    max-height: 110px !important;
     
     border: none; cursor: pointer;
     background: url('assets/UI_Answer_Box.png') no-repeat center/contain;
