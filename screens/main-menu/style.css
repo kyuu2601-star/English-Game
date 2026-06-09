@@ -125,13 +125,15 @@
 /* Bệ đỡ Nametag_lv5 */
 /* 🎯 ĐÃ SỬA: Đưa về đường dẫn gốc 'assets/' */
 .player-nametag-wrapper {
-    width: 440px;
-    height: 110px;
+    height: 12vh !important;       /* 👈 ĐỔI TỪ: 110px -> THÀNH: 12vh (Bằng ~18% chiều cao con nhân vật 65vh) */
+    width: calc(12vh * 4) !important; /* 👈 ĐỔI TỪ: 440px -> THÀNH: Tự tính toán chiều ngang theo tỷ lệ ảnh gốc (440/110 = 4) */
+    max-height: 110px !important;  /* Khi màn hình quá to, bệ tên không được vượt quá 110px */
+    max-width: 440px !important;   /* Chiều ngang không được vượt quá 440px */
+    margin-top: -2vh !important;   /* 👈 ĐỔI TỪ: -20px -> THÀNH: -2vh để không bị giãn khoảng cách khi zoom */
     background: url('assets/Nametag_lv5.png') no-repeat center/contain;
     display: flex;
     justify-content: center;
-    align-items: center;
-    margin-top: -20px;   
+    align-items: center;   
     box-sizing: border-box;
     z-index: 10;
 }
