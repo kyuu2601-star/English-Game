@@ -35,6 +35,8 @@ function renderCollectionBook() {
     let pageItems = globalMobList.slice(startIdx, startIdx + 8);
 
     pageItems.forEach((mob, index) => {
+        if (!mob.ID) return; // Bảo vệ: Bỏ qua các dòng rác nếu lỡ gõ dư trên Google Sheets
+
         let isShiny = /[a-zA-Z]$/.test(mob.ID);
         let count = gameState.captured[mob.ID] || 0;
         
@@ -44,7 +46,9 @@ function renderCollectionBook() {
         
         // Nạp phôi ảnh nền thẻ bài lùi cấp chuẩn
         let imgName = isShiny ? `Card_lv${mob.Stars}_S.png` : `Card_lv${mob.Stars}.png`;
-        card.style.backgroundImage = `url('../../assets/${imgName}')`;
+        
+        // 🎯 ĐÃ FIX: Chuyển về đường dẫn gốc 'assets/' để chống lỗi 404 trên GitHub Pages
+        card.style.backgroundImage = `url('assets/${imgName}')`;
 
         // Bơm đẩy cấu trúc HTML của tấm thẻ
         card.innerHTML = `
