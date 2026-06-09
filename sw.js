@@ -1,4 +1,8 @@
-const CACHE_NAME = 'mon-english-v1';
+// ==========================================================================
+// 🤖 SERVICE WORKER (PWA): CHIẾN THUẬT NETWORK-FIRST - KHẮC PHỤC TRIỆT ĐỂ LỖI CACHE
+// ==========================================================================
+
+const CACHE_NAME = 'mon-english-v1'; // 💡 Mẹo: Sau này nếu sửa nhiều, fen chỉ cần đổi v1 thành v2, v3 là máy user tự dọn sạch kho cũ
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -30,7 +34,7 @@ const ASSETS_TO_CACHE = [
   './screens/collection-book/logic.js'
 ];
 
-// Cài đặt Service Worker và ép nạp toàn bộ danh sách asset tĩnh vào Cache Storage
+// 📦 1. CÀI ĐẶT SW: Ép nạp phôi static ban đầu
 self.addEventListener('install', (e) => {
   e.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
@@ -40,7 +44,7 @@ self.addEventListener('install', (e) => {
   );
 });
 
-// Kích hoạt SW và dọn dẹp các cache cũ nếu fen có cập nhật phiên bản game sau này
+// 🗑️ 2. KÍCH HOẠT SW: Dọn dẹp triệt để các kho cache cũ rác rưởi
 self.addEventListener('activate', (e) => {
   e.waitUntil(
     caches.keys().then((keys) => {
@@ -56,23 +60,28 @@ self.addEventListener('activate', (e) => {
   );
 });
 
-// CHIẾN THUẬT FETCH: Đánh chặn request mạng, ưu tiên bốc từ Ổ cứng (Cache) ra trước, 
-// nếu không có (như ảnh quái vật mới từ Google Sheets) thì mới lên mạng tải và tự động lưu tiếp vào cache.
+// 🚀 3. CHIẾN THUẬT FETCH MỚI: LUÔN LÊN MẠNG QUÉT FILE MỚI, CHỈ DÙNG CACHE KHI MẤT MẠNG
 self.addEventListener('fetch', (e) => {
-  e.respondWith(
-    caches.match(e.request).then((cachedResponse) => {
-      if (cachedResponse) return cachedResponse; // Trả ảnh từ ổ cứng về ngay lập tức, siêu tốc 0.5s!
+  // Bỏ qua các request không phải http/https (như chrome-extension) để tránh lỗi crash console
+  if (!e.request.url.startsWith('http')) return;
 
-      return fetch(e.request).then((networkResponse) => {
-          // Bẫy lưu động: Nếu là ảnh quái vật (.png) tải từ bên ngoài về, tự lưu vào kho luôn
-          if (e.request.url.includes('.png') || e.request.url.includes('.ttf')) {
-              return caches.open(CACHE_NAME).then((cache) => {
-                  cache.put(e.request, networkResponse.clone());
-                  return networkResponse;
-              });
-          }
-          return networkResponse;
-      });
-    })
+  e.respondWith(
+    // 🔥 Ép lao thẳng lên mạng lấy file mới nhất về trước
+    fetch(e.request)
+      .then((networkResponse) => {
+        // Nếu lấy file từ mạng thành công (status 200), tiến hành cập nhật đè bản mới này vào kho cache
+        if (networkResponse.status === 200) {
+          const responseClone = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(e.request, responseClone);
+          });
+        }
+        return networkResponse;
+      })
+      .catch(() => {
+        // 🛡️ CỨU CÁNH CHÍ MẠNG: Chỉ khi nào rớt mạng hoàn toàn (offline), mới lôi file từ ổ cứng ra xài
+        console.log('🔌 [PWA] Bạn đang offline! Đang bốc file cứu cánh từ Cache Storage cho:', e.request.url);
+        return caches.match(e.request);
+      })
   );
 });
