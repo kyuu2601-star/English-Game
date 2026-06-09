@@ -68,8 +68,8 @@
 
 /* Logo sạch bóng viền, tự scale mượt và phanh lại ở 320px */
 .game-logo-main {
-    width: 32vh !important;       /* 📌 Chiều ngang co giãn linh hoạt theo tỷ lệ (Cũ: 320px) */
-    max-width: 640px !important;  /* 🛡️ Khóa cứng size gốc bảo vệ resolution nét căng */
+    width: 50vh !important;       /* 📌 Chiều ngang co giãn linh hoạt theo tỷ lệ (Cũ: 320px) */
+    max-width: 800px !important;  /* 🛡️ Khóa cứng size gốc bảo vệ resolution nét căng */
     height: auto;
     object-fit: contain;
     
