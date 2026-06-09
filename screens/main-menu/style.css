@@ -105,7 +105,7 @@
     background-color: transparent;
     -webkit-tap-highlight-color: transparent;
     outline: none;
-    z-index: 999;
+    z-index: 90;
 }
 
 /* 🎯 ĐÃ SỬA: Đưa về đường dẫn gốc 'assets/' */
