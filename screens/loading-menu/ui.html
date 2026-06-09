@@ -1,42 +1,10 @@
 <div class="screen-style-wrapper loading-menu-bg">
     <div class="menu-content-core">
-        <img src="assets/Game_Logo.png" alt="Logo" class="game-logo">
+        <img src="../../assets/Game_Logo.png" alt="Logo" class="game-logo">
         
         <div id="loading-bar-container" class="loading-bar-bg">
             <div id="loading-bar-fill" class="loading-bar-fill"></div>
             <span id="loading-text">In Loading...</span>
-        </div>
-
-        <div id="menu-controls" class="menu-layout-box">
-            <div class="menu-buttons-side">
-                <button id="btn-start" class="btn-main" onclick="changeScreen('battle')"></button>
-                <button id="btn-collection-menu" class="btn-main" onclick="changeScreen('collection')"></button>
-            </div>
-            <div id="menu-avatar-display" class="menu-char-preview animation-idle"></div>
-        </div>
-    </div>
-
-    <div id="login-popup" class="modal-overlay">
-        <div class="login-popup-content">
-            <h3>WRITE YOUR NAME & CHOOSE YOUR CHARACTER</h3>
-            
-            <div class="character-select-row">
-                <div id="char-card-male" class="char-select-card" onclick="pickGender('male')">
-                    <img src="assets/Player_Male_Main.png" alt="Male">
-                    <p>ANDIL</p>
-                </div>
-                
-                <div class="input-center-zone">
-                    <input type="text" id="input-username" placeholder="Your Name..." maxlength="15">
-                </div>
-
-                <div id="char-card-female" class="char-select-card" onclick="pickGender('female')">
-                    <img src="assets/Player_Female_Main.png" alt="Female">
-                    <p>ALICE</p>
-                </div>
-            </div>
-
-            <button class="btn-confirm-login" onclick="confirmLogin()">CONFIRM</button>
         </div>
     </div>
 </div>
