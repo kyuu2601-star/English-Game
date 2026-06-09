@@ -1,0 +1,198 @@
+/* ==========================================================================
+   1. KHUNG NỀN LAYOUT SẢNH CHÍNH
+   ========================================================================== */
+.loading-menu-bg {
+    background: url('../../assets/Background_Loading.png') no-repeat center/cover !important;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0; left: 0;
+    z-index: 1; /* Nền sảnh chính nằm dưới đáy */
+}
+
+.menu-content-core {
+    display: flex; /* 🚀 Trả về flex để hiển thị cấu trúc sảnh chính */
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start; 
+    height: 100%;
+    position: relative;
+    padding-top: 100px; /* Giữ nguyên khoảng cách neo logo của fen */
+    box-sizing: border-box;
+    z-index: 5; /* Nằm trên lớp nền nhưng nằm dưới lớp Loading phủ */
+}
+
+/* Điều khiển Logo Mon English */
+.menu-content-core img {
+    width: 320px; 
+    height: auto;
+    object-fit: contain;
+    margin-bottom: 20px;         
+    outline: none !important;
+    border: none !important;
+    -webkit-tap-highlight-color: transparent; 
+    user-select: none;                        
+    pointer-events: none;                     
+}
+
+/* ==========================================================================
+   2. BỘ ĐIỀU KHIỂN NÚT BẤM & NHÂN VẬT ĐẠI DIỆN
+   ========================================================================== */
+.menu-layout-box {
+    display: flex; 
+    flex-direction: column; 
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.menu-buttons-side {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.btn-main {
+    width: 200px;
+    height: 66px;
+    border: none;
+    cursor: pointer;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-color: transparent;
+}
+
+#btn-start { background-image: url('../../assets/Btn_Start.png'); }
+#btn-start:active { background-image: url('../../assets/Btn_Start_Pressed.png'); }
+
+#btn-collection-menu { background-image: url('../../assets/Btn_Collection.png'); }
+#btn-collection-menu:active { background-image: url('../../assets/Btn_Collection_Pressed.png'); }
+
+/* GIỮ NGUYÊN CẤU HÌNH CON ANDIL THEO YÊU CẦU CỦA FEN */
+.menu-char-preview {
+    width: 400px; 
+    height: auto; 
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: bottom center;
+}
+
+/* ==========================================================================
+   3. POPUP ĐĂNG NHẬP CHỌN NHÂN VẬT
+   ========================================================================== */
+.modal-overlay {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.75);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 20; /* Nằm trên sảnh chính nhưng dưới lớp rèm phủ Loading */
+}
+
+.login-popup-content {
+    background: #fef08a;
+    border: 6px solid #ca8a04;
+    border-radius: 24px;
+    padding: 25px;
+    width: 720px;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.login-popup-content h3 {
+    color: #854d0e;
+    font-size: 1.6rem;
+    margin-top: 0;
+    font-family: 'MyFredoka', sans-serif;
+}
+
+.character-select-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 25px 0;
+    gap: 15px;
+}
+
+.char-select-card {
+    background: white;
+    border: 4px solid transparent;
+    border-radius: 16px;
+    padding: 10px;
+    cursor: pointer;
+    width: 140px;
+    transition: all 0.25s ease;
+}
+
+.char-select-card:hover {
+    transform: scale(1.05);
+    border-color: #fbbf24;
+    box-shadow: 0 0 20px #fbbf24;
+}
+
+.char-select-card.selected {
+    border-color: #22c55e;
+    box-shadow: 0 0 20px #22c55e;
+    background: #dcfce7;
+}
+
+.char-select-card img {
+    width: 100%;
+    height: 150px;
+    object-fit: contain;
+}
+
+.char-select-card p {
+    margin: 8px 0 0 0;
+    font-weight: bold;
+    color: #475569;
+    font-size: 0.9rem;
+}
+
+.input-center-zone input {
+    padding: 12px 20px;
+    font-size: 1.25rem;
+    border-radius: 30px;
+    border: 4px solid #ca8a04;
+    text-align: center;
+    outline: none;
+    font-family: 'MyFredoka';
+    width: 200px;
+}
+
+.btn-confirm-login {
+    width: 270px;  
+    height: 55px;  
+    border: none;
+    cursor: pointer;
+    background: url('../../assets/UI_Answer_Box.png') no-repeat center/contain;
+    background-color: transparent; 
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'MyFredoka', sans-serif;
+    font-size: 1.2rem;
+    color: white; 
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-top: 15px;  
+    padding: 0;
+}
+
+.btn-confirm-login:active {
+    background-image: url('../../assets/UI_Answer_Box_Pressed.png') !important;
+}
+
+/* ==========================================================================
+   4. HỆ THỐNG ANIMATIONS HƠI THỞ IDLE
+   ========================================================================== */
+.animation-idle {
+    animation: menuBreath 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes menuBreath {
+    0% { transform: translateY(0) scaleY(1); }
+    100% { transform: translateY(-5px) scaleY(1.03); }
+}
