@@ -124,14 +124,14 @@ function openGenderSelectionStage() {
                 <p>ANDIL</p>
             </div>
             
-            <div style="font-family: 'MyFredoka'; font-weight: bold; color: #854d0e; font-size: 1.2rem;">VS</div>
+            <div style="font-family: 'MyFredoka'; font-weight: bold; color: #854d0e; font-size: 3rem;">OR</div>
 
             <div id="char-card-female" class="char-select-card" onclick="pickGender('female')">
                 <img src="assets/Player_Female_Main.png" alt="Female">
                 <p>ALICE</p>
             </div>
         </div>
-        <button class="btn-confirm-login" onclick="finalizeNewPlayerSetup()">CONFIRM CHARACTER</button>
+        <button class="btn-confirm-login" onclick="finalizeNewPlayerSetup()">CONFIRM</button>
     `;
     selectedGenderTemp = ""; // Reset biến tạm giới tính
 }
