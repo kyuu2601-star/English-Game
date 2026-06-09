@@ -137,7 +137,7 @@
 /* Số lượng quái bắt được nẹp ở góc thẻ */
 .card-tag {
     position: absolute;
-    top: 4%; right: 4%;
+    bottom: 10%; left: 6%;
     background: url('assets/Tag_Icon.png') no-repeat center/contain;
     width: 14%; 
     aspect-ratio: 1/1; 
@@ -148,6 +148,7 @@
     font-size: 0.85rem;
     color: white;
     font-weight: bold;
+    z-index: 60; 
 }
 
 /* ==========================================================================
