@@ -1,75 +1,71 @@
 /* ==========================================================================
-   1. LAYOUT NỀN & BỘ NÚT ĐIỀU HƯỚNG GÓC TRÊN TRÁI
+   1. LAYOUT NỀN & THẰNG CHA TỐI CAO ĐIỀU PHỐI SCALE (ĐƠN VỊ VH)
    ========================================================================== */
 .collection-screen-layout {
     width: 100%;
     height: 100%;
     position: relative;
-    /* 🎯 ĐÃ FIX: Chuyển về assets/ và thay đúng phôi nền chuyên dụng Background_Collection của fen */
-    background: url('assets/Background_Collection.png') no-repeat center/cover;
     overflow: hidden;
 }
 
-/* 🧭 GÓC TRÊN BÊN TRÁI: Neo cách lề trái 50px, 2 nút cách nhau 20px */
-.collection-top-left-nav {
+/* 🖼️ Tấm nền đáy phủ kín, tách biệt hoàn toàn không lo méo ảnh */
+#collection-bg {
     position: absolute;
-    top: 20px;
-    left: 50px; /* 📌 Neo cách cạnh trái màn hình 50px */
-    display: flex;
-    gap: 20px;   /* 📌 2 nút cách nhau đúng 20px */
-    z-index: 20;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('assets/Background_Collection.png') no-repeat center/cover;
+    z-index: 0;
 }
 
-.btn-nav-book {
-    width: 54px;
-    height: 54px;
-    border: none;
-    cursor: pointer;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-color: transparent;
-    outline: none;
+/* 📖 KHUNG CUỐN SÁCH TỔNG (Trần tối đa 1920x1080, tự động scale theo vh) */
+.collection-container {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    
+    /* 🎯 ĐÃ ĐỔI: Nạp chuẩn ảnh phôi cuốn sách trần của fen */
+    background: url('assets/Collection_Book.png') no-repeat center/contain;
+    
+    /* Ép tỷ lệ vàng 16:9 tự co giãn theo chiều cao màn hình */
+    height: 85vh !important;
+    width: calc(85vh * 1.777) !important; /* Hệ số 1.777 đảm bảo chuẩn form tỷ lệ 1920/1080 */
+    
+    /* 🛡️ RÀNG BUỘC TRẦN TỐI ĐA: Khóa chết kích thước lớn nhất khi màn hình quá to */
+    max-width: 1920px !important;
+    max-height: 1080px !important;
+    
+    z-index: 5;
 }
-
-/* 🎯 ĐÃ FIX: Chuyển về đường dẫn gốc assets/ */
-.btn-back-main { background-image: url('assets/Btn_Back.png'); }
-.btn-back-main:active { background-image: url('assets/Btn_Back_Pressed.png'); }
-
-/* Asset mới Battle Icon găm trạng thái Pressed chuẩn chỉ */
-.btn-battle-main { background-image: url('assets/Btn_Battle_Icon.png'); }
-.btn-battle-main:active { background-image: url('assets/Btn_Battle_Icon_Pressed.png'); }
-
 
 /* ==========================================================================
-   2. KHUNG CUỐN SÁCH CỔ & LƯỚI THẺ BÀI QUÁI VẬT
+   2. HAI TRANG SÁCH & LƯỚI THẺ BÀI (FORM 250x400 SCALE THEO BIÊN ĐỘ %)
    ========================================================================== */
+/* Khung chứa 2 trang sách lọt lòng: Định vị tuyệt đối bằng % của cuốn sách */
 .book-container {
     position: absolute;
-    top: 52%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 1100px;
-    height: 480px;
-    /* 🎯 ĐÃ FIX: Chuyển về đường dẫn gốc assets/ */
-    background: url('assets/UI_Question_Box.png') no-repeat center/contain; /* Tận dụng phôi khung thoại làm nền sách đôi */
+    top: 10%;     
+    bottom: 12%;  
+    left: 7%;     
+    right: 7%;    
     display: flex;
     justify-content: space-between;
-    padding: 40px 60px;
+    gap: 6%; /* Chừa khoảng không làm gáy sách ở giữa */
     box-sizing: border-box;
-    z-index: 5;
+    z-index: 10;
 }
 
 /* Lưới chứa 4 thẻ bài trên một trang sách (Layout 2x2) */
 .book-page-grid {
-    width: 46%;
+    width: 47%;
     height: 100%;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(2, 1fr);
-    gap: 15px;
+    gap: 4%; /* Khoảng cách giữa các thẻ tự co giãn theo % */
 }
 
-/* Khung viền của từng tấm thẻ bài quái vật */
+/* Khung viền của từng tấm thẻ bài quái vật (Tỷ lệ gốc 250x400) */
 .card-item {
     position: relative;
     background-size: 100% 100%;
@@ -77,47 +73,53 @@
     border-radius: 12px;
     display: flex;
     justify-content: center;
-    align-items: center; /* 📌 Đảm bảo mọi thứ bọc bên trong nén chặt ngay tâm thẻ */
-    opacity: 0.3; /* Mặc định bóng tối mờ căm nếu chưa bắt được quái */
+    align-items: center;
+    opacity: 0.3; 
     transition: opacity 0.3s ease;
+    
+    /* 🎯 ÉP TỶ LỆ KHÓA CHẾT: Giữ form dáng 250x400 nhưng tự co giãn lọt lòng lưới */
+    width: 100%;
+    height: 100%;
+    max-width: 250px;
+    max-height: 400px;
+    margin: auto; /* Căn giữa lòng ô lưới */
 }
 
-/* Sáng bừng lên khi quái vật đã được thu phục thành công */
 .card-item.unlocked {
     opacity: 1;
 }
 
-/* 👾 ĐÃ FIX: Ảnh quái vật bự chảng đúng scale 200x200px neo chuẩn giữa tâm thẻ */
+/* Ảnh quái vật bự chảng tự scale % lọt lòng tâm thẻ */
 .mob-thumb {
-    width: 200px;  /* 📌 Độ lớn chiều rộng 200px */
-    height: 200px; /* 📌 Độ lớn chiều cao 200px */
+    width: 75%;  
+    height: 75%; 
     object-fit: contain;
     position: absolute;
     top: 50%; left: 50%;
-    transform: translate(-50%, -50%); /* 📌 Khóa cứng vị trí ngay giữa trung tâm của tấm thẻ */
+    transform: translate(-50%, -50%);
 }
 
 /* Chữ tên quái vật nẹp viền thẻ */
 .card-title {
     position: absolute;
-    bottom: 12px;
+    bottom: 5%;
     font-family: 'MyFredoka', sans-serif;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     color: #1e293b;
     font-weight: bold;
     text-align: center;
     background: rgba(255, 255, 255, 0.85);
-    padding: 2px 10px;
+    padding: 2px 8px;
     border-radius: 10px;
 }
 
 /* Số lượng quái bắt được nẹp ở góc thẻ */
 .card-tag {
     position: absolute;
-    top: 10px; right: 10px;
-    /* 🎯 ĐÃ FIX: Chuyển về đường dẫn gốc assets/ */
+    top: 4%; right: 4%;
     background: url('assets/Tag_Icon.png') no-repeat center/contain;
-    width: 35px; height: 35px;
+    width: 14%; 
+    aspect-ratio: 1/1; /* Giữ nguyên hình vuông cho tag */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -127,39 +129,90 @@
     font-weight: bold;
 }
 
-
 /* ==========================================================================
-   3. BỘ NÚT CHUYỂN TRANG CHỮ TRẮNG (PREVIOUS / NEXT)
+   3. BỘ 2 NÚT DI CHUYỂN TRANG NEO Ở 2 GÓC MÀN HÌNH (SCALE THEO VH)
    ========================================================================== */
+/* Dẹp bỏ cái zone cũ ở giữa, ép 2 nút dạt ra 2 biên màn hình độc lập */
 .book-pagination-zone {
-    position: absolute;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 40px;
-    z-index: 10;
+    position: static; /* Phá bỏ khung bọc cũ */
 }
 
-/* Nút bấm chuyển trang tận dụng asset hộp đáp án */
 .btn-page-turn {
-    width: 180px;
-    height: 55px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%); /* Căn giữa dọc màn hình */
+    
+    /* Tự động scale kích thước nút dựa theo vh màn hình */
+    width: 8vh !important;
+    height: 8vh !important;
+    max-width: 80px;  /* Không cho to quá mức */
+    max-height: 80px;
+    
     border: none;
     cursor: pointer;
-    /* 🎯 ĐÃ FIX: Chuyển về đường dẫn gốc assets/ */
-    background: url('assets/UI_Answer_Box.png') no-repeat center/contain;
     background-color: transparent;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    outline: none;
+    z-index: 30;
+}
+
+/* Nút PREVIOUS: Neo cứng rìa TRÁI màn hình cách 20px */
+#btn-prev-page {
+    left: 20px !important;
+    background-image: url('assets/Collection_Previous_Btn.png') !important;
+}
+#btn-prev-page:active {
+    background-image: url('assets/Collection_Previous_Btn_Pressed.png') !important;
+}
+
+/* Nút NEXT: Neo cứng rìa PHẢI màn hình cách 20px */
+#btn-next-page {
+    right: 20px !important;
+    background-image: url('assets/Collection_Next_Btn.png') !important;
+}
+#btn-next-page:active {
+    background-image: url('assets/Collection_Next_Btn_Pressed.png') !important;
+}
+
+/* ==========================================================================
+   4. BỘ NÚT BATTLE & HOME NEO DỌC CẠNH PHẢI MÀN HÌNH (SCALE THEO VH)
+   ========================================================================== */
+.collection-top-left-nav {
+    position: absolute;
+    top: 50%;
+    right: 40px !important; /* 📌 Neo sát cạnh PHẢI màn hình cách lề 40px */
+    left: auto !important;  /* Hủy bỏ lệnh lề trái cũ */
+    transform: translateY(-50%); /* Căn giữa dọc màn hình */
     
-    font-family: 'MyFredoka', sans-serif;
-    font-size: 1.1rem;
-    color: #ffffff; /* 📌 CHỮ MÀU TRẮNG TINH KHÔI THEO YÊU CẦU */
-    font-weight: bold;
-    text-align: center;
+    display: flex;
+    flex-direction: column; /* 📌 Xếp hàng dọc theo yêu cầu */
+    gap: 15px !important;   /* 📌 Khoảng cách giữa 2 nút đúng 15px */
+    z-index: 40;
+}
+
+.btn-nav-book {
+    /* 🎯 TỰ ĐỘNG SCALE: Tính kích thước theo vh màn hình của user */
+    width: 11vh !important;
+    height: 11vh !important;
+    
+    /* 🛡️ KHÓA TRẦN TỐI ĐA: Lớn nhất đúng bằng 120x120px */
+    max-width: 120px !important;
+    max-height: 120px !important;
+    
+    border: none;
+    cursor: pointer;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-color: transparent;
     outline: none;
 }
 
-.btn-page-turn:active {
-    /* 🎯 ĐÃ FIX: Chuyển về đường dẫn gốc assets/ */
-    background-image: url('assets/UI_Answer_Box_Pressed.png');
-}
+/* Asset Home/Back */
+.btn-back-main { background-image: url('assets/Btn_Back.png') !important; }
+.btn-back-main:active { background-image: url('assets/Btn_Back_Pressed.png') !important; }
+
+/* Asset Battle Icon */
+.btn-battle-main { background-image: url('assets/Btn_Battle_Icon.png') !important; }
+.btn-battle-main:active { background-image: url('assets/Btn_Battle_Icon_Pressed.png') !important; }
