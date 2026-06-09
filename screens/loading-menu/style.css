@@ -1,45 +1,5 @@
 /* ==========================================================================
-   1. NỀN SẢNH CHỜ & LOGO (HIỂN THỊ CHUẨN ĐỊNH DẠNG THEO REPO ASSETS)
-   ========================================================================== */
-/* Hình nền sảnh chờ phủ kín tỷ lệ cứng */
-.loading-menu-bg {
-    background: url('../../assets/Background_Loading.png') no-repeat center/cover !important;
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0; 
-    left: 0;
-    z-index: 1; /* Nằm dưới đáy cùng */
-}
-
-/* Khung bọc trung tâm lo việc căn chỉnh Logo và nội dung */
-.menu-content-core {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    width: 100%;
-    height: 100%;
-    position: relative;
-    padding-top: 100px; /* Neo Logo cách cạnh trên màn hình đúng 100px */
-    box-sizing: border-box;
-    z-index: 5; /* Nằm trên hình nền nhưng vẫn dưới tấm rèm đen z-999 */
-}
-
-/* Khóa chết Logo: Sạch bóng viền, cấm tương tác kéo chuột hay click nhầm */
-.game-logo {
-    width: 320px;
-    height: auto;
-    object-fit: contain;
-    border: none !important;
-    box-shadow: none !important;
-    outline: none !important;
-    pointer-events: none;
-    user-select: none;
-}
-
-/* ==========================================================================
-   2. LỚP PHỦ TIẾN TRÌNH LOADING (CONTAINER OVERLAY PHỦ TRÊN CÙNG)
+   1. MÀN HÌNH NẠP TÀI NGUYÊN (BUNG LỤA FULLSCREEN + ĐÃ NẰM CHUNG CONTAINER)
    ========================================================================== */
 #loading-bar-container {
     position: absolute;
@@ -47,21 +7,40 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: #020617; /* Tấm màn tối phủ kín để che sảnh game bên dưới lúc đầu */
+    /* 🎯 ĐÃ FIX: Chuyển thẳng ảnh nền sảnh chờ vào đây để hiện hình ngay lập tức, không lo bị rèm che */
+    background: url('assets/Background_Loading.png') no-repeat center/cover !important;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    gap: 20px;
-    z-index: 999; /* 🔥 Đảm bảo z-index cao nhất để đè lên toàn bộ sảnh game ngầm */
-    transition: opacity 0.8s ease-out; /* Tạo hiệu ứng mờ dần (Fade-out) khi tải xong */
+    /* 📌 CĂN CHỈNH: Trục dọc đẩy các phần tử giãn ra 2 đầu (Logo ở đỉnh, thanh nạp ở đáy) */
+    justify-content: space-between; 
+    box-sizing: border-box;
+    padding: 60px 0 80px 0; /* Cách trần 60px cho thoáng Logo, cách lề đáy đúng 80px để neo thanh loading */
+    z-index: 999; /* Đảm bảo đè lên sảnh game chính lúc pre-load */
+    transition: opacity 0.8s ease-out; /* Hiệu ứng tan biến mượt mà khi nạp đủ 100% */
 }
 
-/* Thanh Tiến Trình Cốt Lõi */
+/* ==========================================================================
+   2. KHÓA CỨNG LOGO KHỔ LỚN HEIGHT 500PX
+   ========================================================================== */
+.game-logo {
+    height: 500px; /* 📌 ĐÃ SỬA: Ép cứng chiều cao Logo đạt chuẩn 500px theo yêu cầu */
+    width: auto;   /* Chiều ngang tự động co giãn theo tỷ lệ ảnh gốc để cấm bóp méo hình */
+    object-fit: contain;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    pointer-events: none; /* Khóa chết cấm kéo thả chuột nhầm */
+    user-select: none;
+}
+
+/* ==========================================================================
+   3. THANH TIẾN TRÌNH CỐT LÕI (ĐÃ BỊ ĐẨY XUỐNG ĐÁY MÀN HÌNH)
+   ========================================================================== */
 .loading-bar-bg {
     width: 450px;
     height: 26px;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.75); /* Tăng độ tối nền thanh một chút cho nổi bật trên map */
     border-radius: 15px;
     border: 3px solid #1e3a8a;
     position: relative;
@@ -69,6 +48,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); /* Thêm bóng đổ nhẹ cho thanh nạp thêm sinh động */
 }
 
 .loading-bar-fill {
@@ -86,6 +66,7 @@
     z-index: 3;
     color: white;
     font-size: 0.85rem;
-    text-shadow: 1px 1px #000;
+    text-shadow: 1px 1px #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000; /* Nẹp thêm viền chữ đen bao quanh chữ trắng chống tiệp màu nền */
     font-family: 'MyFredoka', sans-serif;
+    font-weight: bold;
 }
