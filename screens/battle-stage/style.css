@@ -1,35 +1,33 @@
 /* ==========================================================================
-   1. LAYOUT & SÂN KHẤU CHÍNH (MAIN SCREEN & STAGE)
+   1. KHUNG NỀN LAYOUT CHÍNH & TẤM BG PHỦ KÍN ĐA NỀN TẢNG
    ========================================================================== */
 .battle-screen-layout {
     width: 100%;
     height: 100%;
     position: relative;
-    background: #000;
+    overflow: hidden;
 }
 
-/* 🖼️ ĐÃ FIX: Ép ảnh nền Map phủ kín 100% toàn màn hình, xóa bỏ mảng đen */
-.battle-stage {
+/* 🖼️ Tấm BG phủ toàn bộ màn hình và scale theo tỷ lệ tự động (Object-fit Cover) */
+#battle-field {
     width: 100%;
     height: 100%; 
     position: absolute; 
-    top: 0;
-    left: 0;
+    top: 0; left: 0;
     background-size: cover;
     background-position: center;
-    z-index: 1; 
+    z-index: 0; /* Đáy cùng hệ thống */
 }
 
 /* ==========================================================================
-   2. THANH ĐIỀU HƯỚNG TOP NAV & BỘ NÚT MINI CHUẨN ASSET THẬT
+   2. TOP NAV & BỘ NÚT MINI GÓC TRÊN PHẢI (Z-INDEX ƯU TIÊN 1: >900)
    ========================================================================== */
-.top-nav-bar {
+/* Thanh hiển thị xu neo cách lề trên 10px */
+.coin-display-wrapper {
     position: absolute;
-    top: 15px; left: 15px; right: 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    z-index: 10;
+    top: 10px; 
+    left: 10px; /* Neo cách lề 10px */
+    z-index: 950; /* Z-layer ưu tiên 1 */
 }
 
 .coin-display {
@@ -43,9 +41,14 @@
     border: 2px solid #facc15;
 }
 
-.right-minis {
+/* Các btn neo ở phía trên góc phải màn hình, cách cạnh trái khoảng 20px, cách nhau 12px */
+.top-nav-bar-right {
+    position: absolute;
+    top: 10px;
+    right: 20px; /* Neo cách lề phải (cạnh trái cụm nút) 20px */
     display: flex;
-    gap: 12px;
+    gap: 12px;   /* Mỗi cái cách nhau đúng 12px */
+    z-index: 950; /* Z-layer ưu tiên 1 */
 }
 
 .btn-mini {
@@ -56,136 +59,65 @@
     background-size: contain;
     background-repeat: no-repeat;
     background-color: transparent;
+    outline: none;
 }
-
-.btn-back { background-image: url('../../assets/Btn_Back.png'); }
-.btn-back:active { background-image: url('../../assets/Btn_Back_Pressed.png'); }
-
-.btn-mini-book { background-image: url('../../assets/Btn_Collection_Icon.png'); }
-.btn-mini-book:active { background-image: url('../../assets/Btn_Collection_Icon_Pressed.png'); }
-
-.btn-backpack { background-image: url('../../assets/Btn_Backpack_Icon.png'); }
-.btn-backpack:active { background-image: url('../../assets/Btn_Backpack_Icon_Pressed.png'); }
-
-.btn-setting { background-image: url('../../assets/Btn_Setting_Icon.png'); }
-.btn-setting:active { background-image: url('../../assets/Btn_Setting_Icon_Pressed.png'); }
-
 
 /* ==========================================================================
-   3. KHU VỰC NHÂN VẬT & CỤM QUÁI THU NHỎ (SPRITES NODES COMPONENT)
+   3. KHUNG CÂU HỎI & ĐÁP ÁN (Z-INDEX ƯU TIÊN 2: ~800 & ƯU TIÊN 1: ~900)
    ========================================================================== */
-/* 🧍 ĐÃ FIX: Đẩy Player chạm sát cạnh dưới đáy màn hình */
-.sprite-player {
+/* Khung câu hỏi giữ scale chiều dài 1000px, cao 350px, neo thẳng sát cạnh dưới màn hình */
+.battle-dialogue-ui {
     position: absolute;
-    bottom: 0px; 
-    left: 60px;
-    width: 250px; 
-    height: 370px;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: bottom;
-    z-index: 3;
+    bottom: 0px; /* Neo thẳng sát cạnh dưới màn hình */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1000px;  /* Chiều dài 1000px */
+    height: 350px;  /* Chiều cao 350px */
+    background: url('../../assets/UI_Question_Box.png') no-repeat center/contain;
+    box-sizing: border-box;
+    z-index: 800;   /* Z-layer ưu tiên 2: Dưới nút bấm nhưng trên quái/tướng */
 }
 
-/* 👾 ĐÃ FIX: Gom cụm quái và thanh máu sát lại gần nhau, hạ thấp vị trí cho thoáng */
-.mob-node-box {
+/* Câu hỏi neo tại vị trí đáy màn hình 200px, cao tối đa 320px, ngang 950px ngay giữa khung */
+.question-zone {
     position: absolute;
-    top: 25px; 
-    right: 60px;
-    width: 400px; 
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start; 
-    gap: 0px; 
-    z-index: 5;
-}
-
-/* ĐÃ FIX: Thu nhỏ kích thước quái xuống 380px để chống tràn hình cho quái 5 sao */
-.sprite-mob {
-    width: 280px; 
-    height: 280px;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-}
-
-/* ❤️ ĐÃ FIX: Dùng margin âm kéo thanh Nametag/Máu hít sát dính chặt chân quái */
-.mob-nametag-plate {
-    width: 260px; 
-    height: 65px;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
+    bottom: 200px; /* Neo tính từ đáy màn hình lên 200px */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 950px;  /* Chiều ngang 950px đặt ngay giữa */
+    height: auto;
+    max-height: 120px; /* Khoảng trần cao nhất lọt lòng từ mốc 200px đến 320px đáy (320-200=120px) */
+    
+    font-family: 'MyPatrick', cursive;
+    font-size: 1.85rem;
+    color: #000000; /* Màu chữ đen chuẩn chỉ */
+    font-weight: bold;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 0 15px;
-    box-sizing: border-box;
-    margin-top: -75px; 
-}
-
-.mob-nametag-plate span {
-    font-family: 'MyFredoka', sans-serif;
-    font-size: 1.15rem;
-    color: #1e3a8a;
-    font-weight: bold;
-    text-transform: uppercase;
     text-align: center;
-}
-
-
-/* ==========================================================================
-   4. GIAO DIỆN HỘP CÂU HỎI & NÚT ĐÁP ÁN TIẾNG ANH LỌT LÒNG KHUNG
-   ========================================================================== */
-/* 📦 ĐÃ FIX: Tăng padding lề trái/phải lên 80px để ép 3 nút lùi sâu vào trong lòng khung vải */
-.battle-dialogue-ui {
-    position: absolute;
-    bottom: 8px; left: 50%;
-    transform: translateX(-50%);
-    width: 1000px; height: 250px;
-    background: url('../../assets/UI_Question_Box.png') no-repeat center/contain;
-    padding: 15px 80px; 
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    z-index: 10;
-}
-
-/* 📝 ĐÃ FIX: Ép chữ câu hỏi vào tâm, giới hạn vùng 100px, tự bẻ dòng khi quá dài */
-.question-zone {
-    height: 180px;
-    max-height: 2200px; 
-    font-family: 'MyPatrick', cursive;
-    font-size: 1.85rem;
-    color: #1e293b;
-    font-weight: bold;
-    display: flex;
-    justify-content: center; 
-    align-items: center; 
-    text-align: center; 
-    width: 100%; 
     word-break: break-word;
     white-space: normal;
-    padding: 0 20px; 
-    box-sizing: border-box;
+    z-index: 910;  /* Z-layer ưu tiên 1 */
 }
 
-/* 🕹️ ĐÃ FIX: Chuyển sang center và dùng gap kiểm soát khoảng cách (spacing) giữa 3 nút */
+/* Các câu trả lời: dài 300px, cao 100px, neo cách màn hình 50px (cạnh dưới) và cách nhau 20px */
 .answers-zone {
-    height: 65px;
+    position: absolute;
+    bottom: 50px; /* Neo cách đáy màn hình đúng 50px */
+    left: 50%;
+    transform: translateX(-50%);
     display: flex;
-    justify-content: center; 
+    justify-content: center;
     align-items: center;
-    gap: 10px; 
+    gap: 20px;    /* Mỗi nút cách nhau đúng 20px */
     width: 100%;
+    z-index: 910; /* Z-layer ưu tiên 1 */
 }
 
-/* ĐÃ FIX: Hạ nhẹ size xuống 240px x 50px cho gọn gàng, bao lọt lòng khung */
 .btn-answer {
-    width: 240px; 
-    height: 50px; 
+    width: 300px;  /* Chiều dài đúng 300px */
+    height: 100px; /* Chiều cao đúng 100px */
     border: none;
     cursor: pointer;
     color: white;
@@ -193,25 +125,115 @@
     background: url('../../assets/UI_Answer_Box.png') no-repeat center/contain;
     background-color: transparent;
     font-family: 'MyFredoka', sans-serif;
-    font-size: 1.15rem;
+    font-size: 1.3rem;
     text-align: center;
+    outline: none;
 }
-
-.btn-answer:active {
-    background-image: url('../../assets/UI_Answer_Box_Pressed.png');
-}
-
 
 /* ==========================================================================
-   5. HIỆU ỨNG VFX LAYERS (SMOKE, BALL, SHINY RAIN SYSTEM)
+   4. NHÂN VẬT & QUÁI VẬT (Z-INDEX ƯU TIÊN 3: ~600)
    ========================================================================== */
-.vfx-smoke-effect {
+/* Nhân vật: cao 450, ngang 300, neo cách cạnh phải màn hình 50px */
+#player-sprite {
     position: absolute;
-    top: 120px; right: 166px;
-    width: 300px; height: 300px;
-    background: url('../../assets/VFX_Smoke.png') no-repeat;
+    bottom: 0px; 
+    right: 50px;   /* Neo cách cạnh phải màn hình đúng 50px */
+    width: 300px;  /* Chiều ngang 300px */
+    height: 450px; /* Chiều cao 450px */
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: bottom center;
+    z-index: 600;  /* Z-layer ưu tiên 3: Nằm dưới khung câu hỏi */
+}
+
+/* Mob Node bọc cụm quái: scale 200x200 neo ở giữa khung hình bên phải (tầm 500px từ đỉnh) */
+.mob-node-box {
+    position: absolute;
+    top: 500px;    /* Neo cách cạnh trên màn hình tầm 500px */
+    right: 400px;   /* Đẩy lùi vào khu vực giữa khung hình bên phải */
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 600;  /* Z-layer ưu tiên 3 */
+}
+
+#mob-sprite {
+    width: 200px;  /* Scale đúng tỷ lệ 200px */
+    height: 200px; /* Scale đúng tỷ lệ 200px */
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    transition: transform 0.5s linear, opacity 0.4s ease;
+}
+
+/* Thanh tên: nằm ngay sát con mob, ăn vào -50px của con mob và phải đè lên nó */
+#mob-nametag {
+    width: 180px;
+    height: 45px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    
+    margin-top: -50px; /* 📌 Ép ăn gian âm ngược lên -50px đè lên chân con quái vật */
+    position: relative;
+    z-index: 700;      /* Z-layer ưu tiên 2: Đè lên trên con Mob */
+    transition: opacity 0.3s ease;
+}
+
+#mob-name-text {
+    font-family: 'MyFredoka', sans-serif;
+    font-size: 0.95rem;
+    color: #ffffff;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px #000;
+}
+
+/* ==========================================================================
+   5. HIỆU ỨNG VFX LAYERS & POPUPS KẾT QUẢ (Z-INDEX PHÂN TẦNG TUYỆT ĐỐI)
+   ========================================================================== */
+/* Hệ thống biển báo Popup thông báo kết quả (Scale chuẩn 1000x200px) */
+.result-popup-banner {
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    width: 1000px; /* Kích thước vàng 1000px */
+    height: 200px; /* Kích thước vàng 200px */
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
     display: none;
-    z-index: 6;
+    z-index: 999; /* 🔥 Z-layer ưu tiên 1: Đè lên trên đầu tất cả mọi thứ */
+}
+
+/* Quả cầu bắt quái (Bố trí găm giữa tim con quái) */
+#ball-vfx {
+    position: absolute;
+    top: 550px;
+    right: 470px;
+    width: 60px;
+    height: 60px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    display: none;
+    /* Kiểm soát phân tầng bằng JS: Mở ưu tiên 2 (z-850), Đóng ưu tiên 3 (z-840) */
+}
+
+/* Hiệu ứng khói tẩu thoát anim fbf vfx_smoke */
+#smoke-vfx {
+    position: absolute;
+    top: 450px;
+    right: 350px;
+    width: 300px;
+    height: 300px;
+    background: url('../../assets/vfx_smoke.png') no-repeat;
+    display: none;
+    z-index: 750; /* Z-layer ưu tiên 2 trên mob */
 }
 
 .play-smoke {
@@ -224,61 +246,28 @@
     to { background-position: -1800px 0; }
 }
 
-.vfx-ball-effect {
-    position: absolute;
-    top: 240px; right: 286px;
-    width: 60px; height: 60px;
-    background-size: contain;
-    background-repeat: no-repeat;
-    display: none;
-    z-index: 7;
-}
-
+/* 🌧️ CƠN MƯA SAO RƠI SHINY (Ưu tiên 2.5: z-index 650 - Trên Mob, Player nhưng DƯỚI TOÀN BỘ UI) */
 .shiny-container {
     position: absolute;
     top: 0; left: 0;
-    width: 100%; height: 385px;
+    width: 100%; height: 100%;
     pointer-events: none;
     overflow: hidden;
-    z-index: 1; 
+    z-index: 650; /* 🔥 Ưu tiên 2.5 chuẩn chỉ */
 }
 
 .shiny-star {
     position: absolute;
-    width: 20px; height: 20px;
+    width: 24px; height: 24px;
     background: url('../../assets/VFX_Star_Shiny.png') no-repeat center/contain;
-    top: -25px;
+    top: -30px;
     opacity: 0;
-    pointer-events: none;
     animation: shinyRainFall var(--fall-duration) linear forwards;
 }
 
 @keyframes shinyRainFall {
-    0% {
-        transform: translateY(0) rotate(0deg) scale(0.5);
-        opacity: 0;
-    }
-    15% {
-        opacity: 1;
-    }
-    85% {
-        opacity: 1;
-    }
-    100% {
-        transform: translateY(410px) rotate(360deg) scale(1);
-        opacity: 0;
-    }
-}
-
-
-/* ==========================================================================
-   6. HOẠT ẢNH NHÚN NHẢY IDLE (BREATHING ANIMATIONS)
-   ========================================================================== */
-.animation-idle {
-    animation: battleBreath 0.8s ease-in-out infinite alternate;
-}
-
-@keyframes battleBreath {
-    0% { transform: translateY(0) scaleY(1); }
-    100% { transform: translateY(-6px) scaleY(1.03); }
+    0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+    15% { opacity: 1; }
+    85% { opacity: 1; }
+    100% { transform: translateY(105vh) rotate(360deg); opacity: 0; }
 }
