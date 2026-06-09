@@ -15,7 +15,9 @@ let currentBookPage = 0;
 let selectedGenderTemp = ""; 
 let shinyRainInterval = null; 
 
-// Bộ nạp động tự nhúng file logic.js riêng của từng màn hình vào hệ thống
+// ==========================================
+// ⚙️ BỘ NẠP ĐỘNG: TỰ ĐỘNG NHÚNG FILE LOGIC.JS RIÊNG BIỆT
+// ==========================================
 async function loadScreen(screenName, callback) {
     const viewport = document.getElementById('game-viewport');
     try {
@@ -37,11 +39,53 @@ async function loadScreen(screenName, callback) {
         const script = document.createElement('script');
         script.id = 'screen-runtime-logic';
         script.src = `screens/${screenName}/logic.js`;
-        script.onload = () => { if (callback) callback(); };
+        script.onload = () => { 
+            console.log(`🤖 Loaded Runtime Logic for: [${screenName}]`);
+            if (callback) callback(); 
+        };
         document.body.appendChild(script);
         
     } catch (error) {
         console.error(`Không thể nạp màn hình: ${screenName}`, error);
+    }
+}
+
+// ==========================================
+// 🧭 BỘ ĐIỀU HƯỚNG TỔNG (ROUTE MANAGER - ĐÃ CỨU SỐNG KHỎI 404 CRASH)
+// ==========================================
+function changeScreen(scrId) {
+    // Tự động dọn sạch vòng lặp mưa sao rơi của quái Shiny khi rời trận đấu
+    if (shinyRainInterval) {
+        clearInterval(shinyRainInterval);
+        shinyRainInterval = null;
+    }
+
+    if (scrId === 'menu') {
+        loadScreen('main-menu', () => {
+            // Gọi lại hàm khởi tạo sảnh chính có trong screens/main-menu/logic.js
+            if (typeof initMainMenuLogic === 'function') {
+                initMainMenuLogic();
+            }
+        });
+    }
+    if (scrId === 'battle') {
+        loadScreen('battle-stage', () => {
+            // Nạp tiền lên UI và kích hoạt lượt đấu mới trong screens/battle-stage/logic.js
+            const coinText = document.getElementById('user-coins');
+            if (coinText) coinText.innerText = gameState.coins;
+            if (typeof nextBattleTurn === 'function') {
+                nextBattleTurn();
+            }
+        });
+    }
+    if (scrId === 'collection') {
+        loadScreen('collection-book', () => {
+            // Reset trang sách về 0 và vẽ lưới thẻ trong screens/collection-book/logic.js
+            currentBookPage = 0;
+            if (typeof renderCollectionBook === 'function') {
+                renderCollectionBook();
+            }
+        });
     }
 }
 
@@ -64,7 +108,11 @@ function saveGameLocal() {
     localStorage.setItem(`pkm_catch_${gameState.username}`, JSON.stringify(gameState));
 }
 
-// Vừa mở Web là gọi màn hình Loading bọc rèm lên đầu tiên
+// Vừa mở Web là kích hoạt gọi lớp rèm phủ Loading chạy tiến trình nạp
 window.onload = function() {
-    loadScreen('loading-menu', initGameEngine);
+    loadScreen('loading-menu', () => {
+        if (typeof initGameEngine === 'function') {
+            initGameEngine();
+        }
+    });
 };
