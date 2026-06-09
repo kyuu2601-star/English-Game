@@ -27,35 +27,62 @@ async function triggerDataFetching() {
         if (fill) fill.style.width = "25%";
         if (txt) txt.innerText = "Scanning device storage... (25%)";
 
-        // Tập hợp toàn bộ asset cốt lõi của hệ thống sảnh, trận đấu và nút bấm
+        // 🎯 ĐÃ SỬA: Đưa toàn bộ tiền tố về dạng 'assets/' chạy trực tiếp từ index gốc
         let fullAssetsList = [
-            '../../assets/Btn_Start.png', '../../assets/Btn_Start_Pressed.png',
-            '../../assets/Btn_Collection.png', '../../assets/Btn_Collection_Pressed.png',
-            '../../assets/UI_Answer_Box.png', '../../assets/UI_Answer_Box_Pressed.png',
-            '../../assets/UI_Question_Box.png', '../../assets/Btn_Back.png',
-            '../../assets/Btn_Back_Pressed.png', '../../assets/Btn_Collection_Icon.png',
-            '../../assets/Btn_Collection_Icon_Pressed.png', '../../assets/Btn_Backpack_Icon.png',
-            '../../assets/Btn_Backpack_Icon_Pressed.png', '../../assets/Btn_Setting_Icon.png',
-            '../../assets/Btn_Setting_Icon_Pressed.png', '../../assets/Collection_Page_Btn.png',
-            '../../assets/Collection_Page_Btn_Pressed1.png', '../../assets/Collection_Page_Btn_Pressed2.png',
-            '../../assets/Tag_Icon.png', '../../assets/VFX_Smoke.png',
-            '../../assets/VFX_Ball_Open.png', '../../assets/VFX_Ball_Close.png',
-            '../../assets/VFX_Star_Shiny.png', '../../assets/Player_Male_Main.png',
-            '../../assets/Player_Female_Main.png', '../../assets/Player_Male_Back.png',
-            '../../assets/Player_Female_Back.png', '../../assets/Nametag_lv1.png',
-            '../../assets/Nametag_lv2.png', '../../assets/Nametag_lv3.png',
-            '../../assets/Nametag_lv4.png', '../../assets/Nametag_lv5.png',
-            '../../assets/BG_Desert.png', '../../assets/BG_Forest.png',
-            '../../assets/BG_Snow.png', '../../assets/BG_Volcano.png'
+            'assets/Background_Loading.png',
+            'assets/Background_Collection.png',
+            'assets/Game_Logo.png',
+            'assets/Btn_Start.png', 
+            'assets/Btn_Start_Pressed.png',
+            'assets/Btn_Collection.png', 
+            'assets/Btn_Collection_Pressed.png',
+            'assets/Btn_Backpack_Icon.png',
+            'assets/Btn_Backpack_Icon_Pressed.png',
+            'assets/Btn_Setting_Icon.png',
+            'assets/Btn_Setting_Icon_Pressed.png',
+            'assets/Btn_Battle_Icon.png',
+            'assets/Btn_Battle_Icon_Pressed.png',
+            'assets/Btn_Back.png',
+            'assets/Btn_Back_Pressed.png',
+            'assets/Btn_Collection_Icon.png',
+            'assets/Btn_Collection_Icon_Pressed.png',
+            'assets/UI_Question_Box.png',
+            'assets/UI_Answer_Box.png', 
+            'assets/UI_Answer_Box_Pressed.png',
+            'assets/Tag_Icon.png', 
+            'assets/Collection_Page_Btn.png',
+            'assets/Collection_Page_Btn_Pressed1.png',
+            'assets/Collection_Page_Btn_Pressed2.png',
+            'assets/Player_Male_Main.png',
+            'assets/Player_Female_Main.png',
+            'assets/Player_Male_Back.png',
+            'assets/Player_Female_Back.png',
+            'assets/Nametag_lv1.png',
+            'assets/Nametag_lv2.png',
+            'assets/Nametag_lv3.png',
+            'assets/Nametag_lv4.png',
+            'assets/Nametag_lv5.png',
+            'assets/VFX_Smoke.png',
+            'assets/VFX_Ball_Open.png',
+            'assets/VFX_Ball_Close.png',
+            'assets/VFX_Star_Shiny.png',
+            'assets/Popup_Captured.png',
+            'assets/Popup_Missed.png',
+            'assets/Snow.png',
+            'assets/BG_Desert.png', 
+            'assets/BG_Forest.png', 
+            'assets/BG_Snow.png', 
+            'assets/BG_Volcano.png'
         ];
 
-        // 🎯 QUÉT SẠCH QUÁI VÀ CARD: Gom link ảnh quái, phôi card lv từ Sheet theo đúng feedback
+        // 🎯 ĐÃ SỬA: Gom link ảnh quái, phôi card lv từ Sheet chuẩn hóa tiền tố assets/
         globalMobList.forEach(mob => {
             if (mob.Image && mob.Image.trim() !== "") {
-                fullAssetsList.push(mob.Image);
+                let cleanUrl = mob.Image.trim();
+                fullAssetsList.push(cleanUrl);
             }
-            fullAssetsList.push(`../../assets/Card_lv${mob.Stars}.png`);
-            fullAssetsList.push(`../../assets/Card_lv${mob.Stars}_S.png`);
+            fullAssetsList.push(`assets/Card_lv${mob.Stars}.png`);
+            fullAssetsList.push(`assets/Card_lv${mob.Stars}_S.png`);
         });
 
         // Tự động quét sạch dấu cách trống gớm ghiếc thay bằng dấu gạch dưới _
@@ -129,8 +156,8 @@ function proceedToCloseLoadingGate() {
         setTimeout(() => {
             loadingContainer.style.display = "none";
             
-            // 🚀 CHUYỂN GIAO NHIỆM VỤ: Gọi lệnh mở toang màn hình Sảnh chính (main-menu)
-            loadScreen('main-menu', initMainMenuLogic);
+            // 🚀 ĐÃ SỬA CHUẨN ĐỊNH TUYẾN: Đẩy qua hàm trung gian changeScreen của core tổng để kiểm soát phiên đăng nhập an toàn
+            changeScreen('menu');
         }, 800);
     }
 }
