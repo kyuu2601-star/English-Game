@@ -88,6 +88,7 @@
     background-color: transparent;
     -webkit-tap-highlight-color: transparent;
     outline: none;
+    z-index: 999
 }
 
 /* 🎯 ĐÃ SỬA: Đưa về đường dẫn gốc 'assets/' */
@@ -103,7 +104,7 @@
    ========================================================================== */
 .menu-right-char-zone {
     position: absolute;
-    right: 80px;         
+    left: 80px;         
     bottom: 150px;       /* 📌 CHÂN NHÂN VẬT CÁCH ĐÁY ĐÚNG 150PX */
     display: none;       /* Mặc định ẩn ngầm, JS sẽ bật 'flex' cùng lúc với bộ nút sảnh */
     flex-direction: column;
