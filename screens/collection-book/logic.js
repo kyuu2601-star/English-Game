@@ -45,13 +45,16 @@ function renderCollectionBook() {
         let isShiny = /[a-zA-Z]$/.test(mob.ID);
         let count = gameState.captured[mob.ID] || 0;
         
-        let card = document.createElement('div');
+        // 🎯 ĐÃ THÊM: Hàm nén số siêu gọn (Dưới 1000 hiện số thường, từ 1000 trở lên hiện 1k, 1.2k...)
+        let displayCount = count;
+        if (count >= 1000) {
+            displayCount = (count / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
+        }
         
-        // 🎯 BÍ KÍP ĐỊNH VỊ: Gài chính xác class 'slot-1' đến 'slot-8' dựa vào chỉ số index (+1)
+        let card = document.createElement('div');
         card.className = `card-item unlocked slot-${index + 1}`;
         
-        // BẪY SẠCH RÁC KHOẢNG TRẮNG CỘT STARS CỦA FEN
-        let starLevel = mob.Stars ? mob.Stars.trim() : "";
+        let starLevel = mob.Stars ? mob.Stars.toString().trim() : "";
         if (starLevel === "" || isNaN(starLevel)) {
             starLevel = "1";
         }
@@ -59,14 +62,13 @@ function renderCollectionBook() {
         let imgName = isShiny ? `Card_lv${starLevel}_S.png` : `Card_lv${starLevel}.png`;
         card.style.backgroundImage = `url('assets/${imgName}')`;
 
-        // Bơm đẩy cấu trúc HTML của tấm thẻ
+        // 🎯 ĐÃ SỬA: Vứt bỏ chữ x cũ rích, chỉ truyền displayCount vào thôi
         card.innerHTML = `
             <img src="${mob.Image}" class="mob-thumb">
             <div class="card-title">${mob.Name}</div>
-            <div class="card-tag"><span class="tag-text">x${count}</span></div>
+            <div class="card-tag"><span class="tag-text">${displayCount}</span></div>
         `;
 
-        // 🎯 THẢ THẲNG VÀO KHUNG SÁCH: CSS tự động bốc class slot-x để đóng đinh vị trí
         bookContainer.appendChild(card);
     });
 }
