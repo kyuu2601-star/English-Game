@@ -138,6 +138,22 @@
 #mob-name-text {
     font-family: 'MyFredoka', sans-serif; font-size: 3vh !important; color: #ffffff;
     font-weight: bold; text-shadow: 1px 1px 2px #000;
+    
+    /* 🎯 1. ÉP CÁI TEXT CANH TRÁI Tuyệt đối INSIDE thẻ nhựa */
+    text-align: left !important;
+    width: 100% !important; /* Chiếm hết chiều rộng thẻ để text-align có tác dụng */
+    
+    /* 🎯 2. TẠO KHU VỰC AN TOÀN TRÁNH CÁI ICON LEVEL TRÊN ẢNH NỀN */
+    /* Ta dùng Padding-Left ngay trên cái Text này để tạo ra 1 bức tường trống, CÁI TEXT sẽ bắt đầu sau bức tường này nhe fen. */
+    /* Dựa trên hình ảnh_4 của fen, khoảng 25% là vùng safe zone đẹp nhất để né icon gai góc đó nhe. Fen cứ nhích % này thử nhe. */
+    padding-left: 20% !important; 
+    
+    /* 🎯 3. LƯỚI BẢO VỆ: Đảm bảo tên quá dài không liếm ra lề phải, mà tự động cắt bằng ... */
+    padding-right: 5% !important; /* Chừa lề phải cho đẹp */
+    white-space: nowrap !important; 
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    box-sizing: border-box; /* Đảm bảo padding không làm phình Text Box */
 }
 
 /* 🎯 ĐÃ SỬA: Gom VFX Quả cầu neo tịnh tiến với tâm Node Box Quái */
