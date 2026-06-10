@@ -167,29 +167,46 @@ async function initGameEngine() {
 // ==========================================
 async function loadScreen(screenName, callback) {
     const viewport = document.getElementById('game-viewport');
-    
-    // 🎯 VŨ KHÍ PHÁ CACHE: Tạo dãy số ngẫu nhiên theo thời gian thực (Timestamp)
     const noCacheStamp = new Date().getTime();
 
     try {
-        // 1. Ép tải HTML mới bằng cache: 'no-store' và đuôi query parameter
+        // 🎬 BƯỚC 1: TẠO TẤM RÈM ĐỂ NẠP MÀN HÌNH TRANSITION ĐÈ LÊN TRÊN CÙNG TRƯỚC
+        let transitionOverlay = document.getElementById('global-transition-overlay');
+        if (!transitionOverlay) {
+            transitionOverlay = document.createElement('div');
+            transitionOverlay.id = 'global-transition-overlay';
+            document.body.appendChild(transitionOverlay);
+        }
+
+        // Tải file UI của màn transition mới tạo bọc vào tấm rèm
+        const transHtmlRes = await fetch(`screens/transition/ui.html?v=${noCacheStamp}`, { cache: 'no-store' });
+        transitionOverlay.innerHTML = await transHtmlRes.text();
+
+        // Nạp file Style của màn transition
+        let transCss = document.getElementById('css-transition');
+        if (!transCss) {
+            transCss = document.createElement('link');
+            transCss.id = 'css-transition'; transCss.rel = 'stylesheet';
+            document.head.appendChild(transCss);
+        }
+        transCss.href = `screens/transition/style.css?v=${noCacheStamp}`;
+
+        // ------------------------------------------------------------------
+        // 🔄 BƯỚC 2: TIẾN HÀNH NẠP FILE MÀN HÌNH MỚI NGẦM PHÍA DƯỚI TẤM RÈM CHIÊU PHỦ
+        // ------------------------------------------------------------------
         const htmlResponse = await fetch(`screens/${screenName}/ui.html?v=${noCacheStamp}`, { cache: 'no-store' });
         const htmlText = await htmlResponse.text();
         viewport.innerHTML = htmlText;
         
-        // 2. Ép tải CSS mới
         const cssId = `css-${screenName}`;
         let link = document.getElementById(cssId);
         if (!link) {
             link = document.createElement('link');
-            link.id = cssId; 
-            link.rel = 'stylesheet';
+            link.id = cssId; link.rel = 'stylesheet';
             document.head.appendChild(link);
         }
-        // Luôn luôn chèn đè href bằng link kèm timestamp
         link.href = `screens/${screenName}/style.css?v=${noCacheStamp}`;
         
-        // 3. Ép tải Script JS mới
         const oldScript = document.getElementById('screen-runtime-logic');
         if (oldScript) oldScript.remove();
         
@@ -198,12 +215,22 @@ async function loadScreen(screenName, callback) {
         script.src = `screens/${screenName}/logic.js?v=${noCacheStamp}`;
         script.onload = () => { 
             console.log(`🤖 Loaded Runtime Logic for: [${screenName}] (Cache Bypassed)`);
-            if (callback) callback(); 
+            
+            // ⏱️ BƯỚC 3: GIỮ TẤM MÀN TRANSITION ĐÚNG 2 GIÂY (2000ms) RỒI MỚI GỠ RA
+            setTimeout(() => {
+                if (transitionOverlay) {
+                    transitionOverlay.remove(); // Xóa bỏ hoàn toàn rèm che
+                }
+                if (callback) callback(); // Đẩy data kích hoạt màn mới lên
+            }, 2000);
         };
         document.body.appendChild(script);
         
     } catch (error) {
         console.error(`Không thể nạp màn hình: ${screenName}`, error);
+        // Phòng hộ sự cố rớt mạng giữa chừng: Tự động dỡ rèm để tránh kẹt chết màn hình
+        const transitionOverlay = document.getElementById('global-transition-overlay');
+        if (transitionOverlay) transitionOverlay.remove();
     }
 }
 
