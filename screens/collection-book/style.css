@@ -170,7 +170,7 @@
     font-family: 'MyFredoka', sans-serif;
     
     /* 🎯 ĐÃ ĐỔI: Chữ luôn bằng 16% chiều ngang thẻ, vứt luôn đơn vị vw cũ */
-    font-size: 16cqi !important; 
+    font-size: 8cqi !important; 
     
     color: #475569; 
     font-weight: bold;
@@ -186,7 +186,7 @@
 
 /* Ép font-size theo tỷ lệ thẻ khi thẻ bị bóp trần (max-width) */
 @media (min-width: 1920px) {
-    .card-tag { font-size: 0.6rem; }
+    .card-tag { font-size: 1rem; }
 }
 
 /* ==========================================================================
