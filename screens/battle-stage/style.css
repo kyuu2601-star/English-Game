@@ -89,12 +89,12 @@
 .answers-zone {
     display: flex; justify-content: center; align-items: center;
     gap: 2vw !important; width: 100%;
-    margin-bottom: 2vh; /* Kê mông lên khỏi viền dưới của cái UI Box */
+    margin-bottom: 1vh; /* Kê mông lên khỏi viền dưới của cái UI Box */
     z-index: 910;
 }
 
 .btn-answer {
-    height: 8vh !important; /* Ép mỏng lại một tí cho hộp khỏi lồi ra */
+    height: 10vh !important; /* Ép mỏng lại một tí cho hộp khỏi lồi ra */
     width: calc(8vh * 3) !important; 
     max-width: 300px !important; max-height: 100px !important;
     border: none; cursor: pointer; color: white; font-weight: bold;
