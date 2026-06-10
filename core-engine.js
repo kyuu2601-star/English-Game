@@ -11,6 +11,7 @@ let globalMobList = [];
 let globalQuestionList = []; 
 let gameState = { 
     username: "", 
+    password: "", // 🎯 ĐÃ THÊM: Chuẩn bị ổ chứa password cho sync ngầm
     coins: 0, 
     gender: "", 
     captured: {},
@@ -22,9 +23,6 @@ let currentBookPage = 0;
 let selectedGenderTemp = ""; 
 let shinyRainInterval = null; 
 
-// ==========================================================================
-// 🚀 THUẬT TOÁN KIỂM TRA, CÀO BÙ ASSET VÀ ÉP TẢI MỚI CODE/CSS (KHÓA LOADING)
-// ==========================================================================
 // ==========================================================================
 // 🚀 THUẬT TOÁN KIỂM TRA, CÀO BÙ ASSET VÀ ÉP TẢI MỚI CODE/CSS (KHÓA LOADING)
 // ==========================================================================
@@ -47,7 +45,6 @@ async function handleGamePreloadAndVersionControl() {
 
     console.log("🚀 [Loading Engine] Bắt đầu tiến trình kiểm tra và tải nạp tài nguyên thực tế...");
     const cache = await caches.open(CACHE_NAME);
-    // ... (phần code bên dưới giữ nguyên) ...
 
     const coreCodes = [
         './global.css',
@@ -304,6 +301,10 @@ async function loginGame(inputUsername, inputPassword) {
             let userData = result.data;
 
             gameState.username = userData.username;
+            
+            // 🎯 ĐÃ THÊM: Gán cứng Mật khẩu để làm chìa khóa Auto-Sync ngầm
+            gameState.password = inputPassword; 
+            
             gameState.coins = parseInt(userData.coins) || 0;
 
             let genderChar = userData.gender ? userData.gender.toString().toUpperCase().trim() : "";
