@@ -2,7 +2,7 @@
 // 🤖 MÔ-ĐUN LOGIC TÁCH BIỆT: SẢNH CHÍNH & XÁC THỰC (MAIN-MENU)
 // ==========================================
 
-function initMainMenuLogic() {
+async function initMainMenuLogic() {
     // 🕵️ KIỂM TRA NGẦM: Vừa nạp Sảnh là check Local Storage của máy liền
     let keys = Object.keys(localStorage);
     let foundUserKey = keys.find(k => k.startsWith('pkm_catch_'));
@@ -11,12 +11,39 @@ function initMainMenuLogic() {
         let savedData = localStorage.getItem(foundUserKey);
         try {
             let parsed = JSON.parse(savedData);
-            if (parsed.username && parsed.gender) {
-                // Trường hợp 1: Máy đã có tài khoản + đã chọn tướng -> Bỏ qua mọi popup, bung sảnh chơi luôn!
+            
+            // 🎯 ĐÃ SỬA: Kiểm tra nếu máy có lưu cả Username lẫn Mật khẩu để Sync Ngầm
+            if (parsed.username && parsed.password) {
+                console.log("🔄 Phát hiện tài khoản cũ, đang tự động đồng bộ dữ liệu mới nhất từ Google Sheet...");
+                
+                // Chạy lệnh đăng nhập ngầm lên Cloud để bốc data mới nhất (xu, năng lượng)
+                let isSyncSuccess = await loginGame(parsed.username, parsed.password);
+                
+                if (isSyncSuccess) {
+                    // 👉 HƯỚNG 1 (ONLINE): Có mạng và sync thành công -> Data mới nhất đã nạp thẳng vào gameState
+                    enterMainMenuDirectly();
+                    return;
+                } else {
+                    // 👉 HƯỚNG 2 (OFFLINE): Nếu rớt mạng hoặc lỗi server -> Kích hoạt chế độ Offline Backup
+                    console.warn("⚠️ Không thể kết nối tới Google Sheet. Kích hoạt chế độ Offline Backup!");
+                    gameState.username = parsed.username;
+                    gameState.password = parsed.password;
+                    gameState.gender = parsed.gender;
+                    gameState.coins = parsed.coins || 0;
+                    gameState.captured = parsed.captured || {};
+                    gameState.energy = parsed.energy || 0;
+                    
+                    enterMainMenuDirectly();
+                    return;
+                }
+            } else if (parsed.username && parsed.gender) {
+                // 👉 LƯỚI BẢO VỆ CHO TÀI KHOẢN ĐỜI CŨ (Chưa được cấp password vào máy)
+                console.warn("⚠️ Tài khoản cũ chưa có Mật khẩu. Dùng tạm dữ liệu Offline.");
                 gameState.username = parsed.username;
                 gameState.gender = parsed.gender;
                 gameState.coins = parsed.coins || 0;
                 gameState.captured = parsed.captured || {};
+                gameState.energy = parsed.energy || 0;
                 
                 enterMainMenuDirectly();
                 return;
@@ -24,7 +51,7 @@ function initMainMenuLogic() {
         } catch (e) { console.error("Lỗi đọc bộ nhớ máy, kích hoạt Đăng nhập mới:", e); }
     }
 
-    // Trường hợp 2: Máy trắng thông tin -> Bật Popup bắt nhập Tên + Mật Khẩu
+    // Trường hợp máy trắng thông tin -> Bật Popup bắt nhập Tên + Mật Khẩu từ đầu
     openLoginCredentialsPopup();
 }
 
@@ -35,7 +62,6 @@ function enterMainMenuDirectly() {
     const avatarDisplay = document.getElementById('menu-avatar-display');
     const nameText = document.getElementById('player-name-text');
 
-    // 🎯 ĐÃ SỬA: Đưa về đường dẫn gốc 'assets/' để chống lỗi trắng ảnh tướng trên GitHub Pages
     if (avatarDisplay) avatarDisplay.style.backgroundImage = `url('assets/Player_${gameState.gender === 'male' ? 'Male' : 'Female'}_Main.png')`;
     if (nameText) nameText.innerText = gameState.username;
 
@@ -44,15 +70,13 @@ function enterMainMenuDirectly() {
     if (charZone) charZone.style.display = "flex";
 }
 
-// 🔏 HÀM 2: MỞ FORM NHẬP ACCOUNT (Tự động biến đổi giao diện popup sang ô điền Pass)
+// 🔏 HÀM 2: MỞ FORM NHẬP ACCOUNT
 function openLoginCredentialsPopup() {
     const loginPopup = document.getElementById('login-popup');
     const popupContent = document.querySelector('.login-popup-content');
     
     if (!loginPopup || !popupContent) return;
 
-    // Tái cấu trúc ruột của Popup thành form nhập Tên + Mật khẩu chuẩn theo yêu cầu
-    // 🎯 ĐÃ SỬA: Thêm dòng text "Liên hệ Admin" ẩn sẵn ngay dưới nút LOGIN
     popupContent.innerHTML = `
         <h3>MON ENGLISH - USER LOGIN</h3>
         <div style="display: flex; flex-direction: column; align-items: center; gap: 15px; margin: 25px 0;">
@@ -80,7 +104,6 @@ async function handleAccountAuthentication() {
     const username = nameInput ? nameInput.value.trim() : "";
     const password = passInput ? passInput.value.trim() : "";
 
-    // Ẩn text lỗi đi mỗi khi bắt đầu bấm nút lại
     if (errorText) errorText.style.display = "none";
 
     if (!username || !password) { 
@@ -91,27 +114,21 @@ async function handleAccountAuthentication() {
         return; 
     }
 
-    // Đổi trạng thái nút bấm tránh spam click
     if (loginBtn) {
         loginBtn.innerText = "LOADING...";
         loginBtn.disabled = true;
     }
 
-    // 🎯 GỌI HÀM FETCH API GOOGLE SHEETS TỪ CORE ENGINE
     const isLoginSuccess = await loginGame(username, password);
 
     if (isLoginSuccess) {
-        // Kiểm tra xem giới tính (Gender) lấy về từ Sheet có bị trống hay không
         if (gameState.gender === "" || !gameState.gender) {
-            // 👉 TH1: TÀI KHOẢN MỚI TINH (Gender trống) -> Chuyển sang bước chọn nhân vật Nam/Nữ
             openGenderSelectionStage();
         } else {
-            // 👉 TH2: TÀI KHOẢN CŨ ĐÃ CHƠI (Có sẵn Gender) -> Đóng popup, vào thẳng sảnh chơi
             document.getElementById('login-popup').style.display = "none";
             enterMainMenuDirectly();
         }
     } else {
-        // Nếu API báo sai Pass/User -> Mở lại nút để nhập lại và hiện cảnh báo đỏ
         if (loginBtn) {
             loginBtn.innerText = "LOGIN";
             loginBtn.disabled = false;
@@ -145,10 +162,9 @@ function openGenderSelectionStage() {
         </div>
         <button class="btn-confirm-login" onclick="finalizeNewPlayerSetup()">CONFIRM</button>
     `;
-    selectedGenderTemp = ""; // Reset biến tạm giới tính
+    selectedGenderTemp = ""; 
 }
 
-// Chọn giới tính bật viền sáng xanh
 function pickGender(g) {
     selectedGenderTemp = g;
     const cardMale = document.getElementById('char-card-male');
@@ -169,11 +185,7 @@ function finalizeNewPlayerSetup() {
     }
 
     gameState.gender = selectedGenderTemp;
-    
-    // 🎯 ĐÃ SỬA: Xóa bỏ vòng lặp tạo freshCaptured chứa đống số 0 lỉnh kỉnh
     gameState.coins = gameState.coins || 0; 
-    
-    // Nếu có data từ sheet thì lấy, không thì khởi tạo túi rỗng tinh khiết {}
     gameState.captured = (Object.keys(gameState.captured).length > 0) ? gameState.captured : {};
     
     saveGameLocal();
