@@ -47,7 +47,7 @@ function nextBattleTurn() {
     let randMap = maps[Math.floor(Math.random() * maps.length)];
     document.getElementById('battle-field').style.backgroundImage = `url('assets/BG_${randMap}.png')`;
 
-    // 🎯 ĐÃ THÊM LÕI CHỐT CHẶN: KIỂM TRA THỂ LỰC (ENERGY)
+    // 🎯 LÕI CHỐT CHẶN: KIỂM TRA THỂ LỰC (ENERGY)
     if (gameState.energy <= 0) {
         mobSprite.style.display = "none";
         mobTag.style.display = "none";
@@ -61,8 +61,6 @@ function nextBattleTurn() {
     // ------------------------------------------------------------------
     // 🎡 TẦNG 1: ĐỔ XÚC XẮC CHỌN MỐC BUCKET % (CHỐNG PHA LOÃNG)
     // ------------------------------------------------------------------
-    // 🎯 RỔ CẤU HÌNH % CỐ ĐỊNH: Tổng các con số này bắt buộc phải bằng 100.
-    // Sau này muốn thêm nhóm "Event" hay mốc "6", fen cứ phẩy rồi nhét thêm 1 dòng vào đây là xong.
     const STAR_PERCENTAGES = {
         "1": 40,
         "2": 30,
@@ -72,7 +70,7 @@ function nextBattleTurn() {
     };
 
     let randStar = Math.random() * 100;
-    let stars = "1"; // Giá trị mặc định phòng hờ
+    let stars = "1"; 
 
     for (let key in STAR_PERCENTAGES) {
         if (randStar < STAR_PERCENTAGES[key]) {
@@ -83,21 +81,18 @@ function nextBattleTurn() {
     }
 
     // ------------------------------------------------------------------
-    // 🎰 TẦNG 2: LỌC BUCKET & XOAY THEO TRỌNG SỐ (WEIGHT - CỘT RATE TRÊN SHEET)
+    // 🎰 TẦNG 2: LỌC BUCKET & XOAY THEO TRỌNG SỐ (WEIGHT QUÁI VẬT)
     // ------------------------------------------------------------------
-    // Gom toàn bộ quái vật thuộc mốc Stars vừa trúng giải ở Tầng 1
     let pool = globalMobList.filter(m => {
         let mobStarStr = m.Stars ? m.Stars.toString().trim() : "";
         return mobStarStr === stars.toString().trim();
     });
     if (pool.length === 0) pool = globalMobList;
 
-    // Phân tách nhánh Shiny và Normal dựa theo đuôi ID để chạy cơ chế Shiny Roll của fen
     let isShinyRoll = Math.random() < 0.01; 
     let shinyPool = pool.filter(m => /[a-zA-Z]$/.test(m.ID));
     let normalPool = pool.filter(m => /^\d+\.\d+$/.test(m.ID));
 
-    // Chọn rổ quái mục tiêu theo tỷ lệ Shiny trúng thưởng
     let targetPool = pool;
     if (isShinyRoll && shinyPool.length > 0) {
         targetPool = shinyPool;
@@ -106,17 +101,14 @@ function nextBattleTurn() {
         targetPool = normalPool;
     }
 
-    // Tiến hành lọc bỏ những con quái có Rate = 0 (Đã bị tắt/khóa trên Google Sheet) trong rổ mục tiêu
     let activePool = targetPool.filter(mob => {
         let rate = parseInt(mob.Rate);
-        if (isNaN(rate)) rate = 10; // Nếu để trống cột Rate trên Sheet thì mặc định trọng số là 10
+        if (isNaN(rate)) rate = 10; 
         return rate > 0;
     });
 
-    // Bẫy cứu hộ: Nếu lỡ tay tắt sạch Rate về 0, lôi lại pool gốc ra chơi đỡ tránh sập giao diện
     if (activePool.length === 0) activePool = targetPool;
 
-    // Tính tổng trọng số Rate của mớ quái đang kích hoạt
     let totalGroupWeight = 0;
     activePool.forEach(mob => {
         let rate = parseInt(mob.Rate);
@@ -124,9 +116,8 @@ function nextBattleTurn() {
         totalGroupWeight += rate;
     });
 
-    // Quay số lọt lòng tìm con quái trúng thưởng cuối cùng theo Weight
     let groupRoll = Math.random() * totalGroupWeight;
-    currentMob = activePool[activePool.length - 1]; // Dự phòng con cuối
+    currentMob = activePool[activePool.length - 1]; 
 
     for (let i = 0; i < activePool.length; i++) {
         let mob = activePool[i];
@@ -140,19 +131,54 @@ function nextBattleTurn() {
         groupRoll -= rate;
     }
 
-    // ------------------------------------------------------------------
-    // ĐỔ DỮ LIỆU LÊN GIAO DIỆN HIỂN THỊ (GIỮ NGUYÊN GỐC)
-    // ------------------------------------------------------------------
+    // Đổ hình ảnh và thẻ tên quái lên UI
     mobSprite.style.backgroundImage = `url('${currentMob.Image}')`;
     mobTag.style.backgroundImage = `url('assets/Nametag_lv${stars}.png')`;
     document.getElementById('mob-name-text').innerText = currentMob.Name;
     document.getElementById('player-sprite').style.backgroundImage = `url('assets/Player_${gameState.gender === 'male' ? 'Male' : 'Female'}_Back.png')`;
 
-    // Câu hỏi lọc theo mốc Stars tương ứng như cũ
+    // ------------------------------------------------------------------
+    // 📖 TẦNG 3: BỐC CÂU HỎI THÔNG MINH (GIẢM TỶ LỆ THEO CỘT COUNT & BỘ ĐẾM NGẦM)
+    // ------------------------------------------------------------------
+    // Bước 3.1: Lọc câu hỏi theo đúng mốc Stars vừa trúng giải
     let qPool = globalQuestionList.filter(q => parseInt(q.Question_Stars) === parseInt(stars));
     if (qPool.length === 0) qPool = globalQuestionList;
-    currentQuestion = qPool[Math.floor(Math.random() * qPool.length)];
 
+    // Bước 3.2: Tính trọng số dựa theo công thức: 100 / (Thực tế trên Sheet + Ngầm trong phiên chơi + 1)
+    let totalQuestionWeight = 0;
+    let questionWeights = qPool.map(q => {
+        let countOnSheet = parseInt(q.Count) || 0; // Cột H trên Google Sheet
+        
+        // Khởi tạo bộ đếm ngầm cho phiên chơi hiện tại nếu chưa có để tránh lỗi undefined
+        if (q._localCount === undefined) q._localCount = 0;
+        let finalCount = countOnSheet + q._localCount;
+
+        let weight = 100 / (finalCount + 1); 
+        totalQuestionWeight += weight;
+        return { question: q, weight: weight };
+    });
+
+    // Bước 3.3: Vòng xoay chọn câu hỏi có trọng số cao nhất (ít xuất hiện nhất)
+    let qRoll = Math.random() * totalQuestionWeight;
+    currentQuestion = qPool[qPool.length - 1]; // Gán sẵn câu cuối làm dự phòng chống sập
+
+    for (let i = 0; i < questionWeights.length; i++) {
+        let item = questionWeights[i];
+        if (qRoll < item.weight) {
+            currentQuestion = item.question;
+            break;
+        }
+        qRoll -= item.weight;
+    }
+
+    // Bước 3.4: Đánh dấu cộng dồn ngầm luôn cho câu hỏi này để lượt tiếp theo tự động giảm tỷ lệ
+    if (currentQuestion._localCount !== undefined) {
+        currentQuestion._localCount += 1;
+    }
+
+    console.log(`📝 Bốc câu hỏi: "${currentQuestion.Question.substring(0, 25)}..." | Lượt xuất hiện (Sheet + Ngầm): ${(parseInt(currentQuestion.Count) || 0) + (currentQuestion._localCount || 0)}`);
+
+    // Hiển thị nội dung câu hỏi và các đáp án lên UI
     document.getElementById('question-text').innerText = currentQuestion.Question;
     document.getElementById('ans-A').innerText = currentQuestion.Option_A;
     document.getElementById('ans-B').innerText = currentQuestion.Option_B;
