@@ -2,7 +2,7 @@
 // 🛠️ SERVICE WORKER (SW.JS) - ĐÃ ĐỒNG BỘ VERSION CONTROL VÀ DỌN RÁC
 // ==========================================================================
 
-// 🎯 ĐỒNG BỘ TUYỆT ĐỐI: Đã lên v3 khớp hoàn toàn với index và core-engine!
+// 🎯 ĐỒNG BỘ TUYỆT ĐỐI: Đã lên v4 khớp hoàn toàn với index và core-engine!
 const CACHE_NAME = 'mon-english-dynamic-cache-v4';
 
 // Cài đặt phôi khởi tạo ban đầu (chỉ nạp trang index)
@@ -17,7 +17,7 @@ self.addEventListener('activate', (e) => {
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames.map((cacheName) => {
-          // Nếu cái tên kho trên máy học sinh khác với CACHE_NAME v3 hiện tại -> XÓA SẠCH!
+          // Nếu cái tên kho trên máy học sinh khác với CACHE_NAME v4 hiện tại -> XÓA SẠCH!
           if (cacheName !== CACHE_NAME) {
             console.log(`🗑️ [SW] Đã phát hiện và xóa sổ kho cache cũ: ${cacheName}`);
             return caches.delete(cacheName);
@@ -30,6 +30,11 @@ self.addEventListener('activate', (e) => {
 
 // CHIẾN THUẬT FETCH: Chơi game bốc từ cache siêu tốc, nhưng cho phép ép tải mới từ file logic
 self.addEventListener('fetch', (e) => {
+  // 🛑 ĐÃ THÊM CHỐT CHẶN: Bỏ qua tất cả các request POST (như API đồng bộ App Script)
+  if (e.request.method !== 'GET') {
+      return; 
+  }
+
   if (!e.request.url.startsWith('http')) return;
 
   e.respondWith(
