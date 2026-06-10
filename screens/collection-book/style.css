@@ -180,13 +180,13 @@
 /* 🎯 ĐÃ THÊM: Lớp lõi chỉ xoay riêng cái chữ x1 */
 .tag-text {
     display: inline-block; /* Bắt buộc để lệnh xoay ăn vào thẻ span */
-    transform: rotate(15deg); /* Góc xoay -15 độ (thêm dấu trừ để xoay ngược chiều kim đồng hồ) */
+    transform: rotate(16deg); /* Góc xoay -15 độ (thêm dấu trừ để xoay ngược chiều kim đồng hồ) */
     transform-origin: center;
 }
 
 /* Ép font-size theo tỷ lệ thẻ khi thẻ bị bóp trần (max-width) */
 @media (min-width: 1920px) {
-    .card-tag { font-size: 0.8rem; }
+    .card-tag { font-size: 0.6rem; }
 }
 
 /* ==========================================================================
