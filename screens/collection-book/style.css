@@ -125,7 +125,7 @@
 /* Chữ tên quái vật nẹp viền thẻ */
 .card-title {
     position: absolute;
-    top: 5%;
+    top: 15%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 90%; /* 🎯 Giới hạn khung chữ không lòi ra khỏi viền */
@@ -148,6 +148,7 @@
 /* Số lượng quái bắt được nẹp ở góc thẻ */
 .card-tag {
     position: absolute;
+    transform: rotate(15deg); /* Góc xoay 15 độ ngược chiều kim đồng hồ */
     top: 0; left: 0;
     width: 100%; 
     height: 100%; 
@@ -159,7 +160,7 @@
     justify-content: flex-start;
     align-items: flex-end;       
     
-    padding-left: 11%; 
+    padding-left: 10%; 
     padding-bottom: 27%; 
     box-sizing: border-box; 
     
