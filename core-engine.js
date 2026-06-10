@@ -8,7 +8,7 @@ const QUESTIONS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT-EF
 const LOGIN_API_URL = "https://script.google.com/macros/s/AKfycbxrOs0HkeESeph6xIL4yN7agvg9zQD13YAhI0L8V1rnH7Co4XGr7XuZIXnXdlRt5mI/exec";
 
 // 🎯 ĐÃ NÂNG CẤP: LÊN VERSION V4 CHUẨN CHỈ
-const CACHE_NAME = 'mon-english-v4'; 
+const CACHE_NAME = 'mon-english-v5'; 
 
 // 🎯 TẤT CẢ CHỈ SỐ ĐỂ TRỐNG/SỐ 0 ĐỂ GOOGLE SHEET NẠP XUỐNG
 let globalMobList = [];      
