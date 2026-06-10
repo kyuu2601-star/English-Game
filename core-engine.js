@@ -250,7 +250,6 @@ function consumeEnergy() {
         if (energyText) energyText.innerText = gameState.energy; 
         
         saveGameLocal();
-        saveGameToSheet(); // 🚀 Bắn lệnh đồng bộ lên Sheet ngay và luôn
         return true; 
     }
     return false; 
