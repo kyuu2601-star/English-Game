@@ -163,29 +163,25 @@ function pickGender(g) {
 
 // 🏁 HÀM 5: CHÍNH THỨC CHỐT NHÂN VẬT & LƯU LẠI
 function finalizeNewPlayerSetup() {
-    if (!selectedGenderTemp) { alert("Please click to choose either Andil or Alice!"); return; }
+    if (!selectedGenderTemp) { 
+        alert("Please click to choose either Andil or Alice!"); 
+        return; 
+    }
 
     gameState.gender = selectedGenderTemp;
     
-    // Tạo sẵn phôi dữ liệu quái vật rỗng để hệ thống đọc/ghi không bị crash
-    let freshCaptured = {};
-    if (globalMobList && globalMobList.length > 0) {
-        globalMobList.forEach(m => { if (m.ID) freshCaptured[m.ID] = 0; });
-    }
-
-    // Thiết lập thông số ban đầu cho tài khoản mới tinh
-    gameState.coins = gameState.coins || 0; // Nếu trên sheet có sẵn tiền thì giữ, không thì bằng 0
-    gameState.captured = (Object.keys(gameState.captured).length > 0) ? gameState.captured : freshCaptured;
+    // 🎯 ĐÃ SỬA: Xóa bỏ vòng lặp tạo freshCaptured chứa đống số 0 lỉnh kỉnh
+    gameState.coins = gameState.coins || 0; 
     
-    // Lưu chặt vào bộ nhớ máy để lần sau mở trình duyệt là tự vào thẳng sảnh không hiện popup
+    // Nếu có data từ sheet thì lấy, không thì khởi tạo túi rỗng tinh khiết {}
+    gameState.captured = (Object.keys(gameState.captured).length > 0) ? gameState.captured : {};
+    
     saveGameLocal();
 
-    // 🎯 ĐÃ THÊM: Bắn lệnh đồng bộ ngay lập tức lên Google Sheet
     if (typeof saveGameToSheet === 'function') {
         saveGameToSheet();
     }
 
-    // Tắt popup, giải phóng sảnh chính hiện nút và tướng lên chào đón
     document.getElementById('login-popup').style.display = "none";
     enterMainMenuDirectly();
 }
