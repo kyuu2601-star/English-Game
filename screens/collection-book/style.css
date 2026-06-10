@@ -125,6 +125,7 @@
 .card-title {
     position: absolute;
     top: 5%;
+    left: 5%;
     font-family: 'MyFredoka', sans-serif;
     font-size: 0.95rem;
     color: #1e293b;
@@ -153,7 +154,7 @@
     /* Fen có thể tùy chỉnh thông số padding này một chút (tính theo %) 
        nếu con số bị lệch so với thiết kế của hình Tag_Icon.png */
     padding-left: 11%; 
-    padding-bottom: 20%; 
+    padding-bottom: 25%; 
     
     box-sizing: border-box; /* Đảm bảo padding không làm phình kích thước 100% */
     
