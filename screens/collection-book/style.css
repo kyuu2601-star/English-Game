@@ -186,7 +186,7 @@
 
 /* Ép font-size theo tỷ lệ thẻ khi thẻ bị bóp trần (max-width) */
 @media (min-width: 1920px) {
-    .card-tag { font-size: 1.2rem; }
+    .card-tag { font-size: 0.8rem; }
 }
 
 /* ==========================================================================
