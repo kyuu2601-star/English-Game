@@ -63,7 +63,7 @@ function renderCollectionBook() {
         card.innerHTML = `
             <img src="${mob.Image}" class="mob-thumb">
             <div class="card-title">${mob.Name}</div>
-            <div class="card-tag">x${count}</div>
+            <div class="card-tag"><span class="tag-text">x${count}</span></div>
         `;
 
         // 🎯 THẢ THẲNG VÀO KHUNG SÁCH: CSS tự động bốc class slot-x để đóng đinh vị trí
