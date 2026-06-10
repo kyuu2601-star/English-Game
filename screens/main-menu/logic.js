@@ -180,6 +180,11 @@ function finalizeNewPlayerSetup() {
     // Lưu chặt vào bộ nhớ máy để lần sau mở trình duyệt là tự vào thẳng sảnh không hiện popup
     saveGameLocal();
 
+    // 🎯 ĐÃ THÊM: Bắn lệnh đồng bộ ngay lập tức lên Google Sheet
+    if (typeof saveGameToSheet === 'function') {
+        saveGameToSheet();
+    }
+
     // Tắt popup, giải phóng sảnh chính hiện nút và tướng lên chào đón
     document.getElementById('login-popup').style.display = "none";
     enterMainMenuDirectly();
