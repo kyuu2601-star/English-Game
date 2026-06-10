@@ -3,15 +3,19 @@
 // ==========================================================================
 const MOBS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT-EFZn4iPTyVHW35NtYDWCwVH5mt6Vuw9kbAFNMm8CkLXzu31QdoK7vW18NdlKLXKKgZIH9YYFKqoh/pub?gid=0&single=true&output=csv";
 const QUESTIONS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT-EFZn4iPTyVHW35NtYDWCwVH5mt6Vuw9kbAFNMm8CkLXzu31QdoK7vW18NdlKLXKKgZIH9YYFKqoh/pub?gid=991631725&single=true&output=csv";
-const LOGIN_API_URL = "https://script.google.com/macros/s/AKfycbzkXP46IjCrgdRjFq9hH1mQ8YHljlsUJWwk63wYIDjkaZ5S0Ua9Juox9CokgFt0MKs/exec";
-const CACHE_NAME = 'mon-english-v3'; 
+
+// 🎯 ĐÃ CẬP NHẬT: LINK DEPLOY MỚI NHẤT
+const LOGIN_API_URL = "https://script.google.com/macros/s/AKfycbxrOs0HkeESeph6xIL4yN7agvg9zQD13YAhI0L8V1rnH7Co4XGr7XuZIXnXdlRt5mI/exec";
+
+// 🎯 ĐÃ NÂNG CẤP: LÊN VERSION V4 CHUẨN CHỈ
+const CACHE_NAME = 'mon-english-v4'; 
 
 // 🎯 TẤT CẢ CHỈ SỐ ĐỂ TRỐNG/SỐ 0 ĐỂ GOOGLE SHEET NẠP XUỐNG
 let globalMobList = [];      
 let globalQuestionList = []; 
 let gameState = { 
     username: "", 
-    password: "", // 🎯 ĐÃ THÊM: Chuẩn bị ổ chứa password cho sync ngầm
+    password: "", // Chuẩn bị ổ chứa password cho sync ngầm
     coins: 0, 
     gender: "", 
     captured: {},
@@ -33,7 +37,6 @@ async function handleGamePreloadAndVersionControl() {
         return;
     }
 
-    // 🎯 ĐÃ THÊM: THUẬT TOÁN ĐỐT KHO RÁC
     // Quét toàn bộ kho Cache trên máy, cái nào khác tên với CACHE_NAME hiện tại thì xóa sạch
     const cacheKeys = await caches.keys();
     for (const key of cacheKeys) {
@@ -170,7 +173,6 @@ async function loadScreen(screenName, callback) {
     const noCacheStamp = new Date().getTime();
 
     try {
-        // 🎬 BƯỚC 1: TẠO TẤM RÈM ĐỂ NẠP MÀN HÌNH TRANSITION ĐÈ LÊN TRÊN CÙNG TRƯỚC
         let transitionOverlay = document.getElementById('global-transition-overlay');
         if (!transitionOverlay) {
             transitionOverlay = document.createElement('div');
@@ -178,11 +180,9 @@ async function loadScreen(screenName, callback) {
             document.body.appendChild(transitionOverlay);
         }
 
-        // Tải file UI của màn transition mới tạo bọc vào tấm rèm
         const transHtmlRes = await fetch(`screens/transition/ui.html?v=${noCacheStamp}`, { cache: 'no-store' });
         transitionOverlay.innerHTML = await transHtmlRes.text();
 
-        // Nạp file Style của màn transition
         let transCss = document.getElementById('css-transition');
         if (!transCss) {
             transCss = document.createElement('link');
@@ -191,9 +191,6 @@ async function loadScreen(screenName, callback) {
         }
         transCss.href = `screens/transition/style.css?v=${noCacheStamp}`;
 
-        // ------------------------------------------------------------------
-        // 🔄 BƯỚC 2: TIẾN HÀNH NẠP FILE MÀN HÌNH MỚI NGẦM PHÍA DƯỚI TẤM RÈM CHIÊU PHỦ
-        // ------------------------------------------------------------------
         const htmlResponse = await fetch(`screens/${screenName}/ui.html?v=${noCacheStamp}`, { cache: 'no-store' });
         const htmlText = await htmlResponse.text();
         viewport.innerHTML = htmlText;
@@ -216,19 +213,17 @@ async function loadScreen(screenName, callback) {
         script.onload = () => { 
             console.log(`🤖 Loaded Runtime Logic for: [${screenName}] (Cache Bypassed)`);
             
-            // ⏱️ BƯỚC 3: GIỮ TẤM MÀN TRANSITION ĐÚNG 2 GIÂY (2000ms) RỒI MỚI GỠ RA
             setTimeout(() => {
                 if (transitionOverlay) {
-                    transitionOverlay.remove(); // Xóa bỏ hoàn toàn rèm che
+                    transitionOverlay.remove();
                 }
-                if (callback) callback(); // Đẩy data kích hoạt màn mới lên
+                if (callback) callback();
             }, 2000);
         };
         document.body.appendChild(script);
         
     } catch (error) {
         console.error(`Không thể nạp màn hình: ${screenName}`, error);
-        // Phòng hộ sự cố rớt mạng giữa chừng: Tự động dỡ rèm để tránh kẹt chết màn hình
         const transitionOverlay = document.getElementById('global-transition-overlay');
         if (transitionOverlay) transitionOverlay.remove();
     }
@@ -289,7 +284,6 @@ function saveGameLocal() {
     localStorage.setItem(`pkm_catch_${gameState.username}`, JSON.stringify(gameState));
 }
 
-// 🎯 HÀM TRỪ NĂNG LƯỢNG (Chỉ hoạt động offline, để chốt hạ cuối trận tự save)
 function consumeEnergy() {
     if (gameState.energy > 0) {
         gameState.energy -= 1;
@@ -307,7 +301,7 @@ function consumeEnergy() {
 // 🔐 HỆ THỐNG ĐĂNG NHẬP & XỬ LÝ DỮ LIỆU TỪ SHEET (API FETCH)
 // ==========================================================================
 
-// 🔓 1. HÀM ĐĂNG NHẬP (Nhận Data)
+// 🔓 1. HÀM ĐĂNG NHẬP
 async function loginGame(inputUsername, inputPassword) {
     try {
         console.log("🔄 Đang kết nối tới máy chủ Google Sheets (Login)...");
@@ -328,10 +322,7 @@ async function loginGame(inputUsername, inputPassword) {
             let userData = result.data;
 
             gameState.username = userData.username;
-            
-            // 🎯 ĐÃ THÊM: Gán cứng Mật khẩu để làm chìa khóa Auto-Sync ngầm
             gameState.password = inputPassword; 
-            
             gameState.coins = parseInt(userData.coins) || 0;
 
             let genderChar = userData.gender ? userData.gender.toString().toUpperCase().trim() : "";
@@ -371,7 +362,7 @@ async function loginGame(inputUsername, inputPassword) {
     }
 }
 
-// 💾 2. HÀM LƯU DỮ LIỆU (Ghi đè Data)
+// 💾 2. HÀM LƯU DỮ LIỆU (ĐÃ GẮN DÂY TÍN HIỆU ID CÂU HỎI)
 async function saveGameToSheet() {
     if (!gameState.username || gameState.username === "") return;
 
@@ -379,6 +370,9 @@ async function saveGameToSheet() {
         let sheetGender = "";
         if (gameState.gender === 'male') sheetGender = "M";
         else if (gameState.gender === 'female') sheetGender = "F";
+
+        // 🎯 LÔI ID CÂU HỎI HIỆN TẠI RA ĐỂ BẮN LÊN API
+        const qID = (window.currentQuestion && window.currentQuestion.ID) ? window.currentQuestion.ID : "";
 
         const response = await fetch(LOGIN_API_URL, {
             method: 'POST',
@@ -389,14 +383,15 @@ async function saveGameToSheet() {
                 coins: gameState.coins,
                 gender: sheetGender,
                 captured: JSON.stringify(gameState.captured),
-                energy: gameState.energy
+                energy: gameState.energy,
+                questionId: qID // 🎯 Bắn mảng này lên để Server tự cộng Count
             })
         });
 
         const result = await response.json();
         
         if (result.success) {
-            console.log("☁️ Đã sao lưu Cloud thành công!");
+            console.log("☁️ Đã sao lưu Cloud và cập nhật Count câu hỏi thành công!");
         } else {
             console.warn("☁️ Lỗi sao lưu Cloud:", result.message);
         }
