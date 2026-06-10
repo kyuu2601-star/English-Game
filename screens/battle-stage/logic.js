@@ -49,47 +49,107 @@ function nextBattleTurn() {
 
     // 🎯 ĐÃ THÊM LÕI CHỐT CHẶN: KIỂM TRA THỂ LỰC (ENERGY)
     if (gameState.energy <= 0) {
-        // Hết năng lượng -> Tắt hoàn toàn quái vật và hiển thị cảnh báo
         mobSprite.style.display = "none";
         mobTag.style.display = "none";
         document.getElementById('question-text').innerText = "You're out of energy! Please wait for admin refill or come back tomorrow to rest!";
-        document.querySelector('.answers-zone').style.display = "none"; // Khóa mồm 3 nút đáp án
-        return; // Ép dừng toàn bộ hàm, không gen quái hay câu hỏi mới nữa
+        document.querySelector('.answers-zone').style.display = "none"; 
+        return; 
     }
 
-    // Nếu còn năng lượng -> Mở lại 3 nút đáp án (lỡ như trước đó bị khóa)
     document.querySelector('.answers-zone').style.display = "flex";
 
-    // Tiếp tục đổ xúc xắc quái vật
+    // ------------------------------------------------------------------
+    // 🎡 TẦNG 1: ĐỔ XÚC XẮC CHỌN MỐC BUCKET % (CHỐNG PHA LOÃNG)
+    // ------------------------------------------------------------------
+    // 🎯 RỔ CẤU HÌNH % CỐ ĐỊNH: Tổng các con số này bắt buộc phải bằng 100.
+    // Sau này muốn thêm nhóm "Event" hay mốc "6", fen cứ phẩy rồi nhét thêm 1 dòng vào đây là xong.
+    const STAR_PERCENTAGES = {
+        "1": 40,
+        "2": 30,
+        "3": 18,
+        "4": 9,
+        "5": 3
+    };
+
     let randStar = Math.random() * 100;
-    let stars = 1;
-    if (randStar < 40) stars = 1;
-    else if (randStar < 70) stars = 2;
-    else if (randStar < 88) stars = 3;
-    else if (randStar < 97) stars = 4;
-    else stars = 5;
+    let stars = "1"; // Giá trị mặc định phòng hờ
 
-    let isShinyRoll = Math.random() < 0.01; 
+    for (let key in STAR_PERCENTAGES) {
+        if (randStar < STAR_PERCENTAGES[key]) {
+            stars = key;
+            break;
+        }
+        randStar -= STAR_PERCENTAGES[key];
+    }
 
-    let pool = globalMobList.filter(m => parseInt(m.Stars) === stars);
+    // ------------------------------------------------------------------
+    // 🎰 TẦNG 2: LỌC BUCKET & XOAY THEO TRỌNG SỐ (WEIGHT - CỘT RATE TRÊN SHEET)
+    // ------------------------------------------------------------------
+    // Gom toàn bộ quái vật thuộc mốc Stars vừa trúng giải ở Tầng 1
+    let pool = globalMobList.filter(m => {
+        let mobStarStr = m.Stars ? m.Stars.toString().trim() : "";
+        return mobStarStr === stars.toString().trim();
+    });
     if (pool.length === 0) pool = globalMobList;
 
+    // Phân tách nhánh Shiny và Normal dựa theo đuôi ID để chạy cơ chế Shiny Roll của fen
+    let isShinyRoll = Math.random() < 0.01; 
     let shinyPool = pool.filter(m => /[a-zA-Z]$/.test(m.ID));
     let normalPool = pool.filter(m => /^\d+\.\d+$/.test(m.ID));
 
+    // Chọn rổ quái mục tiêu theo tỷ lệ Shiny trúng thưởng
+    let targetPool = pool;
     if (isShinyRoll && shinyPool.length > 0) {
-        currentMob = shinyPool[Math.floor(Math.random() * shinyPool.length)];
+        targetPool = shinyPool;
         triggerShinyVFX(); 
-    } else {
-        currentMob = normalPool.length > 0 ? normalPool[Math.floor(Math.random() * normalPool.length)] : pool[Math.floor(Math.random() * pool.length)];
+    } else if (normalPool.length > 0) {
+        targetPool = normalPool;
     }
 
+    // Tiến hành lọc bỏ những con quái có Rate = 0 (Đã bị tắt/khóa trên Google Sheet) trong rổ mục tiêu
+    let activePool = targetPool.filter(mob => {
+        let rate = parseInt(mob.Rate);
+        if (isNaN(rate)) rate = 10; // Nếu để trống cột Rate trên Sheet thì mặc định trọng số là 10
+        return rate > 0;
+    });
+
+    // Bẫy cứu hộ: Nếu lỡ tay tắt sạch Rate về 0, lôi lại pool gốc ra chơi đỡ tránh sập giao diện
+    if (activePool.length === 0) activePool = targetPool;
+
+    // Tính tổng trọng số Rate của mớ quái đang kích hoạt
+    let totalGroupWeight = 0;
+    activePool.forEach(mob => {
+        let rate = parseInt(mob.Rate);
+        if (isNaN(rate)) rate = 10;
+        totalGroupWeight += rate;
+    });
+
+    // Quay số lọt lòng tìm con quái trúng thưởng cuối cùng theo Weight
+    let groupRoll = Math.random() * totalGroupWeight;
+    currentMob = activePool[activePool.length - 1]; // Dự phòng con cuối
+
+    for (let i = 0; i < activePool.length; i++) {
+        let mob = activePool[i];
+        let rate = parseInt(mob.Rate);
+        if (isNaN(rate)) rate = 10;
+
+        if (groupRoll < rate) {
+            currentMob = mob;
+            break;
+        }
+        groupRoll -= rate;
+    }
+
+    // ------------------------------------------------------------------
+    // ĐỔ DỮ LIỆU LÊN GIAO DIỆN HIỂN THỊ (GIỮ NGUYÊN GỐC)
+    // ------------------------------------------------------------------
     mobSprite.style.backgroundImage = `url('${currentMob.Image}')`;
     mobTag.style.backgroundImage = `url('assets/Nametag_lv${stars}.png')`;
     document.getElementById('mob-name-text').innerText = currentMob.Name;
     document.getElementById('player-sprite').style.backgroundImage = `url('assets/Player_${gameState.gender === 'male' ? 'Male' : 'Female'}_Back.png')`;
 
-    let qPool = globalQuestionList.filter(q => parseInt(q.Question_Stars) === stars);
+    // Câu hỏi lọc theo mốc Stars tương ứng như cũ
+    let qPool = globalQuestionList.filter(q => parseInt(q.Question_Stars) === parseInt(stars));
     if (qPool.length === 0) qPool = globalQuestionList;
     currentQuestion = qPool[Math.floor(Math.random() * qPool.length)];
 
@@ -129,7 +189,6 @@ function submitAnswer(chosen) {
 
     if (!popupBanner || !mob || !tag) return;
 
-    // 🎯 CHỐT ĐƠN TRỪ NĂNG LƯỢNG LUÔN (Dù đúng hay sai cũng bị trừ, nhưng chỉ lưu vào biến)
     consumeEnergy();
 
     if (chosen === currentQuestion.Correct_Answer) {
@@ -162,17 +221,14 @@ function submitAnswer(chosen) {
             setTimeout(() => {
                 let isFirstTime = !gameState.captured[currentMob.ID]; 
                 
-                // Nạp quái vào túi đồ
                 gameState.captured[currentMob.ID] = (gameState.captured[currentMob.ID] || 0) + 1;
                 
-                // Nếu là quái trùng thì cộng xu lên UI
                 if (!isFirstTime) {
                     gameState.coins += (parseInt(currentMob.Stars) * 10);
                     const coinDisplay = document.getElementById('user-coins');
                     if (coinDisplay) coinDisplay.innerText = gameState.coins;
                 }
 
-                // 🎯 LƯU TOÀN TẬP: Bắn 1 phát lên Cloud, save sạch Xu, Năng Lượng và Quái vừa bắt
                 if (typeof saveGameToSheet === 'function') { saveGameToSheet(); }
                 
                 saveGameLocal(); 
@@ -202,7 +258,6 @@ function submitAnswer(chosen) {
         mob.style.opacity = "0";
 
         setTimeout(() => {
-            // 🎯 LƯU TOÀN TẬP: Trả lời sai bị mất năng lượng -> Cũng bắn API lưu lại luôn
             if (typeof saveGameToSheet === 'function') { saveGameToSheet(); }
             
             saveGameLocal();
