@@ -2,6 +2,33 @@
 // 🤖 MÔ-ĐUN LOGIC TÁCH BIỆT: SẢNH CHÍNH & XÁC THỰC (MAIN-MENU)
 // ==========================================
 
+// ⏳ MÔ-ĐUN POPUP AUTO-LOGIN LOADING THÊM VÀO ĐỂ TỐI ƯU UX
+function showAutoLoginPopup() {
+    let popup = document.getElementById('auto-login-loading-popup');
+    if (!popup) {
+        popup = document.createElement('div');
+        popup.id = 'auto-login-loading-popup';
+        popup.innerHTML = `
+            <div style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); z-index: 9999; display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                <div style="width: 50px; height: 50px; border: 5px solid rgba(255, 255, 255, 0.3); border-top-color: #FFD700; border-radius: 50%; animation: spin-loading 1s linear infinite;"></div>
+                <h2 style="color: white; font-family: 'Fredoka', 'PatrickHand', sans-serif; margin-top: 20px; font-weight: normal; letter-spacing: 1px;">Đang kết nối dữ liệu...</h2>
+                <style>@keyframes spin-loading { 100% { transform: rotate(360deg); } }</style>
+            </div>
+        `;
+        document.body.appendChild(popup);
+    }
+    popup.style.display = 'flex';
+}
+
+function hideAutoLoginPopup() {
+    const popup = document.getElementById('auto-login-loading-popup');
+    if (popup) {
+        popup.style.transition = "opacity 0.3s";
+        popup.style.opacity = "0";
+        setTimeout(() => popup.remove(), 300);
+    }
+}
+
 async function initMainMenuLogic() {
     // 🕵️ KIỂM TRA NGẦM: Vừa nạp Sảnh là check Local Storage của máy liền
     let keys = Object.keys(localStorage);
@@ -16,9 +43,15 @@ async function initMainMenuLogic() {
             if (parsed.username && parsed.password) {
                 console.log("🔄 Phát hiện tài khoản cũ, đang tự động đồng bộ dữ liệu mới nhất từ Google Sheet...");
                 
+                // 🔴 BẬT POPUP LOADING LÊN TRƯỚC KHI KẾT NỐI SERVER
+                showAutoLoginPopup();
+
                 // Chạy lệnh đăng nhập ngầm lên Cloud để bốc data mới nhất (xu, năng lượng)
                 let isSyncSuccess = await loginGame(parsed.username, parsed.password);
                 
+                // 🟢 ĐĂNG NHẬP (THÀNH CÔNG HAY THẤT BẠI ĐỀU) TẮT POPUP ĐI
+                hideAutoLoginPopup();
+
                 if (isSyncSuccess) {
                     // 👉 HƯỚNG 1 (ONLINE): Có mạng và sync thành công -> Data mới nhất đã nạp thẳng vào gameState
                     enterMainMenuDirectly();
