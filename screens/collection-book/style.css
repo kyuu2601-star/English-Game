@@ -125,8 +125,8 @@
 /* Chữ tên quái vật nẹp viền thẻ */
 .card-title {
     position: absolute;
-    top: 15%;
-    left: 50%;
+    top: 10%;
+    left: 55%;
     transform: translate(-50%, -50%);
     width: 90%; /* 🎯 Giới hạn khung chữ không lòi ra khỏi viền */
     font-family: 'MyFredoka', sans-serif;
@@ -145,6 +145,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
 /* Số lượng quái bắt được nẹp ở góc thẻ */
 .card-tag {
     position: absolute;
@@ -159,9 +160,11 @@
     justify-content: flex-start;
     align-items: flex-end;       
     
+    /* 🎯 Giữ nguyên thông số fen đã canh chỉnh */
     padding-left: 10%; 
     padding-bottom: 27%;
-    transform: rotate(15deg); /* Góc xoay 15 độ ngược chiều kim đồng hồ */
+    
+    /* ❌ Đã bứng dòng transform đi chỗ khác để khung Tag đứng im */
     box-sizing: border-box; 
     
     font-family: 'MyFredoka', sans-serif;
@@ -172,6 +175,13 @@
     color: #475569; 
     font-weight: bold;
     z-index: 60; 
+}
+
+/* 🎯 ĐÃ THÊM: Lớp lõi chỉ xoay riêng cái chữ x1 */
+.tag-text {
+    display: inline-block; /* Bắt buộc để lệnh xoay ăn vào thẻ span */
+    transform: rotate(15deg); /* Góc xoay -15 độ (thêm dấu trừ để xoay ngược chiều kim đồng hồ) */
+    transform-origin: center;
 }
 
 /* Ép font-size theo tỷ lệ thẻ khi thẻ bị bóp trần (max-width) */
