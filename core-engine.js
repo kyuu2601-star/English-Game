@@ -4,7 +4,7 @@
 const MOBS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT-EFZn4iPTyVHW35NtYDWCwVH5mt6Vuw9kbAFNMm8CkLXzu31QdoK7vW18NdlKLXKKgZIH9YYFKqoh/pub?gid=0&single=true&output=csv";
 const QUESTIONS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT-EFZn4iPTyVHW35NtYDWCwVH5mt6Vuw9kbAFNMm8CkLXzu31QdoK7vW18NdlKLXKKgZIH9YYFKqoh/pub?gid=991631725&single=true&output=csv";
 const LOGIN_API_URL = "https://script.google.com/macros/s/AKfycbzkXP46IjCrgdRjFq9hH1mQ8YHljlsUJWwk63wYIDjkaZ5S0Ua9Juox9CokgFt0MKs/exec";
-const CACHE_NAME = 'mon-english-v1'; 
+const CACHE_NAME = 'mon-english-v2'; 
 
 // 🎯 TẤT CẢ CHỈ SỐ ĐỂ TRỐNG/SỐ 0 ĐỂ GOOGLE SHEET NẠP XUỐNG
 let globalMobList = [];      
@@ -25,6 +25,9 @@ let shinyRainInterval = null;
 // ==========================================================================
 // 🚀 THUẬT TOÁN KIỂM TRA, CÀO BÙ ASSET VÀ ÉP TẢI MỚI CODE/CSS (KHÓA LOADING)
 // ==========================================================================
+// ==========================================================================
+// 🚀 THUẬT TOÁN KIỂM TRA, CÀO BÙ ASSET VÀ ÉP TẢI MỚI CODE/CSS (KHÓA LOADING)
+// ==========================================================================
 async function handleGamePreloadAndVersionControl() {
     if (!('caches' in window)) {
         console.warn("⚠️ Trình duyệt không hỗ trợ Cache Storage, bỏ qua preload.");
@@ -32,8 +35,19 @@ async function handleGamePreloadAndVersionControl() {
         return;
     }
 
+    // 🎯 ĐÃ THÊM: THUẬT TOÁN ĐỐT KHO RÁC
+    // Quét toàn bộ kho Cache trên máy, cái nào khác tên với CACHE_NAME hiện tại thì xóa sạch
+    const cacheKeys = await caches.keys();
+    for (const key of cacheKeys) {
+        if (key !== CACHE_NAME) {
+            console.log(`🗑️ Dọn dẹp phiên bản cũ: ${key}`);
+            await caches.delete(key);
+        }
+    }
+
     console.log("🚀 [Loading Engine] Bắt đầu tiến trình kiểm tra và tải nạp tài nguyên thực tế...");
     const cache = await caches.open(CACHE_NAME);
+    // ... (phần code bên dưới giữ nguyên) ...
 
     const coreCodes = [
         './global.css',
