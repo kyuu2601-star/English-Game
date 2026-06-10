@@ -372,7 +372,7 @@ async function saveGameToSheet() {
         else if (gameState.gender === 'female') sheetGender = "F";
 
         // 🎯 LÔI ID CÂU HỎI HIỆN TẠI RA ĐỂ BẮN LÊN API
-        const qID = (window.currentQuestion && window.currentQuestion.ID) ? window.currentQuestion.ID : "";
+        const qID = (window.currentQuestion && window.currentQuestion.Q_ID) ? window.currentQuestion.Q_ID : "";
 
         const response = await fetch(LOGIN_API_URL, {
             method: 'POST',
