@@ -162,15 +162,19 @@ function submitAnswer(chosen) {
             }
             
             setTimeout(() => {
-                let isFirstTime = gameState.captured[currentMob.ID] === 0;
-                gameState.captured[currentMob.ID] += 1;
+                // 🎯 ĐÃ SỬA LẠI LOGIC CHECK LẦN ĐẦU
+                // Nếu túi đồ chưa có ID này (undefined) -> Đây là lần đầu bắt được
+                let isFirstTime = !gameState.captured[currentMob.ID]; 
+                
+                // 🎯 ĐÃ SỬA LOGIC CỘNG: Nếu chưa có thì khởi tạo bằng 0 rồi +1, có rồi thì lấy số cũ +1
+                gameState.captured[currentMob.ID] = (gameState.captured[currentMob.ID] || 0) + 1;
                 
                 // Trả xu (+ Save ngầm nếu có thay đổi)
                 if (!isFirstTime) {
                     gameState.coins += (parseInt(currentMob.Stars) * 10);
                     const coinDisplay = document.getElementById('user-coins');
                     if (coinDisplay) coinDisplay.innerText = gameState.coins;
-                    saveGameToSheet(); // Trúng quái trùng thì up xu lên mây
+                    saveGameToSheet(); 
                 }
 
                 saveGameLocal(); 
