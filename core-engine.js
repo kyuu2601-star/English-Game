@@ -156,27 +156,37 @@ async function initGameEngine() {
 // ==========================================
 async function loadScreen(screenName, callback) {
     const viewport = document.getElementById('game-viewport');
+    
+    // 🎯 VŨ KHÍ PHÁ CACHE: Tạo dãy số ngẫu nhiên theo thời gian thực (Timestamp)
+    const noCacheStamp = new Date().getTime();
+
     try {
-        const htmlResponse = await fetch(`screens/${screenName}/ui.html`);
+        // 1. Ép tải HTML mới bằng cache: 'no-store' và đuôi query parameter
+        const htmlResponse = await fetch(`screens/${screenName}/ui.html?v=${noCacheStamp}`, { cache: 'no-store' });
         const htmlText = await htmlResponse.text();
         viewport.innerHTML = htmlText;
         
+        // 2. Ép tải CSS mới
         const cssId = `css-${screenName}`;
-        if (!document.getElementById(cssId)) {
-            const link = document.createElement('link');
-            link.id = cssId; link.rel = 'stylesheet';
-            link.href = `screens/${screenName}/style.css`;
+        let link = document.getElementById(cssId);
+        if (!link) {
+            link = document.createElement('link');
+            link.id = cssId; 
+            link.rel = 'stylesheet';
             document.head.appendChild(link);
         }
+        // Luôn luôn chèn đè href bằng link kèm timestamp
+        link.href = `screens/${screenName}/style.css?v=${noCacheStamp}`;
         
+        // 3. Ép tải Script JS mới
         const oldScript = document.getElementById('screen-runtime-logic');
         if (oldScript) oldScript.remove();
         
         const script = document.createElement('script');
         script.id = 'screen-runtime-logic';
-        script.src = `screens/${screenName}/logic.js`;
+        script.src = `screens/${screenName}/logic.js?v=${noCacheStamp}`;
         script.onload = () => { 
-            console.log(`🤖 Loaded Runtime Logic for: [${screenName}]`);
+            console.log(`🤖 Loaded Runtime Logic for: [${screenName}] (Cache Bypassed)`);
             if (callback) callback(); 
         };
         document.body.appendChild(script);
@@ -241,7 +251,7 @@ function saveGameLocal() {
     localStorage.setItem(`pkm_catch_${gameState.username}`, JSON.stringify(gameState));
 }
 
-// 🎯 HÀM TRỪ NĂNG LƯỢNG KÈM LƯU LÊN SHEET
+// 🎯 HÀM TRỪ NĂNG LƯỢNG (Chỉ hoạt động offline, để chốt hạ cuối trận tự save)
 function consumeEnergy() {
     if (gameState.energy > 0) {
         gameState.energy -= 1;
@@ -268,7 +278,7 @@ async function loginGame(inputUsername, inputPassword) {
             method: 'POST',
             headers: { 'Content-Type': 'text/plain;charset=utf-8' },
             body: JSON.stringify({
-                action: "login", // 🎯 Đã gài thêm cờ phân loại
+                action: "login", 
                 username: inputUsername,
                 password: inputPassword
             })
@@ -321,11 +331,9 @@ async function loginGame(inputUsername, inputPassword) {
 
 // 💾 2. HÀM LƯU DỮ LIỆU (Ghi đè Data)
 async function saveGameToSheet() {
-    // Chỉ lưu khi tài khoản đã xác thực rõ ràng
     if (!gameState.username || gameState.username === "") return;
 
     try {
-        // Ép kiểu chữ cho chuẩn form M/F
         let sheetGender = "";
         if (gameState.gender === 'male') sheetGender = "M";
         else if (gameState.gender === 'female') sheetGender = "F";
@@ -334,11 +342,11 @@ async function saveGameToSheet() {
             method: 'POST',
             headers: { 'Content-Type': 'text/plain;charset=utf-8' },
             body: JSON.stringify({
-                action: "save", // 🎯 Cờ ra lệnh Ghi đè
+                action: "save", 
                 username: gameState.username,
                 coins: gameState.coins,
                 gender: sheetGender,
-                captured: JSON.stringify(gameState.captured), // Chuyển túi đồ thành chuỗi Text
+                captured: JSON.stringify(gameState.captured),
                 energy: gameState.energy
             })
         });
