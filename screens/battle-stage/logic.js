@@ -177,7 +177,8 @@ function nextBattleTurn() {
     }
 
     console.log(`📝 Bốc câu hỏi: "${currentQuestion.Question.substring(0, 25)}..." | Lượt xuất hiện (Sheet + Ngầm): ${(parseInt(currentQuestion.Count) || 0) + (currentQuestion._localCount || 0)}`);
-
+    window.currentQuestion = currentQuestion;
+    
     // Hiển thị nội dung câu hỏi và các đáp án lên UI
     document.getElementById('question-text').innerText = currentQuestion.Question;
     document.getElementById('ans-A').innerText = currentQuestion.Option_A;
