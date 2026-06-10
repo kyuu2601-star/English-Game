@@ -137,18 +137,36 @@
 /* Số lượng quái bắt được nẹp ở góc thẻ */
 .card-tag {
     position: absolute;
-    bottom: 10%; left: 6%;
+    top: 0; left: 0;
+    width: 100%; 
+    height: 100%; 
+    
+    /* 🎯 BUNG KÍN TAG ICON 400x600 ĐÈ HOÀN TOÀN LÊN THẺ BÀI */
     background: url('assets/Tag_Icon.png') no-repeat center/contain;
-    width: 14%; 
-    aspect-ratio: 1/1; 
+    
+    /* 🎯 DÙNG FLEX ĐỂ CANH CON SỐ LỌT VÀO VÙNG CỦA TAG ICON */
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: flex-start; /* Ép số về bên trái */
+    align-items: flex-end;       /* Ép số xuống đáy */
+    
+    /* 🎯 CÂN CHỈNH NHẸ PADDING ĐỂ SỐ RỚT ĐÚNG VÀO CÁI THẺ NHỰA */
+    /* Fen có thể tùy chỉnh thông số padding này một chút (tính theo %) 
+       nếu con số bị lệch so với thiết kế của hình Tag_Icon.png */
+    padding-left: 12%; 
+    padding-bottom: 6%; 
+    
+    box-sizing: border-box; /* Đảm bảo padding không làm phình kích thước 100% */
+    
     font-family: 'MyFredoka', sans-serif;
-    font-size: 0.85rem;
-    color: white;
+    font-size: 1.5vw; /* Dùng vw hoặc vh để font chữ tự co giãn theo màn hình */
+    color: #475569; /* Đổi màu chữ tối một chút cho dễ đọc trên nền vàng/trắng */
     font-weight: bold;
     z-index: 60; 
+}
+
+/* Ép font-size theo tỷ lệ thẻ khi thẻ bị bóp trần (max-width) */
+@media (min-width: 1920px) {
+    .card-tag { font-size: 1.2rem; }
 }
 
 /* ==========================================================================
