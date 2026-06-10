@@ -119,7 +119,6 @@ function triggerShinyVFX() {
 }
 
 function submitAnswer(chosen) {
-    // 🎯 ĐÃ THÊM: Ngăn chặn click bậy bạ nếu hết năng lượng
     if (gameState.energy <= 0) return;
 
     const popupBanner = document.getElementById('result-popup-banner');
@@ -130,14 +129,13 @@ function submitAnswer(chosen) {
 
     if (!popupBanner || !mob || !tag) return;
 
+    // 🎯 CHỐT ĐƠN TRỪ NĂNG LƯỢNG LUÔN (Dù đúng hay sai cũng bị trừ, nhưng chỉ lưu vào biến)
+    consumeEnergy();
+
     if (chosen === currentQuestion.Correct_Answer) {
         // ==========================================
         // 🟢 TRƯỜNG HỢP ĐÚNG: CAPTURED FLOW
         // ==========================================
-        
-        // 🎯 GỌI HÀM TRỪ NĂNG LƯỢNG NGAY KHI VỪA ĐÁP TRÚNG (+ Tự auto Save)
-        consumeEnergy();
-
         popupBanner.style.backgroundImage = "url('assets/Popup_Captured.png')";
         popupBanner.style.display = "block";
         popupBanner.style.transform = "translate(-50%, -50%) scale(1)";
@@ -162,21 +160,21 @@ function submitAnswer(chosen) {
             }
             
             setTimeout(() => {
-                // 🎯 ĐÃ SỬA LẠI LOGIC CHECK LẦN ĐẦU
-                // Nếu túi đồ chưa có ID này (undefined) -> Đây là lần đầu bắt được
                 let isFirstTime = !gameState.captured[currentMob.ID]; 
                 
-                // 🎯 ĐÃ SỬA LOGIC CỘNG: Nếu chưa có thì khởi tạo bằng 0 rồi +1, có rồi thì lấy số cũ +1
+                // Nạp quái vào túi đồ
                 gameState.captured[currentMob.ID] = (gameState.captured[currentMob.ID] || 0) + 1;
                 
-                // Trả xu (+ Save ngầm nếu có thay đổi)
+                // Nếu là quái trùng thì cộng xu lên UI
                 if (!isFirstTime) {
                     gameState.coins += (parseInt(currentMob.Stars) * 10);
                     const coinDisplay = document.getElementById('user-coins');
                     if (coinDisplay) coinDisplay.innerText = gameState.coins;
-                    saveGameToSheet(); 
                 }
 
+                // 🎯 LƯU TOÀN TẬP: Bắn 1 phát lên Cloud, save sạch Xu, Năng Lượng và Quái vừa bắt
+                if (typeof saveGameToSheet === 'function') { saveGameToSheet(); }
+                
                 saveGameLocal(); 
                 nextBattleTurn();
             }, 1200);
@@ -204,8 +202,10 @@ function submitAnswer(chosen) {
         mob.style.opacity = "0";
 
         setTimeout(() => {
-            // 🎯 LƯU DỰ PHÒNG: Dù xịt không bắt được nhưng cũng ráng đẩy cái túi đồ lên Cloud lưu giữ hiện trường
+            // 🎯 LƯU TOÀN TẬP: Trả lời sai bị mất năng lượng -> Cũng bắn API lưu lại luôn
             if (typeof saveGameToSheet === 'function') { saveGameToSheet(); }
+            
+            saveGameLocal();
             nextBattleTurn();
         }, 1500);
     }
