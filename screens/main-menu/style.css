@@ -186,7 +186,7 @@
     position: absolute;           /* Ép tọa độ chạy theo thằng cha .player-nametag-wrapper */
     
     /* 🎯 ĐẨY LÙI VỀ CẠNH TRÁI: Đẩy lùi âm phân nửa chiều rộng ảnh ra rìa trái bệ đỡ */
-    left: -1vh !important;      
+    left: -5vh !important;      
     /* 🎯 CĂN GIỮA TRỤC DỌC: Giúp tâm avatar luôn nằm ngay chính giữa bệ đỡ theo chiều ngang */
     top: 50%;
     transform: translateY(-50%) !important; 
