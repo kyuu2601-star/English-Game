@@ -1,0 +1,81 @@
+<div class="garden-wrapper">
+    <div class="garden-container-1080p">
+        
+        <div id="garden-viewport" class="garden-viewport">
+            <div id="garden-map" class="garden-map">
+                <div class="garden-tile" style="background-image: url('assets/tile_0_0.png')"></div>
+                <div class="garden-tile" style="background-image: url('assets/tile_0_1.png')"></div>
+                <div class="garden-tile" style="background-image: url('assets/tile_0_2.png')"></div>
+                <div class="garden-tile" style="background-image: url('assets/tile_0_3.png')"></div>
+                <div class="garden-tile" style="background-image: url('assets/tile_1_0.png')"></div>
+                <div class="garden-tile" style="background-image: url('assets/tile_1_1.png')"></div>
+                <div class="garden-tile" style="background-image: url('assets/tile_1_2.png')"></div>
+                <div class="garden-tile" style="background-image: url('assets/tile_1_3.png')"></div>
+                <div class="garden-tile" style="background-image: url('assets/tile_2_0.png')"></div>
+                <div class="garden-tile" style="background-image: url('assets/tile_2_1.png')"></div>
+                <div class="garden-tile" style="background-image: url('assets/tile_2_2.png')"></div>
+                <div class="garden-tile" style="background-image: url('assets/tile_2_3.png')"></div>
+                <div class="garden-tile" style="background-image: url('assets/tile_3_0.png')"></div>
+                <div class="garden-tile" style="background-image: url('assets/tile_3_1.png')"></div>
+                <div class="garden-tile" style="background-image: url('assets/tile_3_2.png')"></div>
+                <div class="garden-tile" style="background-image: url('assets/tile_3_3.png')"></div>
+
+                <div id="garden-player" class="garden-player"></div>
+
+                </div>
+        </div>
+
+        <div id="joystick-zone" class="joystick-zone">
+            <div id="joystick-base" class="joystick-base">
+                <div id="joystick-stick" class="joystick-stick"></div>
+            </div>
+        </div>
+
+        <div id="btn-whistle-zone" class="btn-whistle-zone">
+            <svg class="whistle-cooldown-svg">
+                <circle class="cooldown-circle-track" cx="65" cy="65" r="60"></circle>
+                <circle id="cooldown-progress-bar" class="cooldown-circle-bar" cx="65" cy="65" r="60"></circle>
+            </svg>
+            <button id="btn-whistle-trigger" class="btn-whistle-core"></button>
+        </div>
+
+        <div class="garden-top-nav-menu">
+            <button class="btn-garden-nav btn-nav-collection" title="Bộ sưu tập" onclick="changeScreen('collection')"></button>
+            <button class="btn-garden-nav btn-nav-battle" title="Đi chiến đấu" onclick="changeScreen('battle-stage')"></button>
+            <button class="btn-garden-nav btn-nav-back" title="Về sảnh chính" onclick="changeScreen('menu')"></button>
+        </div>
+
+        <div id="garden-mon-selector" class="garden-select-modal" style="display: none;">
+            <div class="garden-select-content">
+                <h3>CHỌN VỆ SĨ (TỐI ĐA 5)</h3>
+                
+                <div class="grid-pagination-wrapper">
+                    <button class="btn-grid-arrow" id="btn-selector-prev" onclick="changeSelectorPage(-1)">◀</button>
+                    <div id="garden-selector-grid" class="garden-selector-grid-6x6">
+                        </div>
+                    <button class="btn-grid-arrow" id="btn-selector-next" onclick="changeSelectorPage(1)">▶</button>
+                </div>
+
+                <div class="garden-slots-row-bottom">
+                    <div class="garden-vanguard-slot-box" id="slot-0" onclick="deselectMonFromSlot(0)"></div>
+                    <div class="garden-vanguard-slot-box" id="slot-1" onclick="deselectMonFromSlot(1)"></div>
+                    <div class="garden-vanguard-slot-box" id="slot-2" onclick="deselectMonFromSlot(2)"></div>
+                    <div class="garden-vanguard-slot-box" id="slot-3" onclick="deselectMonFromSlot(3)"></div>
+                    <div class="garden-vanguard-slot-box" id="slot-4" onclick="deselectMonFromSlot(4)"></div>
+                </div>
+
+                <button class="btn-confirm-whistle-select" onclick="confirmWhistleSelection()">XÁC NHẬN</button>
+            </div>
+        </div>
+
+    </div> </div> ```
+
+---
+
+**Điểm nhấn kỹ thuật trong file UI này:**
+1. **Z-index chuẩn RPG:** Nhân vật (`garden-player`) được để ở z-index cao để luôn đè lên các tấm gạch nền.
+2. **SVG Cooldown:** Tui đã chuẩn bị sẵn thẻ `<circle>` với `id="cooldown-progress-bar"`. Lát nữa trong JS mình chỉ cần điều chỉnh thuộc tính `stroke-dashoffset` là vòng tròn tiến trình sẽ chạy mượt mà quanh nút còi.
+3. **Cấu trúc ma trận 16 tấm:** Các tấm gạch được đặt theo thứ tự từ trái qua phải, từ trên xuống dưới đúng chuẩn CSS Grid để không bị lệch bản đồ.
+4. **Nút bấm:** Toàn bộ ảnh nền nút đã được gài trong CSS, file HTML này chỉ chứa lệnh gọi hàm chuyển màn hình (`changeScreen`).
+
+Fen xem qua bộ khung này ổn chưa? Nếu ok rồi thì hú tui để anh em mình cùng "đổ bê tông" nốt file quan trọng nhất và cũng nặng đô nhất: **`logic.js`** nhe!
