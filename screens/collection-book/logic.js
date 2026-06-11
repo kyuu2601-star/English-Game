@@ -66,7 +66,7 @@ function renderCollectionBook() {
         let imgName = "";
 
         if (isRankE) {
-            imgName = isShiny ? "Card_LvE_S.png" : "Card_LvE.png";
+            imgName = isShiny ? "Card_lvE_S.png" : "Card_lvE.png";
         } else {
             imgName = isShiny ? `Card_lv${starLevel}_S.png` : `Card_lv${starLevel}.png`;
         }
