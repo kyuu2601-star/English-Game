@@ -149,7 +149,7 @@
     max-height: 55px !important;  /* Thay vì 110px, tui bóp trần max-height về đúng 55px khớp với phôi chữ */
     max-width: 220px !important;   /* Giới hạn max-width tương ứng tỷ lệ 4 lần */
     margin-top: -3vh !important;   /* Khóa âm khoảng cách nhích lên che chân nhân vật không bị giãn khi zoom */
-    background: url('assets/Nametag_lv5.png') no-repeat center/contain;
+    background: url('assets/Nametag_Player.png') no-repeat center/contain;
     display: flex;
     justify-content: center;
     align-items: center;   
