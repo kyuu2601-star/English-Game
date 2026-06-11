@@ -132,17 +132,29 @@ function nextBattleTurn() {
         groupRoll -= rate;
     }
 
-    // Đổ hình ảnh và thẻ tên quái lên UI
+    // Đổ hình ảnh lên UI
     mobSprite.style.backgroundImage = `url('${currentMob.Image}')`;
-    mobTag.style.backgroundImage = `url('assets/Nametag_lv${stars}.png')`;
+    
+    // 🎯 ĐÃ SỬA: KIỂM TRA NAMETAG. NẾU KHÔNG PHẢI TỪ 1-5 THÌ MƯỢN TẠM KHUNG 5 SAO
+    let validNametagLevels = ["1", "2", "3", "4", "5"];
+    let nametagGraphic = validNametagLevels.includes(stars.toString().trim()) ? stars.toString().trim() : "5";
+    mobTag.style.backgroundImage = `url('assets/Nametag_lv${nametagGraphic}.png')`;
+    
     document.getElementById('mob-name-text').innerText = currentMob.Name;
     document.getElementById('player-sprite').style.backgroundImage = `url('assets/Player_${gameState.gender === 'male' ? 'Male' : 'Female'}_Back.png')`;
 
     // ------------------------------------------------------------------
     // 📖 TẦNG 3: BỐC CÂU HỎI THÔNG MINH (GIẢM TỶ LỆ THEO CỘT COUNT & BỘ ĐẾM NGẦM)
     // ------------------------------------------------------------------
-    // Bước 3.1: Lọc câu hỏi theo đúng mốc Stars vừa trúng giải
-    let qPool = globalQuestionList.filter(q => parseInt(q.Question_Stars) === parseInt(stars));
+    // 🎯 ĐÃ SỬA: Lọc câu hỏi bằng String Comparison thay vì parseInt()
+    let targetStarStr = stars.toString().trim().toUpperCase();
+    
+    let qPool = globalQuestionList.filter(q => {
+        let qStarStr = q.Question_Stars ? q.Question_Stars.toString().trim().toUpperCase() : "";
+        return qStarStr === targetStarStr;
+    });
+    
+    // Fallback: Nếu lỡ bốc trúng mốc P mà trong Sheet chưa có câu hỏi mốc P nào thì lấy đại toàn bộ
     if (qPool.length === 0) qPool = globalQuestionList;
 
     // Bước 3.2: Tính trọng số dựa theo công thức: 100 / (Thực tế trên Sheet + Ngầm trong phiên chơi + 1)
@@ -252,7 +264,11 @@ function submitAnswer(chosen) {
                 gameState.captured[currentMob.ID] = (gameState.captured[currentMob.ID] || 0) + 1;
                 
                 if (!isFirstTime) {
-                    gameState.coins += (parseInt(currentMob.Stars) * 10);
+                    // Cứu hộ an toàn tính tiền thưởng nếu lỡ quái là mã chữ
+                    let starValueForCoins = parseInt(currentMob.Stars);
+                    if (isNaN(starValueForCoins)) starValueForCoins = 5; // Mặc định quái chữ thưởng ngang 5 sao
+                    
+                    gameState.coins += (starValueForCoins * 10);
                     const coinDisplay = document.getElementById('user-coins');
                     if (coinDisplay) coinDisplay.innerText = gameState.coins;
                 }
@@ -293,3 +309,11 @@ function submitAnswer(chosen) {
         }, 1500);
     }
 }
+
+// 🗑️ Dọn dẹp rác khi chuyển màn hình
+window.addEventListener('beforeunload', () => {
+    if (typeof shinyRainInterval !== 'undefined' && shinyRainInterval) {
+        clearInterval(shinyRainInterval);
+        shinyRainInterval = null;
+    }
+});
