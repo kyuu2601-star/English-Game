@@ -77,6 +77,7 @@ async function initMainMenuLogic() {
                 gameState.coins = parsed.coins || 0;
                 gameState.captured = parsed.captured || {};
                 gameState.energy = parsed.energy || 0;
+                gameState.avatar = parsed.avatar || "";
                 
                 enterMainMenuDirectly();
                 return;
@@ -94,6 +95,7 @@ function enterMainMenuDirectly() {
     const charZone = document.querySelector('.menu-right-char-zone');
     const avatarDisplay = document.getElementById('menu-avatar-display');
     const nameText = document.getElementById('player-name-text');
+    const avatarImg = document.getElementById('main-menu-avatar');
 
     if (avatarDisplay) avatarDisplay.style.backgroundImage = `url('assets/Player_${gameState.gender === 'male' ? 'Male' : 'Female'}_Main.png')`;
     if (nameText) nameText.innerText = gameState.username;
