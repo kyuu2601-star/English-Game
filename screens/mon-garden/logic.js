@@ -6,6 +6,9 @@
 let gardenAnimationFrameId = null;
 let gardenIntervalTimers = [];
 
+// 🎯 TRẠNG THÁI SCALE MÀN HÌNH (Rất quan trọng để UI thu phóng vừa màn hình)
+let currentGardenScale = 1;
+
 // Trạng thái Nhân vật chính (Player State)
 let gardenPlayerState = {
     x: 2000, 
@@ -65,6 +68,10 @@ function initGardenLogic() {
 
     updatePlayerSpriteAsset();
 
+    // 🎯 GỌI HÀM CÂN BẰNG TỶ LỆ MÀN HÌNH VÀ GẮN SỰ KIỆN KHI RESIZE
+    fitGardenToScreen();
+    window.addEventListener('resize', fitGardenToScreen);
+
     viewportEl.scrollLeft = gardenPlayerState.x - 1920 / 2 + gardenPlayerState.width / 2;
     viewportEl.scrollTop = gardenPlayerState.y - 1080 / 2 + gardenPlayerState.height / 2;
 
@@ -75,8 +82,20 @@ function initGardenLogic() {
     runGardenGameTickLoop();
 }
 
+// 🎯 HÀM TỰ ĐỘNG THU PHÓNG KHUNG GAME ĐỂ VỪA KHÍT MỌI THIẾT BỊ
+function fitGardenToScreen() {
+    const container = document.querySelector('.garden-container-1080p');
+    if (!container) return;
+    
+    // Tìm tỷ lệ scale để nhét vừa 1920x1080 vào cửa sổ hiện tại (Letterbox)
+    currentGardenScale = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+    
+    // Áp dụng scale, giao diện sẽ tự nhỏ lại/to ra mà không vỡ cấu trúc
+    container.style.transform = `translate(-50%, -50%) scale(${currentGardenScale})`;
+}
+
 // ==========================================================================
-// 🕹️ THUẬT TOÁN ĐIỀU KHIỂN CẦN GẠT JOYSTICK
+// 🕹️ THUẬT TOÁN ĐIỀU KHIỂN CẦN GẠT JOYSTICK (ĐÃ CHUẨN HÓA TỌA ĐỘ SCALE)
 // ==========================================================================
 function activateVirtualJoystickEngine() {
     const base = document.getElementById('joystick-base');
@@ -97,8 +116,10 @@ function activateVirtualJoystickEngine() {
         const pageX = e.pageX || (e.touches ? e.touches[0].pageX : 0);
         const pageY = e.pageY || (e.touches ? e.touches[0].pageY : 0);
 
-        let dx = pageX - gardenJoystickState.startX;
-        let dy = pageY - gardenJoystickState.startY;
+        // 🎯 CỰC KỲ QUAN TRỌNG: Chia cho scale để ngón tay đi bao nhiêu, cần gạt đi bấy nhiêu
+        let dx = (pageX - gardenJoystickState.startX) / currentGardenScale;
+        let dy = (pageY - gardenJoystickState.startY) / currentGardenScale;
+        
         let dist = Math.sqrt(dx * dx + dy * dy);
         let angle = Math.atan2(dy, dx);
 
@@ -132,7 +153,6 @@ function updatePlayerSpriteAsset() {
     let genderTag = (gameState.gender === 'female') ? 'Female' : 'Male';
     let directionTag = (gardenPlayerState.viewDirection === 'up') ? 'Back' : 'Main';
     
-    // 🎯 ĐƯỜNG DẪN CHUẨN GITHUB PAGES
     playerEl.style.backgroundImage = `url('assets/Player_${genderTag}_${directionTag}.png')`;
 }
 
@@ -265,7 +285,7 @@ function spawnAllMonsFromUserSheet() {
 }
 
 // ==========================================================================
-// ✋ ENGINE: SCREEN-LEVEL DRAG & DROP (XÁCH QUÁI LÊN)
+// ✋ ENGINE: SCREEN-LEVEL DRAG & DROP (ĐÃ ĐƯỢC CHUẨN HÓA THEO SCALE)
 // ==========================================================================
 function startHoldingMonRoutine(e, monObj) {
     if (currentHeldMonInstance || monObj.isFollowerMode) return; 
@@ -279,11 +299,12 @@ function startHoldingMonRoutine(e, monObj) {
     const pageX = e.pageX || (e.touches ? e.touches[0].pageX : 0);
     const pageY = e.pageY || (e.touches ? e.touches[0].pageY : 0);
 
-    holdPointerOffset.x = pageX - petRect.left;
-    holdPointerOffset.y = pageY - petRect.top;
+    // 🎯 TRỪ HẬU QUẢ CỦA SCALE ĐỂ QUÁI KHÔNG BỊ GIẬT LỆCH KHI BẤM VÀO
+    holdPointerOffset.x = (pageX - petRect.left) / currentGardenScale;
+    holdPointerOffset.y = (pageY - petRect.top) / currentGardenScale;
 
-    const originX = (holdPointerOffset.x / petRect.width) * 100;
-    const originY = (holdPointerOffset.y / petRect.height) * 100;
+    const originX = (holdPointerOffset.x / (petRect.width / currentGardenScale)) * 100;
+    const originY = (holdPointerOffset.y / (petRect.height / currentGardenScale)) * 100;
 
     monObj.graphicElement.style.transformOrigin = `${originX}% ${originY}%`;
 
@@ -295,6 +316,7 @@ function startHoldingMonRoutine(e, monObj) {
 
 function setupScreenLevelDragDropEngine() {
     const viewport = document.getElementById('garden-viewport');
+    const container = document.querySelector('.garden-container-1080p');
     
     function onGlobalMouseMoveRoutine(e) {
         if (!currentHeldMonInstance || !document.getElementById('garden-player')) return;
@@ -303,8 +325,14 @@ function setupScreenLevelDragDropEngine() {
         const pageX = e.pageX || (e.touches ? e.touches[0].pageX : 0);
         const pageY = e.pageY || (e.touches ? e.touches[0].pageY : 0);
 
-        let newMapX = pageX + viewport.scrollLeft - holdPointerOffset.x;
-        let newMapY = pageY + viewport.scrollTop - holdPointerOffset.y;
+        const containerRect = container.getBoundingClientRect();
+
+        // 🎯 TÍNH TOÁN LẠI TỌA ĐỘ ẢO DỰA TRÊN ĐỘ THU PHÓNG
+        let logicalPointerX = (pageX - containerRect.left) / currentGardenScale;
+        let logicalPointerY = (pageY - containerRect.top) / currentGardenScale;
+
+        let newMapX = logicalPointerX + viewport.scrollLeft - holdPointerOffset.x;
+        let newMapY = logicalPointerY + viewport.scrollTop - holdPointerOffset.y;
 
         if (newMapX < 50) newMapX = 50;
         if (newMapX > 3950) newMapX = 3950;
@@ -668,6 +696,9 @@ function closeMonSelectorModal() {
 // 🗑️ DỌN DẸP BỘ NHỚ KHI CHUYỂN MÀN HÌNH
 // ==========================================================================
 function cleanUpGardenEngineLeaks() {
+    // 🎯 Gỡ bỏ sự kiện thu phóng tránh lọt lỗ hổng sang map khác
+    window.removeEventListener('resize', fitGardenToScreen); 
+    
     if (gardenAnimationFrameId) {
         cancelAnimationFrame(gardenAnimationFrameId);
         gardenAnimationFrameId = null;
