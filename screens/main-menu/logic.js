@@ -100,6 +100,26 @@ function enterMainMenuDirectly() {
     if (avatarDisplay) avatarDisplay.style.backgroundImage = `url('assets/Player_${gameState.gender === 'male' ? 'Male' : 'Female'}_Main.png')`;
     if (nameText) nameText.innerText = gameState.username;
 
+    // ===================================================================
+    // 🎯 ĐOẠN ĐÃ FIX: LẤY LINK ĐỘNG TỪ SHEET (gameState.avatar) ĐỔ VÀO UI
+    // ===================================================================
+    if (avatarImg) {
+        let rawLink = gameState.avatar ? gameState.avatar.trim() : "";
+
+        if (rawLink !== "") {
+            avatarImg.src = rawLink; // Tự động lấy link fen gắn trong Cột G trên Sheet
+            avatarImg.style.display = "block"; // Ép hiển thị
+
+            // Bẫy lỗi: Link hỏng thì tự ẩn đi chứ không hiện icon rách
+            avatarImg.onerror = function() {
+                this.style.display = "none";
+            };
+        } else {
+            avatarImg.style.display = "none"; // Nếu cột G trên Sheet trống thì ẩn Avatar đi
+        }
+    }
+    // ===================================================================
+
     // Kích hoạt hiển thị cụm nút Start/Collection và nhân vật lên màn hình
     if (menuControls) menuControls.style.display = "flex";
     if (charZone) charZone.style.display = "flex";
