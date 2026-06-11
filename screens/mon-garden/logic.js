@@ -173,10 +173,20 @@ function spawnAllMonsFromUserSheet() {
         const catchCount = gameState.captured[mob.ID] || 0;
         if (catchCount <= 0) return; 
 
+        // Khởi điểm bự 100px, mỗi cấp cộng dồn kích thước lên, chặn trần 350px
         let calculatedSize = 100 + (catchCount - 1) * 5;
         if (calculatedSize > 350) calculatedSize = 350;
 
+        // Quét tìm siêu thú bắt đầu bằng chữ 'e' hoặc 'E'
         let isSpecialCodeE = mob.ID.toString().toUpperCase().startsWith('E');
+
+        // ===================================================================
+        // 🎯 TỰ FIX: ÉP SIZE CON ĐẶC BIỆT TO GẤP ĐÔI QUÁI THƯỜNG
+        // ===================================================================
+        if (isSpecialCodeE) {
+            calculatedSize = calculatedSize * 2; // Nhân đôi kích thước thực tế
+            // Nếu muốn giới hạn trần tối đa cho Boss không bị tràn màn hình thì chặn nhẹ ở đây:
+            if (calculatedSize > 500) calculatedSize = 500;
 
         const petEl = document.createElement('div');
         petEl.className = "garden-mon-pet";
