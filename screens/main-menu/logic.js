@@ -99,28 +99,25 @@ function enterMainMenuDirectly() {
 
     if (avatarDisplay) avatarDisplay.style.backgroundImage = `url('assets/Player_${gameState.gender === 'male' ? 'Male' : 'Female'}_Main.png')`;
     if (nameText) nameText.innerText = gameState.username;
-
-    // ===================================================================
-    // 🎯 ĐOẠN ĐÃ FIX: LẤY LINK ĐỘNG TỪ SHEET (gameState.avatar) ĐỔ VÀO UI
-    // ===================================================================
-if (avatarImg) {
+    if (avatarImg) {
         let rawLink = gameState.avatar ? gameState.avatar.trim() : "";
-        let defaultAvatar = "assets/default-avatar.png"; // Link dự phòng cục bộ
+        let defaultAvatar = "assets/default-avatar.png";
 
         if (rawLink !== "") {
-            avatarImg.crossOrigin = "anonymous"; // Ép mở khóa CORS né vụ Github chặn tải
+            // In thẳng ra Console để F12 lên xem App Script nó trả về link gì!
+            console.log("🔗 Link Avatar nhận được từ Sheet là:", rawLink);
+
+            // Bỏ vụ crossOrigin luôn, cho tải tự nhiên
             avatarImg.src = rawLink; 
             avatarImg.style.display = "block"; 
 
-            // 🛡️ Bẫy lỗi: Link hỏng hoặc bị chặn tải thì tự lùi về ảnh mặc định
             avatarImg.onerror = function() {
-                this.onerror = null; // Chống lặp vô hạn lỡ default cũng lỗi
-                this.removeAttribute("crossOrigin"); // Gỡ khóa mạng để tải file local
+                console.warn("⚠️ Link ảnh từ Sheet bị chết hoặc bị chặn! Lùi về default.");
+                this.onerror = null; 
                 this.src = defaultAvatar;
             };
         } else {
-            // 🛡️ Nếu cột G trên Sheet trống thì móc luôn ảnh mặc định ra xài
-            avatarImg.removeAttribute("crossOrigin");
+            console.log("ℹ️ Ô chứa Avatar trên Sheet bị trống, dùng default.");
             avatarImg.src = defaultAvatar; 
             avatarImg.style.display = "block"; 
         }
