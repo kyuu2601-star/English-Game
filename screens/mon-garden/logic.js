@@ -381,7 +381,7 @@ function startHoldingMonRoutine(e, monObj) {
     // ===================================================================
     monObj.element.style.transition = "none"; 
     let currentScaleX = monObj.element.style.transform.includes("scaleX(-1)") ? -1 : 1;
-    monObj.element.style.transform = `scaleX(${currentScaleX}) scale(3)`;
+    monObj.element.style.transform = `scaleX(${currentScaleX}) scale(2)`;
     monObj.element.style.zIndex = "999999"; 
 }
 
