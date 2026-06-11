@@ -362,6 +362,14 @@ function startHoldingMonRoutine(e, monObj) {
     monObj.graphicElement.style.transformOrigin = `${originX}% ${originY}%`;
     monObj.element.classList.add('is-being-held');
     gardenJoystickState.isHolding = false;
+
+    // ===================================================================
+    // 🎯 2. TÍNH NĂNG MỚI: XÁCH QUÁI PHÓNG TO GẤP 3 NGAY LẬP TỨC CHO ĐIỆN THOẠI
+    // ===================================================================
+    monObj.element.style.transition = "none"; 
+    let currentScaleX = monObj.element.style.transform.includes("scaleX(-1)") ? -1 : 1;
+    monObj.element.style.transform = `scaleX(${currentScaleX}) scale(3)`;
+    monObj.element.style.zIndex = "999999"; 
 }
 
 function setupScreenLevelDragDropEngine() {
@@ -398,8 +406,23 @@ function setupScreenLevelDragDropEngine() {
         if (!currentHeldMonInstance || !document.getElementById('garden-player')) return;
         e.preventDefault();
         
-        currentHeldMonInstance.element.classList.remove('is-being-held');
-        currentHeldMonInstance.element.dataset.heldMode = "false";
+        const releasedMon = currentHeldMonInstance;
+        
+        releasedMon.element.classList.remove('is-being-held');
+        releasedMon.element.dataset.heldMode = "false";
+
+        // ===================================================================
+        // 🎯 TÍNH NĂNG MỚI: BUÔNG TAY THẢ QUÁI RƠI XUỐNG - THU NHỎ DẦN MƯỢT MÀ
+        // ===================================================================
+        releasedMon.element.style.transition = "transform 0.3s ease-out";
+        let currentScaleX = releasedMon.element.style.transform.includes("scaleX(-1)") ? -1 : 1;
+        releasedMon.element.style.transform = `scaleX(${currentScaleX}) scale(1)`;
+
+        setTimeout(() => {
+            releasedMon.element.style.transition = "none";
+            releasedMon.element.style.zIndex = "500"; 
+        }, 300);
+
         currentHeldMonInstance = null;
     }
 
