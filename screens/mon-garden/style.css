@@ -229,8 +229,8 @@
     position: absolute;
     top: 0;
     left: 0;
-    width: 130px;
-    height: 130px;
+    width: 200px;
+    height: 200px;
     transform: rotate(-90deg);
     pointer-events: none;
 }
