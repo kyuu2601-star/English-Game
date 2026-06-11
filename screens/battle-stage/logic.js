@@ -135,10 +135,26 @@ function nextBattleTurn() {
     // Đổ hình ảnh lên UI
     mobSprite.style.backgroundImage = `url('${currentMob.Image}')`;
     
-    // 🎯 ĐÃ SỬA: KIỂM TRA NAMETAG. NẾU KHÔNG PHẢI TỪ 1-5 THÌ MƯỢN TẠM KHUNG 5 SAO
-    let validNametagLevels = ["1", "2", "3", "4", "5"];
-    let nametagGraphic = validNametagLevels.includes(stars.toString().trim()) ? stars.toString().trim() : "5";
-    mobTag.style.backgroundImage = `url('assets/Nametag_lv${nametagGraphic}.png')`;
+    // ===================================================================
+    // 🎯 KHÚC CHÈN MỚI 1: KIỂM TRA RANK E ĐỂ GẮN NAMETAG & KÍCH SẤM SÉT MÀN HÌNH
+    // ===================================================================
+    let isRankE = currentMob.ID.toString().toUpperCase().startsWith('E');
+    const vignetteBorder = document.getElementById('boss-electric-vignette');
+
+    if (isRankE) {
+        // Nạp asset Nametag_lvE xịn mới cập nhật của fen
+        mobTag.style.backgroundImage = "url('assets/Nametag_lvE.png')";
+        // Kích nổ viền chớp sáng sấm sét sấm chớp bao quanh rìa màn hình
+        if (vignetteBorder) vignetteBorder.classList.add('active-warn');
+    } else {
+        // Trả về logic gốc cũ của fen cho các quái thông thường khác
+        let validNametagLevels = ["1", "2", "3", "4", "5"];
+        let nametagGraphic = validNametagLevels.includes(stars.toString().trim()) ? stars.toString().trim() : "5";
+        mobTag.style.backgroundImage = `url('assets/Nametag_lv${nametagGraphic}.png')`;
+        // Tắt viền sấm sét đi nếu lượt này chỉ gặp quái thường
+        if (vignetteBorder) vignetteBorder.classList.remove('active-warn');
+    }
+    // ===================================================================
     
     document.getElementById('mob-name-text').innerText = currentMob.Name;
     document.getElementById('player-sprite').style.backgroundImage = `url('assets/Player_${gameState.gender === 'male' ? 'Male' : 'Female'}_Back.png')`;
@@ -146,7 +162,6 @@ function nextBattleTurn() {
     // ------------------------------------------------------------------
     // 📖 TẦNG 3: BỐC CÂU HỎI THÔNG MINH (GIẢM TỶ LỆ THEO CỘT COUNT & BỘ ĐẾM NGẦM)
     // ------------------------------------------------------------------
-    // 🎯 ĐÃ SỬA: Lọc câu hỏi bằng String Comparison thay vì parseInt()
     let targetStarStr = stars.toString().trim().toUpperCase();
     
     let qPool = globalQuestionList.filter(q => {
@@ -154,15 +169,12 @@ function nextBattleTurn() {
         return qStarStr === targetStarStr;
     });
     
-    // Fallback: Nếu lỡ bốc trúng mốc P mà trong Sheet chưa có câu hỏi mốc P nào thì lấy đại toàn bộ
     if (qPool.length === 0) qPool = globalQuestionList;
 
-    // Bước 3.2: Tính trọng số dựa theo công thức: 100 / (Thực tế trên Sheet + Ngầm trong phiên chơi + 1)
     let totalQuestionWeight = 0;
     let questionWeights = qPool.map(q => {
-        let countOnSheet = parseInt(q.Count) || 0; // Cột H trên Google Sheet
+        let countOnSheet = parseInt(q.Count) || 0; 
         
-        // Khởi tạo bộ đếm ngầm cho phiên chơi hiện tại nếu chưa có để tránh lỗi undefined
         if (q._localCount === undefined) q._localCount = 0;
         let finalCount = countOnSheet + q._localCount;
 
@@ -171,9 +183,8 @@ function nextBattleTurn() {
         return { question: q, weight: weight };
     });
 
-    // Bước 3.3: Vòng xoay chọn câu hỏi có trọng số cao nhất (ít xuất hiện nhất)
     let qRoll = Math.random() * totalQuestionWeight;
-    currentQuestion = qPool[qPool.length - 1]; // Gán sẵn câu cuối làm dự phòng chống sập
+    currentQuestion = qPool[qPool.length - 1]; 
 
     for (let i = 0; i < questionWeights.length; i++) {
         let item = questionWeights[i];
@@ -184,7 +195,6 @@ function nextBattleTurn() {
         qRoll -= item.weight;
     }
 
-    // Bước 3.4: Đánh dấu cộng dồn ngầm luôn cho câu hỏi này để lượt tiếp theo tự động giảm tỷ lệ
     if (currentQuestion._localCount !== undefined) {
         currentQuestion._localCount += 1;
     }
@@ -192,7 +202,6 @@ function nextBattleTurn() {
     console.log(`📝 Bốc câu hỏi: "${currentQuestion.Question.substring(0, 25)}..." | Lượt xuất hiện (Sheet + Ngầm): ${(parseInt(currentQuestion.Count) || 0) + (currentQuestion._localCount || 0)}`);
     window.currentQuestion = currentQuestion;
     
-    // Hiển thị nội dung câu hỏi và các đáp án lên UI
     document.getElementById('question-text').innerText = currentQuestion.Question;
     document.getElementById('ans-A').innerText = currentQuestion.Option_A;
     document.getElementById('ans-B').innerText = currentQuestion.Option_B;
@@ -226,6 +235,7 @@ function submitAnswer(chosen) {
     const mob = document.getElementById('mob-sprite');
     const tag = document.getElementById('mob-nametag');
     const smoke = document.getElementById('smoke-vfx');
+    const vignetteBorder = document.getElementById('boss-electric-vignette'); // 🎯 THÊM ĐỂ DỌN VIỀN KHI KẾT THÚC TURN
 
     if (!popupBanner || !mob || !tag) return;
 
@@ -252,6 +262,9 @@ function submitAnswer(chosen) {
         mob.style.opacity = "0";
         mob.style.transform = "scale(0)";
 
+        // 🎯 Tắt hẳn hiệu ứng viền sấm sét ngay khi đập đúng đáp án bắt được Boss
+        if (vignetteBorder) vignetteBorder.classList.remove('active-warn');
+
         setTimeout(() => {
             if (ball) {
                 ball.style.backgroundImage = "url('assets/VFX_Ball_Close.png')";
@@ -264,9 +277,8 @@ function submitAnswer(chosen) {
                 gameState.captured[currentMob.ID] = (gameState.captured[currentMob.ID] || 0) + 1;
                 
                 if (!isFirstTime) {
-                    // Cứu hộ an toàn tính tiền thưởng nếu lỡ quái là mã chữ
                     let starValueForCoins = parseInt(currentMob.Stars);
-                    if (isNaN(starValueForCoins)) starValueForCoins = 5; // Mặc định quái chữ thưởng ngang 5 sao
+                    if (isNaN(starValueForCoins)) starValueForCoins = 5; 
                     
                     gameState.coins += (starValueForCoins * 10);
                     const coinDisplay = document.getElementById('user-coins');
@@ -300,6 +312,9 @@ function submitAnswer(chosen) {
         mob.style.zIndex = "600";
         mob.style.transform = "translateX(-1200px) scale(0.5)";
         mob.style.opacity = "0";
+
+        // 🎯 Tắt hẳn hiệu ứng viền sấm sét khi trả lời sai quái chạy mất
+        if (vignetteBorder) vignetteBorder.classList.remove('active-warn');
 
         setTimeout(() => {
             if (typeof saveGameToSheet === 'function') { saveGameToSheet(); }
