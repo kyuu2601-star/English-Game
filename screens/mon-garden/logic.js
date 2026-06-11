@@ -13,9 +13,9 @@ let currentGardenScale = 1;
 let gardenPlayerState = {
     x: 2000, 
     y: 2000,
-    width: 132,  // 🎯 Đã tăng từ 66px lên 132px
-    height: 200, // 🎯 Đã tăng từ 100px lên 200px
-    speed: 7.5,  // Tăng nhẹ tốc độ chạy cho mượt với size mới
+    width: 132,  // 🎯 Tăng từ 66px lên 132px giúp Char bự, rõ nét
+    height: 200, // 🎯 Tăng từ 100px lên 200px
+    speed: 7.5,  // Tăng nhẹ tốc độ để di chuyển cân bằng với kích thước mới
     facingX: 1,      
     viewDirection: 'down', 
     isMoving: false,
@@ -38,12 +38,12 @@ let playerMovementTrailQueue = [];
 let activeGardenMonsInstances = []; 
 let selectedVanguardSlotsArray = [null, null, null, null, null]; 
 
-// Trạng thái Whistle Cooldown & Duration (Vòng tua hồi còi)
+// Trạng thái Whistle Cooldown & Duration (🎯 ĐÃ SỬA CÚ PHÁP ĐÚNG CHUẨN OBJECT)
 let whistleSystemState = {
-    isActiveActive = false,
-    isCooldownPhase = false,
-    durationTimer = null,
-    cooldownTimer = null
+    isActiveActive: false,
+    isCooldownPhase: false,
+    durationTimer: null,
+    cooldownTimer: null
 };
 
 // Trạng thái phân trang của Bảng chọn Mon Grid 6x6 Popup
@@ -66,13 +66,13 @@ function initGardenLogic() {
     const viewportEl = document.getElementById('garden-viewport');
     if (!playerEl || !viewportEl) return;
 
-    // Ép size to gấp đôi cho thẻ nhân vật trong file HTML
+    // 🎯 Áp thông số kích thước mới của Char vào DOM thực tế
     playerEl.style.width = `${gardenPlayerState.width}px`;
     playerEl.style.height = `${gardenPlayerState.height}px`;
 
     updatePlayerSpriteAsset();
 
-    // Cân bằng tỷ lệ màn hình và gắn sự kiện resize
+    // Gọi hàm cân bằng tỷ lệ màn hình và gắn sự kiện khi resize
     fitGardenToScreen();
     window.addEventListener('resize', fitGardenToScreen);
 
@@ -90,12 +90,13 @@ function initGardenLogic() {
 function fitGardenToScreen() {
     const container = document.querySelector('.garden-container-1080p');
     if (!container) return;
+    
     currentGardenScale = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
     container.style.transform = `translate(-50%, -50%) scale(${currentGardenScale})`;
 }
 
 // ==========================================================================
-// 🕹️ THUẬT TOÁN ĐIỀU KHIỂN CẦN GẠT JOYSTICK
+// 🕹️ THUẬT TOÁN ĐIỀU KHIỂN CẦN GẠT JOYSTICK (ĐÃ CHUẨN HÓA TỌA ĐỘ SCALE)
 // ==========================================================================
 function activateVirtualJoystickEngine() {
     const base = document.getElementById('joystick-base');
@@ -156,7 +157,7 @@ function updatePlayerSpriteAsset() {
 }
 
 // ==========================================================================
-// 🧬 ENGINE THẢ QUÁI VÀ QUẢN LÝ HÀNH VI (FIX BUBBLE CHAT 50PX + SIÊU THÚ CHỮ e CHỮ HOA CHỮ THƯỜNG)
+// 🧬 ENGINE THẢ QUÁI VÀ QUẢN LÝ HÀNH VI (FIX BUBBLE CHAT TĨNH 50PX + QUÁI HỆ e ĐỨNG YÊN)
 // ==========================================================================
 function spawnAllMonsFromUserSheet() {
     const mapContainer = document.getElementById('garden-map');
@@ -172,11 +173,11 @@ function spawnAllMonsFromUserSheet() {
         const catchCount = gameState.captured[mob.ID] || 0;
         if (catchCount <= 0) return; 
 
-        // Khởi điểm hẳn 150px, bắt thêm được cộng thêm size, chặn trần 350px
+        // Khởi điểm bự 150px, mỗi cấp cộng dồn kích thước lên, chặn trần 350px
         let calculatedSize = 150 + (catchCount - 1) * 5;
         if (calculatedSize > 350) calculatedSize = 350;
 
-        // Check siêu thú đặc biệt (Ăn cả chữ 'e' thường lẫn chữ 'E' hoa nhờ .toUpperCase())
+        // Quét tìm siêu thú bắt đầu bằng chữ 'e' hoặc 'E'
         let isSpecialCodeE = mob.ID.toString().toUpperCase().startsWith('E');
 
         const petEl = document.createElement('div');
@@ -197,9 +198,9 @@ function spawnAllMonsFromUserSheet() {
 
         petEl.appendChild(graphicCore);
 
-        // Siêu thú 'e' đứng yên gần tâm rốn bản đồ, quái thường thả ngẫu nhiên
         let spawnX, spawnY;
         if (isSpecialCodeE) {
+            // Ép siêu thú đứng yên gần rốn bản đồ, bao quanh vị trí xuất phát người chơi
             spawnX = 1850 + Math.random() * 300;
             spawnY = 1850 + Math.random() * 300;
         } else {
@@ -253,7 +254,7 @@ function spawnAllMonsFromUserSheet() {
                 bubbleEl.innerText = randomEmoji;
                 
                 // ===================================================================
-                // 🎯 ĐÃ ĐẬP CHẾT LỖI SCALE: Khóa cứng đúng 50x50px chuẩn yêu cầu của fen
+                // 🎯 ĐÃ ĐẬP CHẾT LỖI BUBBLE CHAT: Khóa cứng scale tỷ lệ 50px tĩnh tuyệt đối
                 // ===================================================================
                 bubbleEl.style.position = "absolute";
                 bubbleEl.style.width = "50px";   
@@ -262,7 +263,7 @@ function spawnAllMonsFromUserSheet() {
                 bubbleEl.style.transform = "scale(1) !important"; 
                 bubbleEl.style.transformOrigin = "bottom center";
                 
-                // Căn chuẩn góc phải trên đầu quái vật, xích ra mượt mà không lệch tâm
+                // Định vị chuẩn xác hít chặt lên vai phải của Mon dựa theo kích thước thực
                 bubbleEl.style.top = "-40px"; 
                 bubbleEl.style.left = `${mon.size - 20}px`; 
                 bubbleEl.style.right = "auto";
