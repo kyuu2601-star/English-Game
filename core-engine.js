@@ -56,7 +56,9 @@ async function handleGamePreloadAndVersionControl() {
         './screens/loading-menu/ui.html', './screens/loading-menu/style.css', './screens/loading-menu/logic.js',
         './screens/main-menu/ui.html', './screens/main-menu/style.css', './screens/main-menu/logic.js',
         './screens/battle-stage/ui.html', './screens/battle-stage/style.css', './screens/battle-stage/logic.js',
-        './screens/collection-book/ui.html', './screens/collection-book/style.css', './screens/collection-book/logic.js'
+        './screens/collection-book/ui.html', './screens/collection-book/style.css', './screens/collection-book/logic.js',
+        // 🎯 ĐÃ THÊM MỚI: Nạp trước 3 file của Khu Vườn (mon-garden)
+        './screens/mon-garden/ui.html', './screens/mon-garden/style.css', './screens/mon-garden/logic.js'
     ];
 
     const staticAssets = [
@@ -260,6 +262,17 @@ function changeScreen(scrId) {
             currentBookPage = 0;
             if (typeof renderCollectionBook === 'function') {
                 renderCollectionBook();
+            }
+        });
+    }
+    // 🎯 ĐÃ THÊM MỚI: Chuyển hướng cho Khu Vườn
+    if (scrId === 'garden') {
+        if (typeof cleanUpGardenEngineLeaks === 'function') {
+            cleanUpGardenEngineLeaks();
+        }
+        loadScreen('mon-garden', () => {
+            if (typeof initGardenLogic === 'function') {
+                initGardenLogic();
             }
         });
     }
