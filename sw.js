@@ -3,7 +3,7 @@
 // ==========================================================================
 
 // 🎯 ĐỒNG BỘ TUYỆT ĐỐI: Đã lên v4 khớp hoàn toàn với index và core-engine!
-const CACHE_NAME = 'mon-english-v6';
+const CACHE_NAME = 'mon-english-v7';
 
 // Cài đặt phôi khởi tạo ban đầu (chỉ nạp trang index)
 self.addEventListener('install', (e) => {
