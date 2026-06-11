@@ -161,7 +161,7 @@
 }
 
 /* ===================================================================
-   🕹️ 5. VIRTUAL JOYSTICK
+   🕹️ 5. VIRTUAL JOYSTICK (🎯 SỬA SỐ Ở ĐÂY ĐỂ PHÓNG TO GẤP ĐÔI)
    =================================================================== */
 .joystick-zone {
     position: absolute;
@@ -172,8 +172,8 @@
 }
 
 .joystick-base {
-    width: 160px;
-    height: 160px;
+    width: 320px;  /* 🎯 Sửa từ 160px lên 320px */
+    height: 320px; /* 🎯 Sửa từ 160px lên 320px */
     background: rgba(0, 0, 0, 0.2); 
     border: 3px solid rgba(255, 255, 255, 0.4); 
     border-radius: 50%;
@@ -184,8 +184,8 @@
 }
 
 .joystick-stick {
-    width: 65px;
-    height: 65px;
+    width: 130px;  /* 🎯 Sửa từ 65px lên 130px */
+    height: 130px; /* 🎯 Sửa từ 65px lên 130px */
     background: rgba(255, 255, 255, 0.85); 
     border-radius: 50%;
     position: absolute;
@@ -201,8 +201,8 @@
     bottom: 55px;
     right: 65px;
     z-index: 9000; 
-    width: 130px;
-    height: 130px;
+    width: 200px;
+    height: 200px;
     touch-action: none;
 }
 
