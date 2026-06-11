@@ -441,19 +441,21 @@
     100% { transform: rotate(0deg); }
 }
 
-/* 🎯 HIỆU ỨNG BUNNY HOP VÒNG CUNG CHUẨN RPG */
-@keyframes monBunnyHopEffect {
+/* 🎯 HIỆU ỨNG NHẢY PARABOL KHÔNG DỊCH CHUYỂN TỨC THỜI */
+@keyframes monTrueParabolHop {
     0% {
-        transform: translateY(0) rotate(0deg);
+        /* Bắt đầu tại chỗ cũ, scale hướng nhìn */
+        transform: translate(0, 0) scaleX(var(--mon-scale-x)) translateY(0);
     }
     50% {
-        transform: translateY(-40px) rotate(4deg); /* Nhảy bổng cao hẳn 40px ở giữa chặng */
+        /* Giữa chặng: Đã bay được một nửa quãng đường X, Y và nhấc bổng lên trời -35px tạo đỉnh Parabol */
+        transform: translate(calc(var(--hop-delta-x) * 0.5), calc(var(--hop-delta-y) * 0.5)) scaleX(var(--mon-scale-x)) translateY(-35px);
     }
     100% {
-        transform: translateY(0) rotate(0deg); /* Đáp đất vững vàng */
+        /* Đáp đất: Đến đúng vị trí đích cách 50px, translateY trả về 0 */
+        transform: translate(var(--hop-delta-x), var(--hop-delta-y)) scaleX(var(--mon-scale-x)) translateY(0);
     }
 }
-
 .garden-mon-pet.is-being-held {
     transition: none !important; 
     z-index: 999999 !important; 
