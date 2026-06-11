@@ -143,6 +143,7 @@
 
 /* Bệ đỡ Nametag_lv5: Đồng bộ thu phóng khít khao dưới chân tướng */
 .player-nametag-wrapper {
+    position: relative;
     height: 12vh !important;       /* Bằng ~18% chiều cao con nhân vật 65vh */
     width: calc(12vh * 4) !important; /* Tự tính toán chiều ngang theo tỷ lệ ảnh gốc (440/110 = 4) */
     max-height: 55px !important;  /* Thay vì 110px, tui bóp trần max-height về đúng 55px khớp với phôi chữ */
@@ -172,6 +173,28 @@
     z-index: 12;
 }
 
+/* ==========================================================================
+   🎯 ĐÃ CHÈN THÊM: ĐỊNH VỊ CHO AVATAR ĐỀ CẠNH TRÁI KHUNG TÊN (STYLE BRAWL STARS)
+   ========================================================================== */
+#main-menu-avatar {
+    /* 🎯 RESPONSIVE SCALE: Tự động zoom to nhỏ tỷ lệ thuận theo chiều cao Khung Tên (vh) */
+    width: 11vh !important;       /* Cho nhỏ hơn chiều cao khung tên 12vh một xíu nhìn cho gọn gàng */
+    height: 11vh !important;
+    max-width: 50px !important;   /* Khống chế trần max để khớp khít khi khung tên đạt max-height 55px */
+    max-height: 50px !important;
+
+    position: absolute;           /* Ép tọa độ chạy theo thằng cha .player-nametag-wrapper */
+    
+    /* 🎯 ĐẨY LÙI VỀ CẠNH TRÁI: Đẩy lùi âm phân nửa chiều rộng ảnh ra rìa trái bệ đỡ */
+    left: -5.5vh !important;      
+    /* 🎯 CĂN GIỮA TRỤC DỌC: Giúp tâm avatar luôn nằm ngay chính giữa bệ đỡ theo chiều ngang */
+    top: 50%;
+    transform: translateY(-50%) !important; 
+    
+    z-index: 15;                  /* Cho nổi đè lên trên bề mặt cái bệ đỡ */
+    object-fit: contain;          /* Đảm bảo giữ đúng tỷ lệ hình tròn fen tự xuất không móp méo */
+    pointer-events: none;         /* Khóa xuyên thấu để người chơi click xuyên qua nếu dính nút */
+}
 
 /* ==========================================================================
    4. POPUP ĐĂNG NHẬP CHỌN TƯỚNG (BẢO VỆ FORM TRÊN DI ĐỘNG/THIẾT BỊ LẠ)
