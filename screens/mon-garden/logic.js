@@ -157,7 +157,7 @@ function updatePlayerSpriteAsset() {
 }
 
 // ==========================================================================
-// 🧬 ENGINE THẢ QUÁI VÀ QUẢN LÝ HÀNH VI (TRUE PARABOL BUNNY HOP 50PX)
+// 🧬 ENGINE THẢ QUÁI VÀ QUẢN LÝ HÀNH VI (NON-STOP BUNNY HOP + IDLE ĐỆ QUY)
 // ==========================================================================
 function spawnAllMonsFromUserSheet() {
     const mapContainer = document.getElementById('garden-map');
@@ -229,56 +229,72 @@ function spawnAllMonsFromUserSheet() {
         activeGardenMonsInstances.push(monObject);
     });
 
-    const monBehaviorInterval = setInterval(() => {
-        activeGardenMonsInstances.forEach(mon => {
-            if (mon.isCodeE || mon.isFollowerMode || mon.element.dataset.heldMode === "true") return;
+    // 🎯 KHỞI CHẠY VÒNG LẶP ĐỆ QUY KHÔNG NGỪNG NGHỈ (THAY THẾ SETINTERVAL CŨ)
+    activeGardenMonsInstances.forEach(mon => {
+        function triggerNextMonBehaviorTick() {
+            if (!document.getElementById('garden-player') || mon.isCodeE || mon.isFollowerMode || mon.element.dataset.heldMode === "true") {
+                let fallbackTimer = setTimeout(triggerNextMonBehaviorTick, 1000);
+                gardenIntervalTimers.push(fallbackTimer);
+                return;
+            }
 
             let diceRoll = Math.random() * 100;
 
             if (diceRoll < 25) {
+                // ------------------------------------------------------------------
+                // 💤 TRẠNG THÁI IDLE: Đứng yên nghỉ ngơi tại chỗ trong 2.5 giây
+                // ------------------------------------------------------------------
                 mon.isBehavingIdle = true;
                 mon.element.style.transition = "none"; 
                 mon.graphicElement.classList.remove('mon-moving-tilt'); 
 
+                // Xóa bong bóng cũ nếu còn sót lại
                 const oldBubble = mon.element.querySelector('.garden-emoji-bubble');
                 if (oldBubble) oldBubble.remove();
 
-                const emojiPool = ['❤️', '😊', '✨', '💤', '🎵', '⭐', '💡', '🔥'];
-                const randomEmoji = emojiPool[Math.floor(Math.random() * emojiPool.length)];
+                // Đổ xúc xắc nội bộ phụ: 60% tỉ lệ xuất hiện bong bóng chat trong lúc Idle đứng yên
+                if (Math.random() * 100 < 60) {
+                    const emojiPool = ['❤️', '😊', '✨', '💤', '🎵', '⭐', '💡', '🔥'];
+                    const randomEmoji = emojiPool[Math.floor(Math.random() * emojiPool.length)];
 
-                const bubbleEl = document.createElement('div');
-                bubbleEl.className = "garden-emoji-bubble";
-                bubbleEl.innerText = randomEmoji;
-                
-                bubbleEl.style.position = "absolute";
-                bubbleEl.style.width = "50px";   
-                bubbleEl.style.height = "50px";  
-                bubbleEl.style.fontSize = "18px"; 
-                bubbleEl.style.transform = "scale(1) !important"; 
-                bubbleEl.style.transformOrigin = "bottom center";
+                    const bubbleEl = document.createElement('div');
+                    bubbleEl.className = "garden-emoji-bubble";
+                    bubbleEl.innerText = randomEmoji;
+                    
+                    bubbleEl.style.position = "absolute";
+                    bubbleEl.style.width = "50px";   
+                    bubbleEl.style.height = "50px";  
+                    bubbleEl.style.fontSize = "18px"; 
+                    bubbleEl.style.transform = "scale(1) !important"; 
+                    bubbleEl.style.transformOrigin = "bottom center";
 
-                // 🎯 CĂN GIỮA TUYỆT ĐỐI NGAY TRÊN ĐẦU QUÁI VẬT
-                bubbleEl.style.top = "-60px"; 
-                bubbleEl.style.left = "50%";  
-                bubbleEl.style.transform = "translateX(-50%) scale(1) !important"; 
-                bubbleEl.style.right = "auto";
+                    // CĂN GIỮA TUYỆT ĐỐI NGAY TRÊN ĐẦU QUÁI VẬT
+                    bubbleEl.style.top = "-60px"; 
+                    bubbleEl.style.left = "50%";  
+                    bubbleEl.style.transform = "translateX(-50%) scale(1) !important"; 
+                    bubbleEl.style.right = "auto";
 
-                mon.element.appendChild(bubbleEl);
+                    mon.element.appendChild(bubbleEl);
 
-                setTimeout(() => {
-                    if (bubbleEl.parentNode) bubbleEl.remove();
-                }, 2000);
+                    setTimeout(() => {
+                        if (bubbleEl.parentNode) bubbleEl.remove();
+                    }, 2000);
+                }
+
+                // Nghỉ mệt xong 2.5 giây thì tự động chuyển sang lượt nạp hành vi tiếp theo
+                let idleWaitTimer = setTimeout(triggerNextMonBehaviorTick, 2500);
+                gardenIntervalTimers.push(idleWaitTimer);
 
             } else {
+                // ------------------------------------------------------------------
+                // 🐇 TRẠNG THÁI BUNNY HOP: Nhảy Parabol liên tục tới vị trí mới cách 50px
+                // ------------------------------------------------------------------
                 mon.isBehavingIdle = false;
-                
-                // Tắt transition cũ để vẽ Parabol động bằng CSS Animation thông qua CSS Variables
                 mon.element.style.transition = "none";
                 mon.graphicElement.classList.add('mon-moving-tilt');
 
                 let randomAngle = Math.random() * Math.PI * 2;
                 
-                // Khóa cứng cự ly di chuyển tịnh tiến đúng 50px sang điểm đích mới
                 let targetX = mon.currentX + Math.cos(randomAngle) * 50;
                 let targetY = mon.currentY + Math.sin(randomAngle) * 50;
 
@@ -291,18 +307,18 @@ function spawnAllMonsFromUserSheet() {
                 let deltaY = targetY - mon.currentY;
                 let directionSign = targetX > mon.currentX ? 1 : -1;
 
-                // 🎯 GÀI BIẾN CSS DỘNG: Giúp CSS Keyframes định vị được cự ly bay 50px thực tế
+                // Gài biến CSS động truyền quãng đường 50px thực tế
                 mon.element.style.setProperty('--hop-delta-x', `${deltaX}px`);
                 mon.element.style.setProperty('--hop-delta-y', `${deltaY}px`);
                 mon.element.style.setProperty('--mon-scale-x', directionSign);
 
-                // Kích nổ chuyển động bay Parabol (Thời gian bay tốn 0.5 giây)
+                // Kích nổ chuyển động bay hình vòng cung Parabol trong 0.5 giây
                 mon.element.style.animation = "none";
-                mon.element.offsetHeight; // Kích reflow reset nhịp
+                mon.element.offsetHeight; // Kích reflow tạo nhịp reset rải băng
                 mon.element.style.animation = "monTrueParabolHop 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards";
 
-                // Đợi diễn xong hoạt ảnh 500ms thì hạ cánh khóa chết vị trí vật lý left/top
-                setTimeout(() => {
+                // 🚀 ĐÁP ĐẤT PHÁT LÀ NHẢY TIẾP LIỀN: Vừa hết 500ms bay là khóa vị trí thực và lặp vòng luôn!
+                let landEndTimer = setTimeout(() => {
                     mon.element.style.left = `${targetX}px`;
                     mon.element.style.top = `${targetY}px`;
                     mon.element.style.animation = "none";
@@ -310,12 +326,17 @@ function spawnAllMonsFromUserSheet() {
 
                     mon.currentX = targetX;
                     mon.currentY = targetY;
-                }, 500);
-            }
-        });
-    }, 5000);
 
-    gardenIntervalTimers.push(monBehaviorInterval);
+                    // Gọi đệ quy đuôi nhảy chu kỳ tiếp theo ngay lập tức
+                    triggerNextMonBehaviorTick();
+                }, 500);
+
+                gardenIntervalTimers.push(landEndTimer);
+            }
+        }
+        // Kích hoạt nhịp chạy đầu tiên khi load map
+        triggerNextMonBehaviorTick();
+    });
 }
 
 // ==========================================================================
