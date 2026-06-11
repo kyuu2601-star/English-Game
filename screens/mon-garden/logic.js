@@ -77,7 +77,7 @@ function initGardenLogic() {
 
     activateVirtualJoystickEngine();
     activateWhistleButtonCore();
-    setupScreenLevelDragDropEngine(); // 🎯 Bật Engine xách quái
+    setupScreenLevelDragDropEngine(); 
     spawnAllMonsFromUserSheet();
     runGardenGameTickLoop();
 }
@@ -116,7 +116,7 @@ function activateVirtualJoystickEngine() {
         const pageX = e.pageX || (e.touches ? e.touches[0].pageX : 0);
         const pageY = e.pageY || (e.touches ? e.touches[0].pageY : 0);
 
-        // 🎯 CỰC KỲ QUAN TRỌNG: Chia cho scale để ngón tay đi bao nhiêu, cần gạt đi bấy nhiêu
+        // Chia cho scale để ngón tay đi bao nhiêu, cần gạt đi bấy nhiêu
         let dx = (pageX - gardenJoystickState.startX) / currentGardenScale;
         let dy = (pageY - gardenJoystickState.startY) / currentGardenScale;
         
@@ -157,7 +157,7 @@ function updatePlayerSpriteAsset() {
 }
 
 // ==========================================================================
-// 🧬 ENGINE THẢ QUÁI VÀ QUẢN LÝ HÀNH VI (ĐI CỰC CHẬM 10PX/S)
+// 🧬 ENGINE THẢ QUÁI VÀ QUẢN LÝ HÀNH VI (ĐI CỰC CHẬM 10PX/S + FIXED ĐẶC BIỆT CHỮ E)
 // ==========================================================================
 function spawnAllMonsFromUserSheet() {
     const mapContainer = document.getElementById('garden-map');
@@ -173,10 +173,12 @@ function spawnAllMonsFromUserSheet() {
         const catchCount = gameState.captured[mob.ID] || 0;
         if (catchCount <= 0) return; 
 
-        let calculatedSize = 50 + (catchCount - 1);
-        if (calculatedSize > 200) calculatedSize = 200;
+        // 📐 🎯 TO GẤP 3: Khởi điểm hẳn 150px, mỗi con bắt thêm được +5px, chặn trần 350px
+        let calculatedSize = 150 + (catchCount - 1) * 5;
+        if (calculatedSize > 350) calculatedSize = 350;
 
-        let isSpecialCodeP = mob.ID.toString().toUpperCase().includes('P');
+        // 🎯 FIX CHÍ MẠNG: Kiểm tra xem ID có bắt đầu bằng chữ 'E' (Quái đặc biệt của fen) hay không
+        let isSpecialCodeE = mob.ID.toString().toUpperCase().startsWith('E');
 
         const petEl = document.createElement('div');
         petEl.className = "garden-mon-pet";
@@ -188,7 +190,7 @@ function spawnAllMonsFromUserSheet() {
         graphicCore.className = "mon-graphic-core";
         graphicCore.style.backgroundImage = `url('${mob.Image}')`;
 
-        if (isSpecialCodeP) {
+        if (isSpecialCodeE) {
             graphicCore.classList.add('mon-p-stable');
         } else {
             graphicCore.classList.add('mon-moving-tilt');
@@ -196,8 +198,16 @@ function spawnAllMonsFromUserSheet() {
 
         petEl.appendChild(graphicCore);
 
-        let spawnX = 1100 + Math.random() * 1800;
-        let spawnY = 1100 + Math.random() * 1800;
+        // 🎯 ĐIỂM SPAWN GẦN TÂM: Quái đặc biệt đứng ngay gần điểm xuất phát của Player (quanh vùng 1800-2200px)
+        let spawnX, spawnY;
+        if (isSpecialCodeE) {
+            spawnX = 1850 + Math.random() * 300;
+            spawnY = 1850 + Math.random() * 300;
+        } else {
+            spawnX = 1100 + Math.random() * 1800;
+            spawnY = 1100 + Math.random() * 1800;
+        }
+        
         petEl.style.left = `${spawnX}px`;
         petEl.style.top = `${spawnY}px`;
 
@@ -208,7 +218,7 @@ function spawnAllMonsFromUserSheet() {
             element: petEl,
             graphicElement: graphicCore,
             size: calculatedSize,
-            isCodeP: isSpecialCodeP,
+            isCodeE: isSpecialCodeE,
             currentX: spawnX,
             currentY: spawnY,
             isBehavingIdle: false,
@@ -216,7 +226,7 @@ function spawnAllMonsFromUserSheet() {
             followerIndex: -1
         };
 
-        // 🎯 GẮN SỰ KIỆN XÁCH QUÁI CHO TỪNG CON
+        // Gắn sự kiện xách quái
         petEl.addEventListener('mousedown', (e) => startHoldingMonRoutine(e, monObject));
         petEl.addEventListener('touchstart', (e) => startHoldingMonRoutine(e, monObject), { passive: false });
 
@@ -225,8 +235,8 @@ function spawnAllMonsFromUserSheet() {
 
     const monBehaviorInterval = setInterval(() => {
         activeGardenMonsInstances.forEach(mon => {
-            // Không cho dạo mát nếu: Là quái đặc biệt, Đang bám đuôi vệ sĩ, hoặc ĐANG BỊ XÁCH LÊN
-            if (mon.isCodeP || mon.isFollowerMode || mon.element.dataset.heldMode === "true") return;
+            // 🎯 Quái đặc biệt (isCodeE) đứng yên vĩnh viễn không dạo mát đi lung tung nữa
+            if (mon.isCodeE || mon.isFollowerMode || mon.element.dataset.heldMode === "true") return;
 
             let diceRoll = Math.random() * 100;
 
@@ -244,6 +254,16 @@ function spawnAllMonsFromUserSheet() {
                 const bubbleEl = document.createElement('div');
                 bubbleEl.className = "garden-emoji-bubble";
                 bubbleEl.innerText = randomEmoji;
+                
+                // 🎯 TRIỆT TIÊU ĐỘ SCALE: Ép cái bubble luôn giữ kích cỡ chuẩn 50x50px, không bị phình to theo size quái
+                bubbleEl.style.transform = `translateX(0) scale(${100 / (mon.size / 50)})`;
+                bubbleEl.style.transformOrigin = "bottom left";
+                
+                // 🎯 ĐỊNH VỊ CHUẨN XÍCH QUA PHẢI: Tránh đè lên đầu quái
+                bubbleEl.style.top = "-25px";
+                bubbleEl.style.right = "-35px";
+                bubbleEl.style.left = "auto";
+
                 mon.element.appendChild(bubbleEl);
 
                 setTimeout(() => {
@@ -253,11 +273,11 @@ function spawnAllMonsFromUserSheet() {
             } else {
                 mon.isBehavingIdle = false;
                 
-                // 🎯 ĐI BỘ SIÊU CHẬM: Kéo dài transition lên 5 giây
+                // ĐI BỘ SIÊU CHẬM: Kéo dài transition lên 5 giây
                 mon.element.style.transition = "left 5s linear, top 5s linear";
                 mon.graphicElement.classList.add('mon-moving-tilt');
 
-                // 🎯 RÚT NGẮN KHOẢNG CÁCH: Chỉ cho phép đi dạo trong bán kính 50px
+                // RÚT NGẮN KHOẢNG CÁCH: Chỉ cho phép đi dạo trong bán kính 50px
                 let randomRadius = Math.random() * 50; 
                 let randomAngle = Math.random() * Math.PI * 2;
                 
@@ -299,7 +319,6 @@ function startHoldingMonRoutine(e, monObj) {
     const pageX = e.pageX || (e.touches ? e.touches[0].pageX : 0);
     const pageY = e.pageY || (e.touches ? e.touches[0].pageY : 0);
 
-    // 🎯 TRỪ HẬU QUẢ CỦA SCALE ĐỂ QUÁI KHÔNG BỊ GIẬT LỆCH KHI BẤM VÀO
     holdPointerOffset.x = (pageX - petRect.left) / currentGardenScale;
     holdPointerOffset.y = (pageY - petRect.top) / currentGardenScale;
 
@@ -309,8 +328,6 @@ function startHoldingMonRoutine(e, monObj) {
     monObj.graphicElement.style.transformOrigin = `${originX}% ${originY}%`;
 
     monObj.element.classList.add('is-being-held');
-    
-    // Khóa cần gạt nhân vật lại
     gardenJoystickState.isHolding = false;
 }
 
@@ -327,7 +344,6 @@ function setupScreenLevelDragDropEngine() {
 
         const containerRect = container.getBoundingClientRect();
 
-        // 🎯 TÍNH TOÁN LẠI TỌA ĐỘ ẢO DỰA TRÊN ĐỘ THU PHÓNG
         let logicalPointerX = (pageX - containerRect.left) / currentGardenScale;
         let logicalPointerY = (pageY - containerRect.top) / currentGardenScale;
 
@@ -354,7 +370,6 @@ function setupScreenLevelDragDropEngine() {
         currentHeldMonInstance = null;
     }
 
-    // Gỡ event cũ phòng rò rỉ bộ nhớ
     window.removeEventListener('mousemove', onGlobalMouseMoveRoutine);
     window.removeEventListener('mouseup', onGlobalMouseUpRoutine);
     window.removeEventListener('touchmove', onGlobalMouseMoveRoutine);
@@ -365,7 +380,6 @@ function setupScreenLevelDragDropEngine() {
     window.addEventListener('touchmove', onGlobalMouseMoveRoutine, { passive: false });
     window.addEventListener('touchend', onGlobalMouseUpRoutine, { passive: false });
     
-    // Lưu hàm vào biến global để dọn dẹp khi thoát map
     window._gardenMouseDragRef = onGlobalMouseMoveRoutine;
     window._gardenMouseDropRef = onGlobalMouseUpRoutine;
 }
@@ -542,7 +556,6 @@ function triggerWhistleCooldownPhase() {
         if (mon.isFollowerMode) {
             mon.isFollowerMode = false;
             mon.followerIndex = -1;
-            // 🎯 TRẢ TỰ DO: Reset lại transition trượt chậm
             mon.element.style.transition = "left 5s linear, top 5s linear";
         }
     });
@@ -658,6 +671,7 @@ function changeSelectorPage(directionSign) {
     }
 }
 
+// Tìm ô trống bệ dưới điền mã quái
 function selectMonToVanguardSlot(monIdString) {
     let emptySlotIndex = selectedVanguardSlotsArray.findIndex(slot => slot === null);
     
@@ -696,7 +710,6 @@ function closeMonSelectorModal() {
 // 🗑️ DỌN DẸP BỘ NHỚ KHI CHUYỂN MÀN HÌNH
 // ==========================================================================
 function cleanUpGardenEngineLeaks() {
-    // 🎯 Gỡ bỏ sự kiện thu phóng tránh lọt lỗ hổng sang map khác
     window.removeEventListener('resize', fitGardenToScreen); 
     
     if (gardenAnimationFrameId) {
