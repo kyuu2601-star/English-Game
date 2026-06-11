@@ -84,6 +84,10 @@ function initGardenLogic() {
     setupScreenLevelDragDropEngine(); 
     spawnAllMonsFromUserSheet();
     runGardenGameTickLoop();
+
+    playerEl.style.left = `${gardenPlayerState.x}px`;
+    playerEl.style.top = `${gardenPlayerState.y}px`;
+    playerEl.style.transform = `scaleX(${gardenPlayerState.facingX})`;
 }
 
 // HÀM TỰ ĐỘNG THU PHÓNG KHUNG GAME ĐỂ VỪA KHÍT MỌI THIẾT BỊ
