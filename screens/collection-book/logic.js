@@ -81,6 +81,60 @@ function renderCollectionBook() {
             <div class="card-tag"><span class="tag-text">${displayCount}</span></div>
         `;
 
+        // ===================================================================
+        // 🎯 TỰ FIX: CLICK VÀO THẺ HIỆN HÌNH MON FULL MÀN HÌNH 1000PX + OVERLAY TỐI
+        // ===================================================================
+        card.onclick = () => {
+            // 1. Tạo lớp nền tối bao phủ toàn bộ màn hình
+            const overlay = document.createElement('div');
+            overlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                background-color: rgba(0, 0, 0, 0.85);
+                z-index: 9999999;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                cursor: pointer;
+                opacity: 0;
+                transition: opacity 0.25s ease-out;
+            `;
+
+            // 2. Tạo thẻ chứa hình ảnh con Mon phóng to 1000px
+            const bigMonImg = document.createElement('img');
+            bigMonImg.src = mob.Image;
+            bigMonImg.style.cssText = `
+                width: 1000px;
+                height: 1000px;
+                object-fit: contain;
+                pointer-events: none; 
+                transform: scale(0.8);
+                transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+            `;
+
+            overlay.appendChild(bigMonImg);
+            document.body.appendChild(overlay);
+
+            // Kích hoạt hiệu ứng chuyển động mượt mà
+            requestAnimationFrame(() => {
+                overlay.style.opacity = "1";
+                bigMonImg.style.transform = "scale(1)";
+            });
+
+            // 3. Bấm vào lớp overlay nền đen thì tự dọn dẹp biến mất
+            overlay.onclick = () => {
+                overlay.style.opacity = "0";
+                bigMonImg.style.transform = "scale(0.8)";
+                setTimeout(() => {
+                    overlay.remove();
+                }, 250);
+            };
+        };
+        // ===================================================================
+
         bookContainer.appendChild(card);
     });
 }
