@@ -9,13 +9,13 @@ let gardenIntervalTimers = [];
 // 🎯 TRẠNG THÁI SCALE MÀN HÌNH (Rất quan trọng để UI thu phóng vừa màn hình)
 let currentGardenScale = 1;
 
-// Trạng thái Nhân vật chính (Player State)
+// Trạng thái Nhân vật chính (Player State) - ĐÃ PHÓNG TO SIZE GẤP ĐÔI
 let gardenPlayerState = {
     x: 2000, 
     y: 2000,
-    width: 66,
-    height: 100,
-    speed: 6.5,
+    width: 132,  // 🎯 Đã tăng từ 66px lên 132px
+    height: 200, // 🎯 Đã tăng từ 100px lên 200px
+    speed: 7.5,  // Tăng nhẹ tốc độ chạy cho mượt với size mới
     facingX: 1,      
     viewDirection: 'down', 
     isMoving: false,
@@ -40,10 +40,10 @@ let selectedVanguardSlotsArray = [null, null, null, null, null];
 
 // Trạng thái Whistle Cooldown & Duration (Vòng tua hồi còi)
 let whistleSystemState = {
-    isActiveActive: false,
-    isCooldownPhase: false,
-    durationTimer: null,
-    cooldownTimer: null
+    isActiveActive = false,
+    isCooldownPhase = false,
+    durationTimer = null,
+    cooldownTimer = null
 };
 
 // Trạng thái phân trang của Bảng chọn Mon Grid 6x6 Popup
@@ -66,9 +66,13 @@ function initGardenLogic() {
     const viewportEl = document.getElementById('garden-viewport');
     if (!playerEl || !viewportEl) return;
 
+    // Ép size to gấp đôi cho thẻ nhân vật trong file HTML
+    playerEl.style.width = `${gardenPlayerState.width}px`;
+    playerEl.style.height = `${gardenPlayerState.height}px`;
+
     updatePlayerSpriteAsset();
 
-    // 🎯 GỌI HÀM CÂN BẰNG TỶ LỆ MÀN HÌNH VÀ GẮN SỰ KIỆN KHI RESIZE
+    // Cân bằng tỷ lệ màn hình và gắn sự kiện resize
     fitGardenToScreen();
     window.addEventListener('resize', fitGardenToScreen);
 
@@ -82,20 +86,16 @@ function initGardenLogic() {
     runGardenGameTickLoop();
 }
 
-// 🎯 HÀM TỰ ĐỘNG THU PHÓNG KHUNG GAME ĐỂ VỪA KHÍT MỌI THIẾT BỊ
+// HÀM TỰ ĐỘNG THU PHÓNG KHUNG GAME ĐỂ VỪA KHÍT MỌI THIẾT BỊ
 function fitGardenToScreen() {
     const container = document.querySelector('.garden-container-1080p');
     if (!container) return;
-    
-    // Tìm tỷ lệ scale để nhét vừa 1920x1080 vào cửa sổ hiện tại (Letterbox)
     currentGardenScale = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
-    
-    // Áp dụng scale, giao diện sẽ tự nhỏ lại/to ra mà không vỡ cấu trúc
     container.style.transform = `translate(-50%, -50%) scale(${currentGardenScale})`;
 }
 
 // ==========================================================================
-// 🕹️ THUẬT TOÁN ĐIỀU KHIỂN CẦN GẠT JOYSTICK (ĐÃ CHUẨN HÓA TỌA ĐỘ SCALE)
+// 🕹️ THUẬT TOÁN ĐIỀU KHIỂN CẦN GẠT JOYSTICK
 // ==========================================================================
 function activateVirtualJoystickEngine() {
     const base = document.getElementById('joystick-base');
@@ -116,7 +116,6 @@ function activateVirtualJoystickEngine() {
         const pageX = e.pageX || (e.touches ? e.touches[0].pageX : 0);
         const pageY = e.pageY || (e.touches ? e.touches[0].pageY : 0);
 
-        // Chia cho scale để ngón tay đi bao nhiêu, cần gạt đi bấy nhiêu
         let dx = (pageX - gardenJoystickState.startX) / currentGardenScale;
         let dy = (pageY - gardenJoystickState.startY) / currentGardenScale;
         
@@ -157,7 +156,7 @@ function updatePlayerSpriteAsset() {
 }
 
 // ==========================================================================
-// 🧬 ENGINE THẢ QUÁI VÀ QUẢN LÝ HÀNH VI (ĐI CỰC CHẬM 10PX/S + FIXED ĐẶC BIỆT CHỮ E)
+// 🧬 ENGINE THẢ QUÁI VÀ QUẢN LÝ HÀNH VI (FIX BUBBLE CHAT 50PX + SIÊU THÚ CHỮ e CHỮ HOA CHỮ THƯỜNG)
 // ==========================================================================
 function spawnAllMonsFromUserSheet() {
     const mapContainer = document.getElementById('garden-map');
@@ -173,11 +172,11 @@ function spawnAllMonsFromUserSheet() {
         const catchCount = gameState.captured[mob.ID] || 0;
         if (catchCount <= 0) return; 
 
-        // 📐 🎯 TO GẤP 3: Khởi điểm hẳn 150px, mỗi con bắt thêm được +5px, chặn trần 350px
+        // Khởi điểm hẳn 150px, bắt thêm được cộng thêm size, chặn trần 350px
         let calculatedSize = 150 + (catchCount - 1) * 5;
         if (calculatedSize > 350) calculatedSize = 350;
 
-        // 🎯 FIX CHÍ MẠNG: Kiểm tra xem ID có bắt đầu bằng chữ 'E' (Quái đặc biệt của fen) hay không
+        // Check siêu thú đặc biệt (Ăn cả chữ 'e' thường lẫn chữ 'E' hoa nhờ .toUpperCase())
         let isSpecialCodeE = mob.ID.toString().toUpperCase().startsWith('E');
 
         const petEl = document.createElement('div');
@@ -198,7 +197,7 @@ function spawnAllMonsFromUserSheet() {
 
         petEl.appendChild(graphicCore);
 
-        // 🎯 ĐIỂM SPAWN GẦN TÂM: Quái đặc biệt đứng ngay gần điểm xuất phát của Player (quanh vùng 1800-2200px)
+        // Siêu thú 'e' đứng yên gần tâm rốn bản đồ, quái thường thả ngẫu nhiên
         let spawnX, spawnY;
         if (isSpecialCodeE) {
             spawnX = 1850 + Math.random() * 300;
@@ -226,7 +225,6 @@ function spawnAllMonsFromUserSheet() {
             followerIndex: -1
         };
 
-        // Gắn sự kiện xách quái
         petEl.addEventListener('mousedown', (e) => startHoldingMonRoutine(e, monObject));
         petEl.addEventListener('touchstart', (e) => startHoldingMonRoutine(e, monObject), { passive: false });
 
@@ -235,7 +233,6 @@ function spawnAllMonsFromUserSheet() {
 
     const monBehaviorInterval = setInterval(() => {
         activeGardenMonsInstances.forEach(mon => {
-            // 🎯 Quái đặc biệt (isCodeE) đứng yên vĩnh viễn không dạo mát đi lung tung nữa
             if (mon.isCodeE || mon.isFollowerMode || mon.element.dataset.heldMode === "true") return;
 
             let diceRoll = Math.random() * 100;
@@ -255,14 +252,20 @@ function spawnAllMonsFromUserSheet() {
                 bubbleEl.className = "garden-emoji-bubble";
                 bubbleEl.innerText = randomEmoji;
                 
-                // 🎯 TRIỆT TIÊU ĐỘ SCALE: Ép cái bubble luôn giữ kích cỡ chuẩn 50x50px, không bị phình to theo size quái
-                bubbleEl.style.transform = `translateX(0) scale(${100 / (mon.size / 50)})`;
-                bubbleEl.style.transformOrigin = "bottom left";
+                // ===================================================================
+                // 🎯 ĐÃ ĐẬP CHẾT LỖI SCALE: Khóa cứng đúng 50x50px chuẩn yêu cầu của fen
+                // ===================================================================
+                bubbleEl.style.position = "absolute";
+                bubbleEl.style.width = "50px";   
+                bubbleEl.style.height = "50px";  
+                bubbleEl.style.fontSize = "18px"; 
+                bubbleEl.style.transform = "scale(1) !important"; 
+                bubbleEl.style.transformOrigin = "bottom center";
                 
-                // 🎯 ĐỊNH VỊ CHUẨN XÍCH QUA PHẢI: Tránh đè lên đầu quái
-                bubbleEl.style.top = "-25px";
-                bubbleEl.style.right = "-35px";
-                bubbleEl.style.left = "auto";
+                // Căn chuẩn góc phải trên đầu quái vật, xích ra mượt mà không lệch tâm
+                bubbleEl.style.top = "-40px"; 
+                bubbleEl.style.left = `${mon.size - 20}px`; 
+                bubbleEl.style.right = "auto";
 
                 mon.element.appendChild(bubbleEl);
 
@@ -272,12 +275,9 @@ function spawnAllMonsFromUserSheet() {
 
             } else {
                 mon.isBehavingIdle = false;
-                
-                // ĐI BỘ SIÊU CHẬM: Kéo dài transition lên 5 giây
                 mon.element.style.transition = "left 5s linear, top 5s linear";
                 mon.graphicElement.classList.add('mon-moving-tilt');
 
-                // RÚT NGẮN KHOẢNG CÁCH: Chỉ cho phép đi dạo trong bán kính 50px
                 let randomRadius = Math.random() * 50; 
                 let randomAngle = Math.random() * Math.PI * 2;
                 
@@ -315,7 +315,6 @@ function startHoldingMonRoutine(e, monObj) {
     monObj.element.dataset.heldMode = "true";
 
     const petRect = monObj.element.getBoundingClientRect();
-    
     const pageX = e.pageX || (e.touches ? e.touches[0].pageX : 0);
     const pageY = e.pageY || (e.touches ? e.touches[0].pageY : 0);
 
@@ -326,7 +325,6 @@ function startHoldingMonRoutine(e, monObj) {
     const originY = (holdPointerOffset.y / (petRect.height / currentGardenScale)) * 100;
 
     monObj.graphicElement.style.transformOrigin = `${originX}% ${originY}%`;
-
     monObj.element.classList.add('is-being-held');
     gardenJoystickState.isHolding = false;
 }
@@ -671,7 +669,6 @@ function changeSelectorPage(directionSign) {
     }
 }
 
-// Tìm ô trống bệ dưới điền mã quái
 function selectMonToVanguardSlot(monIdString) {
     let emptySlotIndex = selectedVanguardSlotsArray.findIndex(slot => slot === null);
     
