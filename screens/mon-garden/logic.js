@@ -173,7 +173,7 @@ function spawnAllMonsFromUserSheet() {
         const catchCount = gameState.captured[mob.ID] || 0;
         if (catchCount <= 0) return; 
 
-        let calculatedSize = 150 + (catchCount - 1) * 5;
+        let calculatedSize = 100 + (catchCount - 1) * 5;
         if (calculatedSize > 350) calculatedSize = 350;
 
         let isSpecialCodeE = mob.ID.toString().toUpperCase().startsWith('E');
@@ -269,7 +269,7 @@ function spawnAllMonsFromUserSheet() {
                     if (bubbleEl.parentNode) bubbleEl.remove();
                 }, 2000);
 
-            } else {
+} else {
                 mon.isBehavingIdle = false;
                 
                 // 🎯 KÍCH HOẠT BUNNY HOP 50PX (TẮT TRANSITION LẾT CŨ)
@@ -288,16 +288,20 @@ function spawnAllMonsFromUserSheet() {
                 if(targetY > 3900) targetY = 3900;
 
                 let directionSign = targetX > mon.currentX ? 1 : -1;
+
+                // 1. Đẩy tọa độ ngang của lớp vỏ ngoài đi trước để làm điểm đáp vật lý
+                mon.element.style.left = `${targetX}px`;
+                mon.element.style.top = `${targetY}px`;
                 
-                // Kích nổ hiệu ứng nhảy vòng cung bằng CSS Animation gài vào Core quái
+                // 2. 🎯 FIX XUNG ĐỘT: Lật mặt quái bằng thẻ ngoài (mon.element) thay vì thẻ đồ họa trong để tránh đè nát animation
+                mon.element.style.transform = `scaleX(${directionSign})`;
+                
+                // 3. Kích nổ hiệu ứng nhấc bổng vòng cung lên trời (Trục Y) bằng CSS Animation
                 mon.graphicElement.style.animation = "none";
                 mon.graphicElement.offsetHeight; // Kích reflow reset nhịp
                 mon.graphicElement.style.animation = "monBunnyHopEffect 0.5s ease-out forwards";
-                mon.graphicElement.style.transform = `scaleX(${directionSign})`;
 
-                mon.element.style.left = `${targetX}px`;
-                mon.element.style.top = `${targetY}px`;
-
+                // Lưu dữ liệu tọa độ mới vào bộ đếm runtime
                 mon.currentX = targetX;
                 mon.currentY = targetY;
             }
