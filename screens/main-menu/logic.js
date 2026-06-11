@@ -89,7 +89,7 @@ async function initMainMenuLogic() {
     openLoginCredentialsPopup();
 }
 
-// 🔓 HÀM 1: ĐI THẲNG VÀO SẢNH (Dành cho user cũ đã lưu trên máy hoặc đăng nhập thành công)
+// 🔓 HÀM 1: ĐI THẲNG VÀO SẢNH (Bản chuẩn, mượt, sạch bóng lỗi cú pháp)
 function enterMainMenuDirectly() {
     const menuControls = document.getElementById('menu-controls');
     const charZone = document.querySelector('.menu-right-char-zone');
@@ -99,6 +99,8 @@ function enterMainMenuDirectly() {
 
     if (avatarDisplay) avatarDisplay.style.backgroundImage = `url('assets/Player_${gameState.gender === 'male' ? 'Male' : 'Female'}_Main.png')`;
     if (nameText) nameText.innerText = gameState.username;
+
+    // 🎯 CHỈ ĐỌC TỪ BỘ NHỚ SHEET GAMESTATE, CÓ FALLBACK DEFAULT
     if (avatarImg) {
         let rawLink = gameState.avatar ? gameState.avatar.trim() : "";
         let defaultAvatar = "assets/default-avatar.png";
@@ -116,11 +118,6 @@ function enterMainMenuDirectly() {
             avatarImg.style.display = "block"; 
         }
     }
-
-    if (menuControls) menuControls.style.display = "flex";
-    if (charZone) charZone.style.display = "flex";
-}
-    // ===================================================================
 
     // Kích hoạt hiển thị cụm nút Start/Collection và nhân vật lên màn hình
     if (menuControls) menuControls.style.display = "flex";
