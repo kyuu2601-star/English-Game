@@ -7,8 +7,8 @@ const QUESTIONS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT-EF
 // 🎯 ĐÃ CẬP NHẬT: LINK DEPLOY MỚI NHẤT
 const LOGIN_API_URL = "https://script.google.com/macros/s/AKfycbxh9a9wHqhsTlXglcdUaMFcl57MC5CyLZYttRvSAvCnY1kznmQJMlQd7QKQ6lAEF48/exec";
 
-// 🎯 ĐÃ NÂNG CẤP: LÊN VERSION V4 CHUẨN CHỈ
-const CACHE_NAME = 'mon-english-v7'; 
+// 🎯 ĐÃ NÂNG CẤP: LÊN VERSION V8 ĐỂ QUÉT SẠCH CACHE CŨ
+const CACHE_NAME = 'mon-english-v8'; 
 
 // 🎯 TẤT CẢ CHỈ SỐ ĐỂ TRỐNG/SỐ 0 ĐỂ GOOGLE SHEET NẠP XUỐNG
 let globalMobList = [];      
@@ -58,7 +58,6 @@ async function handleGamePreloadAndVersionControl() {
         './screens/main-menu/ui.html', './screens/main-menu/style.css', './screens/main-menu/logic.js',
         './screens/battle-stage/ui.html', './screens/battle-stage/style.css', './screens/battle-stage/logic.js',
         './screens/collection-book/ui.html', './screens/collection-book/style.css', './screens/collection-book/logic.js',
-        // 🎯 ĐÃ THÊM MỚI: Nạp trước 3 file của Khu Vườn (mon-garden)
         './screens/mon-garden/ui.html', './screens/mon-garden/style.css', './screens/mon-garden/logic.js'
     ];
 
@@ -74,14 +73,16 @@ async function handleGamePreloadAndVersionControl() {
         './assets/Nametag_lv1.png', './assets/Nametag_lv2.png', './assets/Nametag_lv3.png', './assets/Nametag_lv4.png', './assets/Nametag_lv5.png',
         './assets/Popup_Captured.png', './assets/Popup_Missed.png', './assets/VFX_Ball_Open.png', './assets/VFX_Ball_Close.png', './assets/VFX_Smoke.png', './assets/VFX_Star_Shiny.png',
         
-        // 🎯 ĐÃ BỔ SUNG: DÀN ASSET CỦA KHU VƯỜN (NẰM CHUNG THƯ MỤC GỐC)
         './assets/Bubble_Chat.png', './assets/Btn_Whistle.png', './assets/Btn_Whistle_Pressed.png',
         './assets/tile_0_0.png', './assets/tile_0_1.png', './assets/tile_0_2.png', './assets/tile_0_3.png',
         './assets/tile_1_0.png', './assets/tile_1_1.png', './assets/tile_1_2.png', './assets/tile_1_3.png',
         './assets/tile_2_0.png', './assets/tile_2_1.png', './assets/tile_2_2.png', './assets/tile_2_3.png',
         './assets/tile_3_0.png', './assets/tile_3_1.png', './assets/tile_3_2.png', './assets/tile_3_3.png',
-        // (Nếu fen có các file Player_Male_Main.png, Player_Female_Back.png thì nó cũng sẽ load từ đây luôn)
-        './assets/Nametag_lvE.png', './assets/Card_LvE.png', './assets/Card_LvE_S.png'
+        './assets/Nametag_lvE.png', './assets/Card_LvE.png', './assets/Card_LvE_S.png',
+        
+        // 🎯 ĐÃ BỔ SUNG 2 FILE MỚI: 
+        './assets/favicon.ico', 
+        './assets/default-avatar.png'
     ];
 
     if (globalMobList && globalMobList.length > 0) {
@@ -275,7 +276,6 @@ function changeScreen(scrId) {
             }
         });
     }
-    // 🎯 ĐÃ THÊM MỚI: Chuyển hướng cho Khu Vườn
     if (scrId === 'garden') {
         if (typeof cleanUpGardenEngineLeaks === 'function') {
             cleanUpGardenEngineLeaks();
