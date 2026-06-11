@@ -103,19 +103,26 @@ function enterMainMenuDirectly() {
     // ===================================================================
     // 🎯 ĐOẠN ĐÃ FIX: LẤY LINK ĐỘNG TỪ SHEET (gameState.avatar) ĐỔ VÀO UI
     // ===================================================================
-    if (avatarImg) {
+if (avatarImg) {
         let rawLink = gameState.avatar ? gameState.avatar.trim() : "";
+        let defaultAvatar = "assets/default-avatar.png"; // Link dự phòng cục bộ
 
         if (rawLink !== "") {
-            avatarImg.src = rawLink; // Tự động lấy link fen gắn trong Cột G trên Sheet
-            avatarImg.style.display = "block"; // Ép hiển thị
+            avatarImg.crossOrigin = "anonymous"; // Ép mở khóa CORS né vụ Github chặn tải
+            avatarImg.src = rawLink; 
+            avatarImg.style.display = "block"; 
 
-            // Bẫy lỗi: Link hỏng thì tự ẩn đi chứ không hiện icon rách
+            // 🛡️ Bẫy lỗi: Link hỏng hoặc bị chặn tải thì tự lùi về ảnh mặc định
             avatarImg.onerror = function() {
-                this.style.display = "none";
+                this.onerror = null; // Chống lặp vô hạn lỡ default cũng lỗi
+                this.removeAttribute("crossOrigin"); // Gỡ khóa mạng để tải file local
+                this.src = defaultAvatar;
             };
         } else {
-            avatarImg.style.display = "none"; // Nếu cột G trên Sheet trống thì ẩn Avatar đi
+            // 🛡️ Nếu cột G trên Sheet trống thì móc luôn ảnh mặc định ra xài
+            avatarImg.removeAttribute("crossOrigin");
+            avatarImg.src = defaultAvatar; 
+            avatarImg.style.display = "block"; 
         }
     }
     // ===================================================================
