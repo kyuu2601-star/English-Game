@@ -8,7 +8,7 @@ const QUESTIONS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT-EF
 const LOGIN_API_URL = "https://script.google.com/macros/s/AKfycbxh9a9wHqhsTlXglcdUaMFcl57MC5CyLZYttRvSAvCnY1kznmQJMlQd7QKQ6lAEF48/exec";
 
 // 🎯 ĐÃ NÂNG CẤP: LÊN VERSION V4 CHUẨN CHỈ
-const CACHE_NAME = 'mon-english-v5'; 
+const CACHE_NAME = 'mon-english-v6'; 
 
 // 🎯 TẤT CẢ CHỈ SỐ ĐỂ TRỐNG/SỐ 0 ĐỂ GOOGLE SHEET NẠP XUỐNG
 let globalMobList = [];      
@@ -71,7 +71,15 @@ async function handleGamePreloadAndVersionControl() {
         './assets/Btn_Backpack_Icon.png', './assets/Btn_Backpack_Icon_Pressed.png', './assets/Btn_Setting_Icon.png', './assets/Btn_Setting_Icon_Pressed.png',
         './assets/Btn_Battle_Icon.png', './assets/Btn_Battle_Icon_Pressed.png', './assets/Tag_Icon.png',
         './assets/Nametag_lv1.png', './assets/Nametag_lv2.png', './assets/Nametag_lv3.png', './assets/Nametag_lv4.png', './assets/Nametag_lv5.png',
-        './assets/Popup_Captured.png', './assets/Popup_Missed.png', './assets/VFX_Ball_Open.png', './assets/VFX_Ball_Close.png', './assets/VFX_Smoke.png', './assets/VFX_Star_Shiny.png'
+        './assets/Popup_Captured.png', './assets/Popup_Missed.png', './assets/VFX_Ball_Open.png', './assets/VFX_Ball_Close.png', './assets/VFX_Smoke.png', './assets/VFX_Star_Shiny.png',
+        
+        // 🎯 ĐÃ BỔ SUNG: DÀN ASSET CỦA KHU VƯỜN (NẰM CHUNG THƯ MỤC GỐC)
+        './assets/Bubble_Chat.png', './assets/Btn_Whistle.png', './assets/Btn_Whistle_Pressed.png',
+        './assets/tile_0_0.png', './assets/tile_0_1.png', './assets/tile_0_2.png', './assets/tile_0_3.png',
+        './assets/tile_1_0.png', './assets/tile_1_1.png', './assets/tile_1_2.png', './assets/tile_1_3.png',
+        './assets/tile_2_0.png', './assets/tile_2_1.png', './assets/tile_2_2.png', './assets/tile_2_3.png',
+        './assets/tile_3_0.png', './assets/tile_3_1.png', './assets/tile_3_2.png', './assets/tile_3_3.png',
+        // (Nếu fen có các file Player_Male_Main.png, Player_Female_Back.png thì nó cũng sẽ load từ đây luôn)
     ];
 
     if (globalMobList && globalMobList.length > 0) {
