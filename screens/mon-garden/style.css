@@ -201,9 +201,12 @@
     bottom: 55px;
     right: 65px;
     z-index: 9000; 
-    width: 200px;
-    height: 200px;
+    width: 200px;  /* 🎯 Tăng từ 130px lên 200px */
+    height: 200px; /* 🎯 Tăng từ 130px lên 200px */
     touch-action: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .btn-whistle-core {
@@ -217,7 +220,9 @@
     border: none;
     cursor: pointer;
     outline: none;
-    position: relative;
+    position: absolute; 
+    top: 0;
+    left: 0;
 }
 .btn-whistle-core:disabled, 
 .btn-whistle-core.is-pressed {
@@ -227,11 +232,11 @@
 
 .whistle-cooldown-svg {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 200px;
-    height: 200px;
-    transform: rotate(-90deg);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-90deg); 
+    width: 200px;  /* 🎯 Tăng từ 130px lên 200px để khớp với zone bọc ngoài */
+    height: 200px; /* 🎯 Tăng từ 130px lên 200px để khớp với zone bọc ngoài */
     pointer-events: none;
 }
 .cooldown-circle-track {
