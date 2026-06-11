@@ -59,7 +59,19 @@ function renderCollectionBook() {
             starLevel = "1";
         }
         
-        let imgName = isShiny ? `Card_lv${starLevel}_S.png` : `Card_lv${starLevel}.png`;
+        // ===================================================================
+        // 🎯 KHÚC CHÈN MỚI: RÀNG BUỘC GẮN CARD ĐẶC CHỦNG CHO RANK E
+        // ===================================================================
+        let isRankE = mob.ID.toString().toUpperCase().startsWith('E');
+        let imgName = "";
+
+        if (isRankE) {
+            imgName = isShiny ? "Card_LvE_S.png" : "Card_LvE.png";
+        } else {
+            imgName = isShiny ? `Card_lv${starLevel}_S.png` : `Card_lv${starLevel}.png`;
+        }
+        // ===================================================================
+
         card.style.backgroundImage = `url('assets/${imgName}')`;
 
         // 🎯 ĐÃ SỬA: Vứt bỏ chữ x cũ rích, chỉ truyền displayCount vào thôi
