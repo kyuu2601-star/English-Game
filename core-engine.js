@@ -19,7 +19,8 @@ let gameState = {
     coins: 0, 
     gender: "", 
     captured: {},
-    energy: 0 
+    energy: 0,
+    avatar: ""
 };
 let currentMob = null;
 let currentQuestion = null;
@@ -346,6 +347,7 @@ async function loginGame(inputUsername, inputPassword) {
             gameState.username = userData.username;
             gameState.password = inputPassword; 
             gameState.coins = parseInt(userData.coins) || 0;
+            gameState.avatar = userData.avatar ? userData.avatar.trim() : "";
 
             let genderChar = userData.gender ? userData.gender.toString().toUpperCase().trim() : "";
             if (genderChar === 'M' || genderChar === 'MALE') {
