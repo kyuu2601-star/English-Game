@@ -240,7 +240,7 @@ function spawnAllMonsFromUserSheet() {
 
             let diceRoll = Math.random() * 100;
 
-            if (diceRoll < 25) {
+            if (diceRoll < 10) {
                 // ------------------------------------------------------------------
                 // 💤 TRẠNG THÁI IDLE: Đứng yên nghỉ ngơi tại chỗ trong 2.5 giây
                 // ------------------------------------------------------------------
@@ -271,7 +271,7 @@ function spawnAllMonsFromUserSheet() {
                     // CĂN GIỮA TUYỆT ĐỐI NGAY TRÊN ĐẦU QUÁI VẬT
                     bubbleEl.style.top = "-60px"; 
                     bubbleEl.style.left = "50%";  
-                    bubbleEl.style.transform = "translateX(-50%) scale(1) !important"; 
+                    bubbleEl.style.transform = "translateX(-70%) scale(1) !important"; 
                     bubbleEl.style.right = "auto";
 
                     mon.element.appendChild(bubbleEl);
