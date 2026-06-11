@@ -180,13 +180,13 @@
     /* 🎯 RESPONSIVE SCALE: Tự động zoom to nhỏ tỷ lệ thuận theo chiều cao Khung Tên (vh) */
     width: 11vh !important;       /* Cho nhỏ hơn chiều cao khung tên 12vh một xíu nhìn cho gọn gàng */
     height: 11vh !important;
-    max-width: 100px !important;   /* Khống chế trần max để khớp khít khi khung tên đạt max-height 55px */
-    max-height: 100px !important;
+    max-width: 1200px !important;   /* Khống chế trần max để khớp khít khi khung tên đạt max-height 55px */
+    max-height: 120px !important;
 
     position: absolute;           /* Ép tọa độ chạy theo thằng cha .player-nametag-wrapper */
     
     /* 🎯 ĐẨY LÙI VỀ CẠNH TRÁI: Đẩy lùi âm phân nửa chiều rộng ảnh ra rìa trái bệ đỡ */
-    left: 0vh !important;      
+    left: -1vh !important;      
     /* 🎯 CĂN GIỮA TRỤC DỌC: Giúp tâm avatar luôn nằm ngay chính giữa bệ đỡ theo chiều ngang */
     top: 50%;
     transform: translateY(-50%) !important; 
