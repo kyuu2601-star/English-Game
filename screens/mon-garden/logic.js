@@ -209,12 +209,42 @@ function spawnAllMonsFromUserSheet() {
 
         let spawnX, spawnY;
         if (isSpecialCodeE) {
-            // Thay vì ép quanh vùng tâm 1850-2150px như cũ, tui rải rộng ra toàn bản đồ
-            // Chừa biên 300px để quái không bị văng ra khỏi rìa map
-            spawnX = 300 + Math.random() * 3400; // Tọa độ chạy từ 300px đến 3700px
-            spawnY = 300 + Math.random() * 3400; // Tọa độ chạy từ 300px đến 3700px
+            let isValidSpawnPosition = false;
+            let attemptsCounter = 0; // Bộ đếm khống chế, tránh kẹt lặp vô hạn
+
+            while (!isValidSpawnPosition && attemptsCounter < 100) {
+                attemptsCounter++;
+                
+                // Bốc thăm tọa độ ngẫu nhiên trên toàn map như cũ
+                spawnX = 300 + Math.random() * 3400;
+                spawnY = 300 + Math.random() * 3400;
+
+                let isTooCloseToOthers = false;
+
+                // Quét danh sách quái đặc biệt ĐÃ ĐƯỢC THẢ TRƯỚC ĐÓ để so độ xa
+                for (let i = 0; i < activeGardenMonsInstances.length; i++) {
+                    let otherMon = activeGardenMonsInstances[i];
+                    if (otherMon.isCodeE) {
+                        // Tính khoảng cách hình học Pitago giữa điểm mới và điểm cũ
+                        let dx = spawnX - otherMon.currentX;
+                        let dy = spawnY - otherMon.currentY;
+                        let actualDistance = Math.sqrt(dx * dx + dy * dy);
+
+                        // 🎯 KHÓA CỨNG: Nếu khoảng cách nhỏ hơn 1000px, đánh dấu lỗi lập tức!
+                        if (actualDistance < 1000) {
+                            isTooCloseToOthers = true;
+                            break; // Thằng này phạm quy, không cần check mấy con sau nữa
+                        }
+                    }
+                }
+
+                // Nếu vượt qua bài kiểm tra (không bị gần con nào dưới 1000px) thì duyệt cho đáp đất!
+                if (!isTooCloseToOthers) {
+                    isValidSpawnPosition = true;
+                }
+            }
         } else {
-            // Khúc else của quái thường fen giữ nguyên si nha
+            // Khúc else của quái thường fen giữ nguyên vẹn hoàn toàn nha
             spawnX = 1100 + Math.random() * 1800;
             spawnY = 1100 + Math.random() * 1800;
         }
