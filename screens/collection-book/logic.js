@@ -91,7 +91,7 @@ function renderCollectionBook() {
                 position: fixed;
                 top: 0;
                 left: 0;
-                width: 50vw;
+                width: 100vw;
                 height: 100vh;
                 background-color: rgba(0, 0, 0, 0.85);
                 z-index: 9999999;
@@ -107,8 +107,8 @@ function renderCollectionBook() {
             const bigMonImg = document.createElement('img');
             bigMonImg.src = mob.Image;
             bigMonImg.style.cssText = `
-                width: 1000px;
-                height: 1000px;
+                width: 600px;
+                height: 600px;
                 object-fit: contain;
                 pointer-events: none; 
                 transform: scale(0.8);
