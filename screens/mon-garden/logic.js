@@ -66,9 +66,10 @@ function initGardenLogic() {
     const viewportEl = document.getElementById('garden-viewport');
     if (!playerEl || !viewportEl) return;
 
+    // 🎯 ÉP KÍCH THƯỚC ĐỘNG CHO CHAR PHÓNG TO ĐÈ LÊN CSS CŨ
     playerEl.style.width = `${gardenPlayerState.width}px`;
     playerEl.style.height = `${gardenPlayerState.height}px`;
-    
+
     updatePlayerSpriteAsset();
 
     // 🎯 GỌI HÀM CÂN BẰNG TỶ LỆ MÀN HÌNH VÀ GẮN SỰ KIỆN KHI RESIZE
@@ -156,7 +157,7 @@ function updatePlayerSpriteAsset() {
 }
 
 // ==========================================================================
-// 🧬 ENGINE THẢ QUÁI VÀ QUẢN LÝ HÀNH VI (ĐI CỰC CHẬM 10PX/S + FIXED ĐẶC BIỆT CHỮ E)
+// 🧬 ENGINE THẢ QUÁI VÀ QUẢN LÝ HÀNH VI (FIX BUBBLE CHAT TĨNH 50PX + QUÁI HỆ e ĐỨNG YÊN)
 // ==========================================================================
 function spawnAllMonsFromUserSheet() {
     const mapContainer = document.getElementById('garden-map');
@@ -257,9 +258,9 @@ function spawnAllMonsFromUserSheet() {
                 bubbleEl.style.transformOrigin = "bottom center";
 
                 // 🎯 CĂN GIỮA TUYỆT ĐỐI NGAY TRÊN ĐẦU QUÁI VẬT
-                bubbleEl.style.top = "-60px"; // Đẩy hẳn lên trên đầu quái một khoảng vừa vặn
-                bubbleEl.style.left = "50%";  // Đẩy góc trái bong bóng ra chính giữa tâm con quái
-                bubbleEl.style.transform = "translateX(-50%) scale(1) !important"; // Thêm translateX(-50%) để giật ngược cái bong bóng lại chính giữa rốn quái
+                bubbleEl.style.top = "-60px"; 
+                bubbleEl.style.left = "50%";  
+                bubbleEl.style.transform = "translateX(-50%) scale(1) !important"; 
                 bubbleEl.style.right = "auto";
 
                 mon.element.appendChild(bubbleEl);
@@ -270,14 +271,16 @@ function spawnAllMonsFromUserSheet() {
 
             } else {
                 mon.isBehavingIdle = false;
-                mon.element.style.transition = "left 5s linear, top 5s linear";
+                
+                // 🎯 KÍCH HOẠT BUNNY HOP 50PX (TẮT TRANSITION LẾT CŨ)
+                mon.element.style.transition = "none";
                 mon.graphicElement.classList.add('mon-moving-tilt');
 
-                let randomRadius = Math.random() * 50; 
                 let randomAngle = Math.random() * Math.PI * 2;
                 
-                let targetX = mon.currentX + Math.cos(randomAngle) * randomRadius;
-                let targetY = mon.currentY + Math.sin(randomAngle) * randomRadius;
+                // Khóa cứng cự ly nhảy đúng 50px từng chặng
+                let targetX = mon.currentX + Math.cos(randomAngle) * 50;
+                let targetY = mon.currentY + Math.sin(randomAngle) * 50;
 
                 if(targetX < 100) targetX = 100;
                 if(targetX > 3900) targetX = 3900;
@@ -285,6 +288,11 @@ function spawnAllMonsFromUserSheet() {
                 if(targetY > 3900) targetY = 3900;
 
                 let directionSign = targetX > mon.currentX ? 1 : -1;
+                
+                // Kích nổ hiệu ứng nhảy vòng cung bằng CSS Animation gài vào Core quái
+                mon.graphicElement.style.animation = "none";
+                mon.graphicElement.offsetHeight; // Kích reflow reset nhịp
+                mon.graphicElement.style.animation = "monBunnyHopEffect 0.5s ease-out forwards";
                 mon.graphicElement.style.transform = `scaleX(${directionSign})`;
 
                 mon.element.style.left = `${targetX}px`;
@@ -580,7 +588,7 @@ function triggerWhistleCooldownPhase() {
 }
 
 // ==========================================================================
-// 📋 LOGIC ĐIỀU PHỐI POPUP BAN BÈ (🎯 ĐÃ THÊM TƯƠNG TÁC ĐÓNG POPUP)
+// 📋 LOGIC ĐIỀU PHỐI POPUP BAN BÈ (🎯 CÓ TƯƠNG TÁC ĐÓNG POPUP)
 // ==========================================================================
 function openWhistleSelectorModalPopup() {
     const modal = document.getElementById('garden-mon-selector');
@@ -592,7 +600,6 @@ function openWhistleSelectorModalPopup() {
     renderWhistleGridAndSlots();
     modal.style.display = "flex";
 
-    // 🎯 THÊM: Click ra vùng trống bên ngoài nền mờ để tự tắt bảng chọn
     modal.onclick = function(event) {
         if (event.target === modal) {
             closeMonSelectorModal();
@@ -689,6 +696,11 @@ function deselectMonFromSlot(slotIndex) {
     renderWhistleGridAndSlots();
 }
 
+function closeMonSelectorModal() {
+    const modal = document.getElementById('garden-mon-selector');
+    if (modal) modal.style.display = "none";
+}
+
 function confirmWhistleSelection() {
     let totalSelected = selectedVanguardSlotsArray.filter(slot => slot !== null).length;
     
@@ -699,12 +711,6 @@ function confirmWhistleSelection() {
 
     document.getElementById('garden-mon-selector').style.display = "none";
     triggerWhistleVanguardSummon();
-}
-
-// 🎯 THÊM: Hàm xử lý đóng ẩn thẻ div Modal Popup
-function closeMonSelectorModal() {
-    const modal = document.getElementById('garden-mon-selector');
-    if (modal) modal.style.display = "none";
 }
 
 // ==========================================================================
