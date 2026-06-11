@@ -8,7 +8,7 @@ const QUESTIONS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT-EF
 const LOGIN_API_URL = "https://script.google.com/macros/s/AKfycbxh9a9wHqhsTlXglcdUaMFcl57MC5CyLZYttRvSAvCnY1kznmQJMlQd7QKQ6lAEF48/exec";
 
 // 🎯 ĐÃ NÂNG CẤP: LÊN VERSION V4 CHUẨN CHỈ
-const CACHE_NAME = 'mon-english-v6'; 
+const CACHE_NAME = 'mon-english-v7'; 
 
 // 🎯 TẤT CẢ CHỈ SỐ ĐỂ TRỐNG/SỐ 0 ĐỂ GOOGLE SHEET NẠP XUỐNG
 let globalMobList = [];      
@@ -80,6 +80,7 @@ async function handleGamePreloadAndVersionControl() {
         './assets/tile_2_0.png', './assets/tile_2_1.png', './assets/tile_2_2.png', './assets/tile_2_3.png',
         './assets/tile_3_0.png', './assets/tile_3_1.png', './assets/tile_3_2.png', './assets/tile_3_3.png',
         // (Nếu fen có các file Player_Male_Main.png, Player_Female_Back.png thì nó cũng sẽ load từ đây luôn)
+        './assets/Nametag_lvE.png', './assets/Card_LvE.png', './assets/Card_LvE_S.png'
     ];
 
     if (globalMobList && globalMobList.length > 0) {
