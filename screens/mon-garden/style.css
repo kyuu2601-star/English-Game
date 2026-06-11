@@ -62,13 +62,17 @@
    =================================================================== */
 .garden-player {
     position: absolute;
-    width: 66px;
-    height: 100px;
+    width: 66px; /* Sẽ bị ghi đè động bằng JS lên 132px để phóng to */
+    height: 100px; /* Sẽ bị ghi đè động bằng JS lên 200px để phóng to */
     background-size: contain;
     background-repeat: no-repeat;
     background-position: bottom center;
     z-index: 800; 
     will-change: left, top, transform;
+    /* CHỐNG BỂ HÌNH CHO PLAYER */
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
 }
 
 .garden-player::after {
@@ -98,9 +102,10 @@
    =================================================================== */
 .garden-mon-pet {
     position: absolute;
-    transition: left 4s ease-in-out, top 4s ease-in-out;
     z-index: 500; 
     will-change: left, top;
+    /* 🎯 Đã gỡ thuộc tính transition cũ để nhường sân cho bước nhảy Bunny Hop giật của JS */
+    transition: none !important;
 }
 
 .garden-mon-pet::after {
@@ -124,9 +129,14 @@
     background-size: contain;
     background-repeat: no-repeat;
     background-position: bottom center;
+    /* CHỐNG BỂ HÌNH CHO QUÁI VẬT DÙ PHÓNG TO */
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
 }
 
 .mon-moving-tilt {
+    /* Được thay thế động hoặc chạy kết hợp linh hoạt tùy xúc xắc */
     animation: mon-tilting-walk 1.2s infinite ease-in-out;
 }
 
@@ -134,11 +144,9 @@
     animation: mon-p-gentle-sway 2.5s infinite ease-in-out !important;
 }
 
-/* 💬 BUBBLE CHAT (🎯 ĐƯỜNG DẪN NỘI BỘ TRONG FOLDER) */
+/* 💬 BUBBLE CHAT (ĐÃ ĐƯỢC CHUẨN HÓA TOÀN DIỆN LÀM NỀN CHO JS KHÓA 50PX) */
 .garden-emoji-bubble {
     position: absolute;
-    width: 50px;
-    height: 50px;
     background-image: url('assets/Bubble_Chat.png'); 
     background-size: 100% 100%;
     background-repeat: no-repeat;
@@ -147,11 +155,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 18px; 
     padding-bottom: 8px; 
-    z-index: 10; 
-    top: -35px; 
-    right: -25px; 
+    z-index: 1010; /* Cao hơn quái để không bị che khuất */
     animation: bubble-pop-up 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
@@ -201,7 +206,6 @@
     touch-action: none;
 }
 
-/* NÚT CÒI (🎯 ĐƯỜNG DẪN NỘI BỘ TRONG FOLDER) */
 .btn-whistle-core {
     width: 100%;
     height: 100%;
@@ -269,7 +273,6 @@
     cursor: pointer;
     outline: none;
 }
-/* NÚT MENU (🎯 ĐƯỜNG DẪN NỘI BỘ TRONG FOLDER) */
 .btn-nav-back { background-image: url('assets/Btn_Back.png'); } 
 .btn-nav-back:active { background-image: url('assets/Btn_Back_Pressed.png'); } 
 
@@ -384,7 +387,6 @@
     width: 60px; height: 60px; object-fit: contain;
 }
 
-/* NÚT XÁC NHẬN (🎯 ĐƯỜNG DẪN NỘI BỘ TRONG FOLDER) */
 .btn-confirm-whistle-select {
     width: 220px;
     height: 65px;
@@ -427,8 +429,8 @@
 }
 
 @keyframes bubble-pop-up {
-    0% { transform: translate(-10px, 10px) scale(0); opacity: 0; }
-    100% { transform: translate(0, 0) scale(1); opacity: 1; }
+    0% { transform: translate(-50%, 10px) scale(0); opacity: 0; }
+    100% { transform: translate(-50%, 0) scale(1); opacity: 1; }
 }
 
 @keyframes mon-violently-shake {
@@ -437,6 +439,19 @@
     50%  { transform: rotate(0deg); }
     75%  { transform: rotate(-10deg); }
     100% { transform: rotate(0deg); }
+}
+
+/* 🎯 HIỆU ỨNG BUNNY HOP VÒNG CUNG CHUẨN RPG */
+@keyframes monBunnyHopEffect {
+    0% {
+        transform: translateY(0) rotate(0deg);
+    }
+    50% {
+        transform: translateY(-40px) rotate(4deg); /* Nhảy bổng cao hẳn 40px ở giữa chặng */
+    }
+    100% {
+        transform: translateY(0) rotate(0deg); /* Đáp đất vững vàng */
+    }
 }
 
 .garden-mon-pet.is-being-held {
