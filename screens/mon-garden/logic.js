@@ -13,8 +13,8 @@ let currentGardenScale = 1;
 let gardenPlayerState = {
     x: 2000, 
     y: 2000,
-    width: 66, 
-    height: 100, 
+    width: 132, 
+    height: 200, 
     speed: 6.5,  
     facingX: 1,      
     viewDirection: 'down', 
@@ -246,12 +246,17 @@ function spawnAllMonsFromUserSheet() {
                 bubbleEl.className = "garden-emoji-bubble";
                 bubbleEl.innerText = randomEmoji;
                 
-                bubbleEl.style.transform = `translateX(0) scale(${100 / (mon.size / 50)})`;
-                bubbleEl.style.transformOrigin = "bottom left";
-                
-                bubbleEl.style.top = "-25px";
-                bubbleEl.style.right = "-35px";
-                bubbleEl.style.left = "auto";
+                bubbleEl.style.position = "absolute";
+                bubbleEl.style.width = "50px";   
+                bubbleEl.style.height = "50px";  
+                bubbleEl.style.fontSize = "18px"; 
+                bubbleEl.style.transform = "scale(1) !important"; 
+                bubbleEl.style.transformOrigin = "bottom center";
+
+                // Căn tọa độ động hít theo góc trên bên phải của con quái
+                bubbleEl.style.top = "-40px"; 
+                bubbleEl.style.left = `${mon.size - 20}px`; // Nương theo độ bự của quái để dịch chuyển
+                bubbleEl.style.right = "auto";
 
                 mon.element.appendChild(bubbleEl);
 
