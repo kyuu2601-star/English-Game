@@ -13,8 +13,8 @@ let currentGardenScale = 1;
 let gardenPlayerState = {
     x: 2000, 
     y: 2000,
-    width: 132, 
-    height: 200, 
+    width: 198, 
+    height: 300, 
     speed: 6.5,  
     facingX: 1,      
     viewDirection: 'down', 
