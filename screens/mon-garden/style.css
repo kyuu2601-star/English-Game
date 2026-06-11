@@ -1,0 +1,430 @@
+/* ===================================================================
+   📺 1. ĐỊNH DẠNG KHUNG NHÌN CHUẨN 1920x1080 (ASPECT RATIO LOCK)
+   =================================================================== */
+/* Khung bọc tràn toàn màn hình máy tính/điện thoại */
+.garden-wrapper {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+    background: #020617; /* Màu tối lấp đầy khoảng trống dư thừa bên ngoài */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+/* 🎯 HỘP LÕI CỐ ĐỊNH 1920x1080 - Tất cả UI/Gameplay bắt buộc nằm chết ở đây */
+.garden-container-1080p {
+    width: 1920px;
+    height: 1080px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    overflow: hidden;
+    background: #000;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+}
+
+/* Khung nhìn cục bộ để cuộn bản đồ bên trong hộp lõi */
+.garden-viewport {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+/* ===================================================================
+   🏞️ 2. MA TRẬN 16 TẤM NỀN BẢN ĐỒ (4000x4000px GIỮ ĐỘ SẮC NÉT)
+   =================================================================== */
+.garden-map {
+    width: 4000px;
+    height: 4000px;
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(4, 1000px);
+    grid-template-rows: repeat(4, 1000px);
+    gap: 0;
+    /* Thần chú chống vỡ ảnh khi di chuyển/zoom camera */
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+}
+
+.garden-tile {
+    width: 1000px;
+    height: 1000px;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+/* ===================================================================
+   🧍 3. NHÂN VẬT CHÍNH (THU NHỎ CÒN 66x100px + HIỆU ỨNG NHÚN NHẨY)
+   =================================================================== */
+.garden-player {
+    position: absolute;
+    width: 66px;
+    height: 100px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: bottom center;
+    z-index: 999;
+    will-change: left, top, transform;
+}
+
+/* Bật khi nhân vật đang di chuyển bằng cần gạt */
+.player-walking {
+    animation: player-walk-bounce 0.25s infinite ease-in-out;
+}
+
+/* Bật tự động bằng JS sau mỗi 5 giây đứng yên */
+.player-idle-breath {
+    animation: player-breathing 1.8s infinite ease-in-out;
+}
+
+/* ===================================================================
+   🦖 4. QUÁI VẬT TÍ HON, MÃ P ĐẶC BIỆT & SPEECH EMOJI BUBBLE
+   =================================================================== */
+.garden-mon-pet {
+    position: absolute;
+    /* Kích thước width/height gốc do JS tính toán (50px + số lần bắt) */
+    transition: left 4s ease-in-out, top 4s ease-in-out;
+    z-index: 500;
+    will-change: left, top;
+}
+
+/* Lõi chứa ảnh Mon để xử lý hoạt ảnh nghiêng lắc */
+.mon-graphic-core {
+    width: 100%;
+    height: 100%;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: bottom center;
+}
+
+/* Hoạt ảnh nghiêng trái phải khi di chuyển tự do */
+.mon-moving-tilt {
+    animation: mon-tilting-walk 1.2s infinite ease-in-out;
+}
+
+/* Ép riêng cho các con quái dính "Mã P" đứng cố định */
+.mon-p-stable {
+    animation: mon-p-gentle-sway 2.5s infinite ease-in-out !important;
+}
+
+/* 💬 SPEECH BUBBLE CHỨA EMOJI CAO ĐÚNG 25PX */
+.garden-emoji-bubble {
+    position: absolute;
+    height: 25px;
+    background: #ffffff;
+    border: 2px solid #000000;
+    border-radius: 6px;
+    padding: 0px 5px;
+    font-size: 14px;
+    line-height: 21px;
+    text-align: center;
+    z-index: 900;
+    top: -22px;
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    animation: bubble-pop-up 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.garden-emoji-bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 5px 5px 0;
+    border-style: solid;
+    border-color: #ffffff transparent;
+}
+
+/* ===================================================================
+   🕹️ 5. VIRTUAL JOYSTICK (GÓC DƯỚI TAY TRÁI)
+   =================================================================== */
+.joystick-zone {
+    position: absolute;
+    bottom: 50px;
+    left: 60px;
+    z-index: 9999;
+    touch-action: none;
+}
+.joystick-base {
+    width: 160px;
+    height: 160px;
+    background: rgba(255, 255, 255, 0.12);
+    border: 5px solid rgba(255, 255, 255, 0.35);
+    border-radius: 50%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(5px);
+}
+.joystick-stick {
+    width: 65px;
+    height: 65px;
+    background: radial-gradient(circle, #ffd700 0%, #b45309 100%);
+    border: 3px solid #ffffff;
+    border-radius: 50%;
+    position: absolute;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.5);
+    will-change: transform;
+}
+
+/* ===================================================================
+   🎺 6. NÚT CÁI CÒI CỠ BỰ & VÒNG TRÒN PROGRESS SVG COOLDOWN
+   =================================================================== */
+.btn-whistle-zone {
+    position: absolute;
+    bottom: 55px;
+    right: 65px;
+    z-index: 9999;
+    width: 130px;
+    height: 130px;
+    touch-action: none;
+}
+.btn-whistle-core {
+    width: 100%;
+    height: 100%;
+    background-image: url('assets/Btn_Whistle.png');
+    background-size: 85%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    position: relative;
+}
+/* Trạng thái bị khóa hoặc đang đè tay vào */
+.btn-whistle-core:disabled, 
+.btn-whistle-core.is-pressed {
+    background-image: url('assets/Btn_Whistle_Pressed.png') !important;
+    cursor: not-allowed;
+}
+
+/* Vòng tròn SVG đếm giây bao bọc ngoài rìa nút còi */
+.whistle-cooldown-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 130px;
+    height: 130px;
+    transform: rotate(-90deg); /* Xoay ngược góc để thanh nạp chạy từ đỉnh đầu */
+    pointer-events: none;
+}
+.cooldown-circle-track {
+    fill: none;
+    stroke: rgba(0, 0, 0, 0.3);
+    stroke-width: 6px;
+}
+.cooldown-circle-bar {
+    fill: none;
+    stroke: #ec4899; /* Màu hồng cánh sen báo hiệu đang chạy duration */
+    stroke-width: 6px;
+    stroke-dasharray: 377; /* Chu vi vòng tròn bán kính r=60 (2 * pi * 60) */
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 0.1s linear, stroke 0.3s;
+}
+/* Đổi màu đỏ cam khi chuyển sang 2 giây hồi chiêu */
+.btn-whistle-zone.on-cooldown .cooldown-circle-bar {
+    stroke: #ef4444;
+}
+
+/* ===================================================================
+   🎛️ 7. HỆ THỐNG MENU ĐIỀU HƯỚNG GÓC TRÊN TAY PHẢI
+   =================================================================== */
+.garden-top-nav-menu {
+    position: absolute;
+    top: 35px;
+    right: 45px;
+    display: flex;
+    gap: 20px;
+    z-index: 9999;
+}
+.btn-garden-nav {
+    width: 90px;
+    height: 90px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    outline: none;
+}
+/* Gán bệ asset tương ứng từng nút */
+.btn-nav-back { background-image: url('assets/Btn_Back.png'); }
+.btn-nav-back:active { background-image: url('assets/Btn_Back_Pressed.png'); }
+
+.btn-nav-battle { background-image: url('assets/Btn_Battle_Icon.png'); }
+.btn-nav-battle:active { background-image: url('assets/Btn_Battle_Icon_Pressed.png'); }
+
+.btn-nav-collection { background-image: url('assets/Btn_Collection_Icon.png'); }
+.btn-nav-collection:active { background-image: url('assets/Btn_Collection_Icon_Pressed.png'); }
+
+/* ===================================================================
+   📋 8. POPUP BẢNG CHỌN VỆ SĨ (GRID 6x6 ROLL TRANG)
+   =================================================================== */
+.garden-select-modal {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.65);
+    z-index: 99999;
+    display: flex; justify-content: center; align-items: center;
+}
+.garden-select-content {
+    background: #fef08a;
+    border: 6px solid #854d0e;
+    border-radius: 28px;
+    padding: 25px;
+    width: 650px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+}
+.garden-select-content h3 {
+    color: #854d0e;
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 32px;
+    letter-spacing: 1px;
+}
+
+/* Khung bọc Grid trung tâm tích hợp 2 mũi tên Roll trang */
+.grid-pagination-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+.btn-grid-arrow {
+    width: 50px;
+    height: 50px;
+    background: #ca8a04;
+    border: 3px solid #854d0e;
+    border-radius: 50%;
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.btn-grid-arrow:active { background: #a16207; }
+
+/* Ma trận Grid 6x6 cố định không gian */
+.garden-selector-grid-6x6 {
+    display: grid;
+    grid-template-columns: repeat(6, 75px);
+    grid-template-rows: repeat(6, 75px);
+    gap: 10px;
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 18px;
+    border: 4px solid #ca8a04;
+}
+
+/* Ô Item Mon trong Grid */
+.garden-grid-cell-item {
+    background: #fef08a;
+    border: 3px solid #ca8a04;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+}
+.garden-grid-cell-item img {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+}
+.garden-grid-cell-item .mon-count-badge {
+    position: absolute;
+    bottom: 2px; right: 4px;
+    font-size: 11px; font-weight: bold; color: #854d0e;
+}
+
+/* Bệ chứa 5 ô trống Vệ sĩ phía dưới */
+.garden-slots-row-bottom {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+.garden-vanguard-slot-box {
+    width: 80px;
+    height: 80px;
+    background: #e2e8f0;
+    border: 3px dashed #94a3b8;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+.garden-vanguard-slot-box.has-mon {
+    background: #fbcfe8;
+    border: 3px solid #ec4899;
+}
+.garden-vanguard-slot-box img {
+    width: 60px; height: 60px; object-fit: contain;
+}
+
+/* Nút xác nhận dùng bệ ảnh UI_Answer_Box */
+.btn-confirm-whistle-select {
+    width: 220px;
+    height: 65px;
+    background-image: url('assets/UI_Answer_Box.png');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    border: none;
+    color: #ffffff;
+    font-size: 22px;
+    font-weight: bold;
+    cursor: pointer;
+    outline: none;
+}
+.btn-confirm-whistle-select:active {
+    background-image: url('assets/UI_Answer_Box_Pressed.png');
+}
+
+/* ===================================================================
+   🎞️ 9. KHÔNG GIAN ĐỊNH NGHĨA KEYFRAMES HOẠT ẢNH ANIMS
+   =================================================================== */
+/* Nhân vật đi bộ nhảy nẩy tâng tâng */
+@keyframes player-walk-bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+/* Nhân vật đứng thở nhè nhẹ */
+@keyframes player-breathing {
+    0%, 100% { transform: scaleY(1); }
+    50% { transform: scaleY(0.95); }
+}
+
+/* Mon di chuyển dạo mát nghiêng qua nghiêng lại */
+@keyframes mon-tilting-walk {
+    0%, 100% { transform: rotate(-8deg); }
+    50% { transform: rotate(8deg); }
+}
+
+/* Mã P huyền thoại đứng lắc lư biên độ siêu nhỏ */
+@keyframes mon-p-gentle-sway {
+    0%, 100% { transform: rotate(-3deg) scale(1.02); }
+    50% { transform: rotate(3deg) scale(0.98); }
+}
+
+/* Nổ bong bóng Chat emoji từ đầu quái */
+@keyframes bubble-pop-up {
+    0% { transform: translateX(-50%) scale(0); opacity: 0; }
+    100% { transform: translateX(-50%) scale(1); opacity: 1; }
+}
