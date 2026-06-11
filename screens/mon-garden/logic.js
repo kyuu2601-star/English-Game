@@ -187,6 +187,7 @@ function spawnAllMonsFromUserSheet() {
             calculatedSize = calculatedSize * 2; // Nhân đôi kích thước thực tế
             // Nếu muốn giới hạn trần tối đa cho Boss không bị tràn màn hình thì chặn nhẹ ở đây:
             if (calculatedSize > 500) calculatedSize = 500;
+            }
 
         const petEl = document.createElement('div');
         petEl.className = "garden-mon-pet";
