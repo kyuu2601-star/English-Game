@@ -99,27 +99,48 @@ function enterMainMenuDirectly() {
 
     if (avatarDisplay) avatarDisplay.style.backgroundImage = `url('assets/Player_${gameState.gender === 'male' ? 'Male' : 'Female'}_Main.png')`;
     if (nameText) nameText.innerText = gameState.username;
-    if (avatarImg) {
-        let rawLink = gameState.avatar ? gameState.avatar.trim() : "";
+if (avatarImg) {
+        let finalAvatarLink = "";
         let defaultAvatar = "assets/default-avatar.png";
 
-        if (rawLink !== "") {
-            // In thẳng ra Console để F12 lên xem App Script nó trả về link gì!
-            console.log("🔗 Link Avatar nhận được từ Sheet là:", rawLink);
+        try {
+            const systemCsvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT-EFZn4iPTyVHW35NtYDWCwVH5mt6Vuw9kbAFNMm8CkLXzu31QdoK7vW18NdlKLXKKgZIH9YYFKqoh/pubhtml?gid=1029675025&single=true";
+            
+            console.log("📥 [Avatar Engine] Đang tự quét file CSV để tìm kiếm Avatar...");
+            let response = await fetch(systemCsvUrl);
+            let text = await response.text();
+            
+            let rows = text.split(/\r?\n/).filter(line => line.trim() !== "").map(line => line.split(','));
+            
+            for (let i = 1; i < rows.length; i++) {
+                let row = rows[i];
+                if (row[0] && row[0].trim() === gameState.username.trim()) {
+                    // Cột G tương ứng với index số 6
+                    if (row[6] && row[6].trim() !== "") {
+                        finalAvatarLink = row[6].trim().replace(/^"|"$/g, ""); 
+                    }
+                    break;
+                }
+            }
+        } catch (err) {
+            console.error("🚨 Lỗi khi tự quét CSV Avatar:", err);
+        }
 
-            // Bỏ vụ crossOrigin luôn, cho tải tự nhiên
-            avatarImg.src = rawLink; 
-            avatarImg.style.display = "block"; 
+        // Đắp link trực tiếp từ Sheet lên UI, không chỉnh sửa gì thêm
+        if (finalAvatarLink !== "") {
+            console.log("🎯 Tìm thấy link Avatar chuẩn từ CSV:", finalAvatarLink);
+            
+            avatarImg.src = finalAvatarLink;
+            avatarImg.style.display = "block";
 
             avatarImg.onerror = function() {
-                console.warn("⚠️ Link ảnh từ Sheet bị chết hoặc bị chặn! Lùi về default.");
-                this.onerror = null; 
+                this.onerror = null;
                 this.src = defaultAvatar;
             };
         } else {
-            console.log("ℹ️ Ô chứa Avatar trên Sheet bị trống, dùng default.");
-            avatarImg.src = defaultAvatar; 
-            avatarImg.style.display = "block"; 
+            console.log("ℹ️ Ô chứa Avatar trên Sheet bị trống, lùi về dùng ảnh mặc định.");
+            avatarImg.src = defaultAvatar;
+            avatarImg.style.display = "block";
         }
     }
     // ===================================================================
