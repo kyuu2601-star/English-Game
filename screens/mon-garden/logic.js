@@ -198,9 +198,12 @@ function spawnAllMonsFromUserSheet() {
 
         let spawnX, spawnY;
         if (isSpecialCodeE) {
-            spawnX = 1850 + Math.random() * 300;
-            spawnY = 1850 + Math.random() * 300;
+            // Thay vì ép quanh vùng tâm 1850-2150px như cũ, tui rải rộng ra toàn bản đồ
+            // Chừa biên 300px để quái không bị văng ra khỏi rìa map
+            spawnX = 300 + Math.random() * 3400; // Tọa độ chạy từ 300px đến 3700px
+            spawnY = 300 + Math.random() * 3400; // Tọa độ chạy từ 300px đến 3700px
         } else {
+            // Khúc else của quái thường fen giữ nguyên si nha
             spawnX = 1100 + Math.random() * 1800;
             spawnY = 1100 + Math.random() * 1800;
         }
