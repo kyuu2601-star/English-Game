@@ -66,6 +66,9 @@ function initGardenLogic() {
     const viewportEl = document.getElementById('garden-viewport');
     if (!playerEl || !viewportEl) return;
 
+    playerEl.style.width = `${gardenPlayerState.width}px`;
+    playerEl.style.height = `${gardenPlayerState.height}px`;
+    
     updatePlayerSpriteAsset();
 
     // 🎯 GỌI HÀM CÂN BẰNG TỶ LỆ MÀN HÌNH VÀ GẮN SỰ KIỆN KHI RESIZE
@@ -253,9 +256,10 @@ function spawnAllMonsFromUserSheet() {
                 bubbleEl.style.transform = "scale(1) !important"; 
                 bubbleEl.style.transformOrigin = "bottom center";
 
-                // Căn tọa độ động hít theo góc trên bên phải của con quái
-                bubbleEl.style.top = "-40px"; 
-                bubbleEl.style.left = `${mon.size - 20}px`; // Nương theo độ bự của quái để dịch chuyển
+                // 🎯 CĂN GIỮA TUYỆT ĐỐI NGAY TRÊN ĐẦU QUÁI VẬT
+                bubbleEl.style.top = "-60px"; // Đẩy hẳn lên trên đầu quái một khoảng vừa vặn
+                bubbleEl.style.left = "50%";  // Đẩy góc trái bong bóng ra chính giữa tâm con quái
+                bubbleEl.style.transform = "translateX(-50%) scale(1) !important"; // Thêm translateX(-50%) để giật ngược cái bong bóng lại chính giữa rốn quái
                 bubbleEl.style.right = "auto";
 
                 mon.element.appendChild(bubbleEl);
