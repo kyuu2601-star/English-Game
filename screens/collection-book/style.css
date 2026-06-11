@@ -48,7 +48,7 @@
     max-width: 1920px !important;
     max-height: 1080px !important;
 
-    background: url('assets/ui/Collection_Book.png') no-repeat center/contain;
+    background: url('assets/Collection_Book.png') no-repeat center/contain;
     z-index: 5;
     
     /* Vô hiệu hóa flex/grid cũ để các slot con tự do găm tọa độ absolute */
