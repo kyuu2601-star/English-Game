@@ -107,8 +107,8 @@ function renderCollectionBook() {
             const bigMonImg = document.createElement('img');
             bigMonImg.src = mob.Image;
             bigMonImg.style.cssText = `
-                width: 600px;
-                height: 600px;
+                width: 300px;
+                height: 300px;
                 object-fit: contain;
                 pointer-events: none; 
                 transform: scale(0.8);
