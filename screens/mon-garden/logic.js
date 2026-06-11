@@ -178,7 +178,7 @@ function spawnAllMonsFromUserSheet() {
         if (catchCount <= 0) return; 
 
         // Khởi điểm bự 100px, mỗi cấp cộng dồn kích thước lên, chặn trần 350px
-        let calculatedSize = 100 + (catchCount - 1) * 5;
+        let calculatedSize = 100 + (catchCount - 1) * 1;
         if (calculatedSize > 350) calculatedSize = 350;
 
         // Quét tìm siêu thú bắt đầu bằng chữ 'e' hoặc 'E'
