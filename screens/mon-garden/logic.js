@@ -712,7 +712,12 @@ function renderWhistleGridAndSlots() {
 
     gridContainer.innerHTML = "";
 
-    let capturedListFilter = globalMobList.filter(mob => (gameState.captured[mob.ID] || 0) > 0);
+    let capturedListFilter = globalMobList.filter(mob => {
+        let isCaptured = (gameState.captured[mob.ID] || 0) > 0;
+        let isSpecialCodeE = mob.ID.toString().toUpperCase().startsWith('E');
+        return isCaptured && !isSpecialCodeE; // Chỉ lấy những con đã bắt và KHÔNG PHẢI đầu E
+    });
+    
     let availableMonsForGrid = capturedListFilter.filter(mob => !selectedVanguardSlotsArray.includes(mob.ID.toString()));
 
     let startIdx = selectorPopupCurrentPage * SELECTOR_GRID_ITEMS_PER_PAGE;
