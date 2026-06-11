@@ -47,7 +47,7 @@
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
     image-rendering: pixelated;
-    z-index: 1; /* 🎯 Lớp 5: Dưới cùng */
+    z-index: 1; 
 }
 
 .garden-tile {
@@ -67,22 +67,21 @@
     background-size: contain;
     background-repeat: no-repeat;
     background-position: bottom center;
-    z-index: 800; /* 🎯 Lớp 2: Đè lên Quái và Background, dưới Menu UI */
+    z-index: 800; 
     will-change: left, top, transform;
 }
 
-/* 🎯 BÓNG ĐỔ DƯỚI CHÂN NHÂN VẬT CHÍNH */
 .garden-player::after {
     content: '';
     position: absolute;
     bottom: -8px; 
     left: 50%;
     transform: translateX(-50%);
-    width: 100%; /* Size bằng chiều ngang nhân vật */
-    height: 18px; /* Độ dẹt của bóng */
+    width: 100%; 
+    height: 18px; 
     background: radial-gradient(ellipse closest-side, #000 0%, transparent 100%);
     opacity: 0.6;
-    z-index: -1; /* Lặn xuống dưới gót chân Nhân vật */
+    z-index: -1; 
     pointer-events: none;
 }
 
@@ -100,23 +99,22 @@
 .garden-mon-pet {
     position: absolute;
     transition: left 4s ease-in-out, top 4s ease-in-out;
-    z-index: 500; /* 🎯 Lớp 3: Trên Background, Dưới Player */
+    z-index: 500; 
     will-change: left, top;
 }
 
-/* 🎯 BÓNG ĐỔ DƯỚI CHÂN QUÁI VẬT (MƯỢT & SCALE THEO KÍCH THƯỚC) */
 .garden-mon-pet::after {
     content: '';
     position: absolute;
     bottom: -5px; 
     left: 50%;
     transform: translateX(-50%);
-    width: 100%; /* Rộng bằng đúng chiều ngang của Mon để scale cùng lúc */
-    height: 20%; /* Chiều cao bóng dẹt cũng scale nhẹ theo kích thước */
-    max-height: 20px; /* Khóa chặn không cho bóng cao quá mức */
+    width: 100%; 
+    height: 20%; 
+    max-height: 20px; 
     background: radial-gradient(ellipse closest-side, #000 0%, transparent 100%); 
-    opacity: 0.6; /* Đúng chuẩn yêu cầu 60% */
-    z-index: -1; /* 🎯 Lớp 4: Lặn xuống dưới chân quái vật */
+    opacity: 0.6; 
+    z-index: -1; 
     pointer-events: none;
 }
 
@@ -136,12 +134,12 @@
     animation: mon-p-gentle-sway 2.5s infinite ease-in-out !important;
 }
 
-/* 💬 🎯 BUBBLE CHAT (NỔI LÊN TRÊN ĐẦU QUÁI VẬT) */
+/* 💬 BUBBLE CHAT (🎯 ĐƯỜNG DẪN NỘI BỘ TRONG FOLDER) */
 .garden-emoji-bubble {
     position: absolute;
     width: 50px;
     height: 50px;
-    background-image: url('screens/mon-garden/assets/Bubble_Chat.png'); /* ĐÃ SỬA ĐƯỜNG DẪN */
+    background-image: url('assets/Bubble_Chat.png'); 
     background-size: 100% 100%;
     background-repeat: no-repeat;
     background-color: transparent;
@@ -151,20 +149,20 @@
     align-items: center;
     font-size: 18px; 
     padding-bottom: 8px; 
-    z-index: 10; /* Nổi lên trên hình ảnh con quái */
+    z-index: 10; 
     top: -35px; 
     right: -25px; 
     animation: bubble-pop-up 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 /* ===================================================================
-   🕹️ 5. VIRTUAL JOYSTICK (TỐI GIẢN VỀ 2 VÒNG TRÒN, LỚP 1)
+   🕹️ 5. VIRTUAL JOYSTICK
    =================================================================== */
 .joystick-zone {
     position: absolute;
     bottom: 50px;
     left: 60px;
-    z-index: 9000; /* 🎯 Lớp 1: Đè mọi thứ trên bản đồ */
+    z-index: 9000; 
     touch-action: none;
 }
 
@@ -197,15 +195,17 @@
     position: absolute;
     bottom: 55px;
     right: 65px;
-    z-index: 9000; /* 🎯 Lớp 1 */
+    z-index: 9000; 
     width: 130px;
     height: 130px;
     touch-action: none;
 }
+
+/* NÚT CÒI (🎯 ĐƯỜNG DẪN NỘI BỘ TRONG FOLDER) */
 .btn-whistle-core {
     width: 100%;
     height: 100%;
-    background-image: url('screens/mon-garden/assets/Btn_Whistle.png'); /* ĐÃ SỬA ĐƯỜNG DẪN */
+    background-image: url('assets/Btn_Whistle.png'); 
     background-size: 85%;
     background-repeat: no-repeat;
     background-position: center;
@@ -217,7 +217,7 @@
 }
 .btn-whistle-core:disabled, 
 .btn-whistle-core.is-pressed {
-    background-image: url('screens/mon-garden/assets/Btn_Whistle_Pressed.png') !important; /* ĐÃ SỬA ĐƯỜNG DẪN */
+    background-image: url('assets/Btn_Whistle_Pressed.png') !important; 
     cursor: not-allowed;
 }
 
@@ -256,7 +256,7 @@
     right: 45px;
     display: flex;
     gap: 20px;
-    z-index: 9000; /* 🎯 Lớp 1 */
+    z-index: 9000; 
 }
 .btn-garden-nav {
     width: 90px;
@@ -269,14 +269,15 @@
     cursor: pointer;
     outline: none;
 }
-.btn-nav-back { background-image: url('screens/mon-garden/assets/Btn_Back.png'); } /* ĐÃ SỬA ĐƯỜNG DẪN */
-.btn-nav-back:active { background-image: url('screens/mon-garden/assets/Btn_Back_Pressed.png'); } /* ĐÃ SỬA ĐƯỜNG DẪN */
+/* NÚT MENU (🎯 ĐƯỜNG DẪN NỘI BỘ TRONG FOLDER) */
+.btn-nav-back { background-image: url('assets/Btn_Back.png'); } 
+.btn-nav-back:active { background-image: url('assets/Btn_Back_Pressed.png'); } 
 
-.btn-nav-battle { background-image: url('screens/mon-garden/assets/Btn_Battle_Icon.png'); } /* ĐÃ SỬA ĐƯỜNG DẪN */
-.btn-nav-battle:active { background-image: url('screens/mon-garden/assets/Btn_Battle_Icon_Pressed.png'); } /* ĐÃ SỬA ĐƯỜNG DẪN */
+.btn-nav-battle { background-image: url('assets/Btn_Battle_Icon.png'); } 
+.btn-nav-battle:active { background-image: url('assets/Btn_Battle_Icon_Pressed.png'); } 
 
-.btn-nav-collection { background-image: url('screens/mon-garden/assets/Btn_Collection_Icon.png'); } /* ĐÃ SỬA ĐƯỜNG DẪN */
-.btn-nav-collection:active { background-image: url('screens/mon-garden/assets/Btn_Collection_Icon_Pressed.png'); } /* ĐÃ SỬA ĐƯỜNG DẪN */
+.btn-nav-collection { background-image: url('assets/Btn_Collection_Icon.png'); } 
+.btn-nav-collection:active { background-image: url('assets/Btn_Collection_Icon_Pressed.png'); } 
 
 /* ===================================================================
    📋 8. POPUP BẢNG CHỌN VỆ SĨ (GRID 6x6 ROLL TRANG)
@@ -285,7 +286,7 @@
     position: absolute;
     top: 0; left: 0; width: 100%; height: 100%;
     background: rgba(0, 0, 0, 0.65);
-    z-index: 99999; /* 🎯 Bố của các loại Lớp, che toàn bộ màn hình khi mở */
+    z-index: 99999; 
     display: flex; justify-content: center; align-items: center;
 }
 .garden-select-content {
@@ -383,10 +384,11 @@
     width: 60px; height: 60px; object-fit: contain;
 }
 
+/* NÚT XÁC NHẬN (🎯 ĐƯỜNG DẪN NỘI BỘ TRONG FOLDER) */
 .btn-confirm-whistle-select {
     width: 220px;
     height: 65px;
-    background-image: url('screens/mon-garden/assets/UI_Answer_Box.png'); /* ĐÃ SỬA ĐƯỜNG DẪN */
+    background-image: url('assets/UI_Answer_Box.png'); 
     background-size: 100% 100%;
     background-repeat: no-repeat;
     background-color: transparent;
@@ -398,7 +400,7 @@
     outline: none;
 }
 .btn-confirm-whistle-select:active {
-    background-image: url('screens/mon-garden/assets/UI_Answer_Box_Pressed.png'); /* ĐÃ SỬA ĐƯỜNG DẪN */
+    background-image: url('assets/UI_Answer_Box_Pressed.png'); 
 }
 
 /* ===================================================================
@@ -429,7 +431,6 @@
     100% { transform: translate(0, 0) scale(1); opacity: 1; }
 }
 
-/* Hoạt ảnh lắc quái cực mạnh khi bị xách lên */
 @keyframes mon-violently-shake {
     0%   { transform: rotate(0deg); }
     25%  { transform: rotate(10deg); }
@@ -438,7 +439,6 @@
     100% { transform: rotate(0deg); }
 }
 
-/* Class CSS dùng JS bật tắt khi cầm/buông Mon */
 .garden-mon-pet.is-being-held {
     transition: none !important; 
     z-index: 999999 !important; 
@@ -449,5 +449,5 @@
     will-change: transform-origin, transform;
 }
 .garden-mon-pet.is-being-held::after {
-    display: none; /* 🎯 Ẩn cái bóng mờ ở dưới đất đi khi quái bị nhấc bổng lên */
+    display: none; 
 }
