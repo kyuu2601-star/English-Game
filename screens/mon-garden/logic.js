@@ -9,13 +9,13 @@ let gardenIntervalTimers = [];
 // 🎯 TRẠNG THÁI SCALE MÀN HÌNH (Rất quan trọng để UI thu phóng vừa màn hình)
 let currentGardenScale = 1;
 
-// Trạng thái Nhân vật chính (Player State) - ĐÃ PHÓNG TO SIZE GẤP ĐÔI
+// Trạng thái Nhân vật chính (Player State)
 let gardenPlayerState = {
     x: 2000, 
     y: 2000,
-    width: 132,  // 🎯 Tăng từ 66px lên 132px giúp Char bự, rõ nét
-    height: 200, // 🎯 Tăng từ 100px lên 200px
-    speed: 7.5,  // Tăng nhẹ tốc độ để di chuyển cân bằng với kích thước mới
+    width: 66, 
+    height: 100, 
+    speed: 6.5,  
     facingX: 1,      
     viewDirection: 'down', 
     isMoving: false,
@@ -66,13 +66,9 @@ function initGardenLogic() {
     const viewportEl = document.getElementById('garden-viewport');
     if (!playerEl || !viewportEl) return;
 
-    // 🎯 Áp thông số kích thước mới của Char vào DOM thực tế
-    playerEl.style.width = `${gardenPlayerState.width}px`;
-    playerEl.style.height = `${gardenPlayerState.height}px`;
-
     updatePlayerSpriteAsset();
 
-    // Gọi hàm cân bằng tỷ lệ màn hình và gắn sự kiện khi resize
+    // 🎯 GỌI HÀM CÂN BẰNG TỶ LỆ MÀN HÌNH VÀ GẮN SỰ KIỆN KHI RESIZE
     fitGardenToScreen();
     window.addEventListener('resize', fitGardenToScreen);
 
@@ -157,7 +153,7 @@ function updatePlayerSpriteAsset() {
 }
 
 // ==========================================================================
-// 🧬 ENGINE THẢ QUÁI VÀ QUẢN LÝ HÀNH VI (FIX BUBBLE CHAT TĨNH 50PX + QUÁI HỆ e ĐỨNG YÊN)
+// 🧬 ENGINE THẢ QUÁI VÀ QUẢN LÝ HÀNH VI (ĐI CỰC CHẬM 10PX/S + FIXED ĐẶC BIỆT CHỮ E)
 // ==========================================================================
 function spawnAllMonsFromUserSheet() {
     const mapContainer = document.getElementById('garden-map');
@@ -173,11 +169,9 @@ function spawnAllMonsFromUserSheet() {
         const catchCount = gameState.captured[mob.ID] || 0;
         if (catchCount <= 0) return; 
 
-        // Khởi điểm bự 150px, mỗi cấp cộng dồn kích thước lên, chặn trần 350px
         let calculatedSize = 150 + (catchCount - 1) * 5;
         if (calculatedSize > 350) calculatedSize = 350;
 
-        // Quét tìm siêu thú bắt đầu bằng chữ 'e' hoặc 'E'
         let isSpecialCodeE = mob.ID.toString().toUpperCase().startsWith('E');
 
         const petEl = document.createElement('div');
@@ -200,7 +194,6 @@ function spawnAllMonsFromUserSheet() {
 
         let spawnX, spawnY;
         if (isSpecialCodeE) {
-            // Ép siêu thú đứng yên gần rốn bản đồ, bao quanh vị trí xuất phát người chơi
             spawnX = 1850 + Math.random() * 300;
             spawnY = 1850 + Math.random() * 300;
         } else {
@@ -253,20 +246,12 @@ function spawnAllMonsFromUserSheet() {
                 bubbleEl.className = "garden-emoji-bubble";
                 bubbleEl.innerText = randomEmoji;
                 
-                // ===================================================================
-                // 🎯 ĐÃ ĐẬP CHẾT LỖI BUBBLE CHAT: Khóa cứng scale tỷ lệ 50px tĩnh tuyệt đối
-                // ===================================================================
-                bubbleEl.style.position = "absolute";
-                bubbleEl.style.width = "50px";   
-                bubbleEl.style.height = "50px";  
-                bubbleEl.style.fontSize = "18px"; 
-                bubbleEl.style.transform = "scale(1) !important"; 
-                bubbleEl.style.transformOrigin = "bottom center";
+                bubbleEl.style.transform = `translateX(0) scale(${100 / (mon.size / 50)})`;
+                bubbleEl.style.transformOrigin = "bottom left";
                 
-                // Định vị chuẩn xác hít chặt lên vai phải của Mon dựa theo kích thước thực
-                bubbleEl.style.top = "-40px"; 
-                bubbleEl.style.left = `${mon.size - 20}px`; 
-                bubbleEl.style.right = "auto";
+                bubbleEl.style.top = "-25px";
+                bubbleEl.style.right = "-35px";
+                bubbleEl.style.left = "auto";
 
                 mon.element.appendChild(bubbleEl);
 
@@ -586,7 +571,7 @@ function triggerWhistleCooldownPhase() {
 }
 
 // ==========================================================================
-// 📋 LOGIC ĐIỀU PHỐI POPUP BAN BÈ
+// 📋 LOGIC ĐIỀU PHỐI POPUP BAN BÈ (🎯 ĐÃ THÊM TƯƠNG TÁC ĐÓNG POPUP)
 // ==========================================================================
 function openWhistleSelectorModalPopup() {
     const modal = document.getElementById('garden-mon-selector');
@@ -597,6 +582,13 @@ function openWhistleSelectorModalPopup() {
 
     renderWhistleGridAndSlots();
     modal.style.display = "flex";
+
+    // 🎯 THÊM: Click ra vùng trống bên ngoài nền mờ để tự tắt bảng chọn
+    modal.onclick = function(event) {
+        if (event.target === modal) {
+            closeMonSelectorModal();
+        }
+    };
 }
 
 function renderWhistleGridAndSlots() {
@@ -700,8 +692,10 @@ function confirmWhistleSelection() {
     triggerWhistleVanguardSummon();
 }
 
+// 🎯 THÊM: Hàm xử lý đóng ẩn thẻ div Modal Popup
 function closeMonSelectorModal() {
-    document.getElementById('garden-mon-selector').style.display = "none";
+    const modal = document.getElementById('garden-mon-selector');
+    if (modal) modal.style.display = "none";
 }
 
 // ==========================================================================
