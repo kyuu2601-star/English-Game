@@ -157,7 +157,7 @@ function updatePlayerSpriteAsset() {
 }
 
 // ==========================================================================
-// 🧬 ENGINE THẢ QUÁI VÀ QUẢN LÝ HÀNH VI (FIX BUBBLE CHAT TĨNH 50PX + QUÁI HỆ e ĐỨNG YÊN)
+// 🧬 ENGINE THẢ QUÁI VÀ QUẢN LÝ HÀNH VI (TRUE PARABOL BUNNY HOP 50PX)
 // ==========================================================================
 function spawnAllMonsFromUserSheet() {
     const mapContainer = document.getElementById('garden-map');
@@ -269,16 +269,16 @@ function spawnAllMonsFromUserSheet() {
                     if (bubbleEl.parentNode) bubbleEl.remove();
                 }, 2000);
 
-} else {
+            } else {
                 mon.isBehavingIdle = false;
                 
-                // 🎯 KÍCH HOẠT BUNNY HOP 50PX (TẮT TRANSITION LẾT CŨ)
+                // Tắt transition cũ để vẽ Parabol động bằng CSS Animation thông qua CSS Variables
                 mon.element.style.transition = "none";
                 mon.graphicElement.classList.add('mon-moving-tilt');
 
                 let randomAngle = Math.random() * Math.PI * 2;
                 
-                // Khóa cứng cự ly nhảy đúng 50px từng chặng
+                // Khóa cứng cự ly di chuyển tịnh tiến đúng 50px sang điểm đích mới
                 let targetX = mon.currentX + Math.cos(randomAngle) * 50;
                 let targetY = mon.currentY + Math.sin(randomAngle) * 50;
 
@@ -287,23 +287,30 @@ function spawnAllMonsFromUserSheet() {
                 if(targetY < 100) targetY = 100;
                 if(targetY > 3900) targetY = 3900;
 
+                let deltaX = targetX - mon.currentX;
+                let deltaY = targetY - mon.currentY;
                 let directionSign = targetX > mon.currentX ? 1 : -1;
 
-                // 1. Đẩy tọa độ ngang của lớp vỏ ngoài đi trước để làm điểm đáp vật lý
-                mon.element.style.left = `${targetX}px`;
-                mon.element.style.top = `${targetY}px`;
-                
-                // 2. 🎯 FIX XUNG ĐỘT: Lật mặt quái bằng thẻ ngoài (mon.element) thay vì thẻ đồ họa trong để tránh đè nát animation
-                mon.element.style.transform = `scaleX(${directionSign})`;
-                
-                // 3. Kích nổ hiệu ứng nhấc bổng vòng cung lên trời (Trục Y) bằng CSS Animation
-                mon.graphicElement.style.animation = "none";
-                mon.graphicElement.offsetHeight; // Kích reflow reset nhịp
-                mon.graphicElement.style.animation = "monBunnyHopEffect 0.5s ease-out forwards";
+                // 🎯 GÀI BIẾN CSS DỘNG: Giúp CSS Keyframes định vị được cự ly bay 50px thực tế
+                mon.element.style.setProperty('--hop-delta-x', `${deltaX}px`);
+                mon.element.style.setProperty('--hop-delta-y', `${deltaY}px`);
+                mon.element.style.setProperty('--mon-scale-x', directionSign);
 
-                // Lưu dữ liệu tọa độ mới vào bộ đếm runtime
-                mon.currentX = targetX;
-                mon.currentY = targetY;
+                // Kích nổ chuyển động bay Parabol (Thời gian bay tốn 0.5 giây)
+                mon.element.style.animation = "none";
+                mon.element.offsetHeight; // Kích reflow reset nhịp
+                mon.element.style.animation = "monTrueParabolHop 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards";
+
+                // Đợi diễn xong hoạt ảnh 500ms thì hạ cánh khóa chết vị trí vật lý left/top
+                setTimeout(() => {
+                    mon.element.style.left = `${targetX}px`;
+                    mon.element.style.top = `${targetY}px`;
+                    mon.element.style.animation = "none";
+                    mon.element.style.transform = `scaleX(${directionSign})`;
+
+                    mon.currentX = targetX;
+                    mon.currentY = targetY;
+                }, 500);
             }
         });
     }, 5000);
