@@ -99,50 +99,27 @@ function enterMainMenuDirectly() {
 
     if (avatarDisplay) avatarDisplay.style.backgroundImage = `url('assets/Player_${gameState.gender === 'male' ? 'Male' : 'Female'}_Main.png')`;
     if (nameText) nameText.innerText = gameState.username;
-if (avatarImg) {
-        let finalAvatarLink = "";
+    if (avatarImg) {
+        let rawLink = gameState.avatar ? gameState.avatar.trim() : "";
         let defaultAvatar = "assets/default-avatar.png";
 
-        try {
-            const systemCsvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT-EFZn4iPTyVHW35NtYDWCwVH5mt6Vuw9kbAFNMm8CkLXzu31QdoK7vW18NdlKLXKKgZIH9YYFKqoh/pubhtml?gid=1029675025&single=true";
-            
-            console.log("📥 [Avatar Engine] Đang tự quét file CSV để tìm kiếm Avatar...");
-            let response = await fetch(systemCsvUrl);
-            let text = await response.text();
-            
-            let rows = text.split(/\r?\n/).filter(line => line.trim() !== "").map(line => line.split(','));
-            
-            for (let i = 1; i < rows.length; i++) {
-                let row = rows[i];
-                if (row[0] && row[0].trim() === gameState.username.trim()) {
-                    // Cột G tương ứng với index số 6
-                    if (row[6] && row[6].trim() !== "") {
-                        finalAvatarLink = row[6].trim().replace(/^"|"$/g, ""); 
-                    }
-                    break;
-                }
-            }
-        } catch (err) {
-            console.error("🚨 Lỗi khi tự quét CSV Avatar:", err);
-        }
-
-        // Đắp link trực tiếp từ Sheet lên UI, không chỉnh sửa gì thêm
-        if (finalAvatarLink !== "") {
-            console.log("🎯 Tìm thấy link Avatar chuẩn từ CSV:", finalAvatarLink);
-            
-            avatarImg.src = finalAvatarLink;
-            avatarImg.style.display = "block";
+        if (rawLink !== "") {
+            avatarImg.src = rawLink; 
+            avatarImg.style.display = "block"; 
 
             avatarImg.onerror = function() {
                 this.onerror = null;
                 this.src = defaultAvatar;
             };
         } else {
-            console.log("ℹ️ Ô chứa Avatar trên Sheet bị trống, lùi về dùng ảnh mặc định.");
-            avatarImg.src = defaultAvatar;
-            avatarImg.style.display = "block";
+            avatarImg.src = defaultAvatar; 
+            avatarImg.style.display = "block"; 
         }
     }
+
+    if (menuControls) menuControls.style.display = "flex";
+    if (charZone) charZone.style.display = "flex";
+}
     // ===================================================================
 
     // Kích hoạt hiển thị cụm nút Start/Collection và nhân vật lên màn hình
