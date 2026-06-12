@@ -146,8 +146,8 @@
     position: relative;
     height: 12vh !important;       /* Bằng ~18% chiều cao con nhân vật 65vh */
     width: calc(12vh * 4) !important; /* Tự tính toán chiều ngang theo tỷ lệ ảnh gốc (440/110 = 4) */
-    max-height: 55px !important;  /* Thay vì 110px, tui bóp trần max-height về đúng 55px khớp với phôi chữ */
-    max-width: 220px !important;   /* Giới hạn max-width tương ứng tỷ lệ 4 lần */
+    max-height: 110px !important;  /* Thay vì 110px, tui bóp trần max-height về đúng 55px khớp với phôi chữ */
+    max-width: 440px !important;   /* Giới hạn max-width tương ứng tỷ lệ 4 lần */
     margin-top: -3vh !important;   /* Khóa âm khoảng cách nhích lên che chân nhân vật không bị giãn khi zoom */
     background: url('assets/Nametag_Player.png') no-repeat center/contain;
     display: flex;
@@ -161,14 +161,14 @@
     font-family: 'MyFredoka', sans-serif;
     
     /* 🎯 RESPONSIVE FONT SIZE: Sử dụng đơn vị vh cho font để text tự động thu nhỏ khi thu nhỏ tab */
-    font-size: 8vh !important; /* Đơn vị vh giúp font chữ tự zoom co giãn đồng bộ theo bệ đỡ */
+    font-size: 6vh !important; /* Đơn vị vh giúp font chữ tự zoom co giãn đồng bộ theo bệ đỡ */
     
     color: #ffffff;      /* 📌 MÀU CHỮ TRẮNG TINH KHÔI */
     font-weight: bold;
     text-transform: uppercase;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8); 
     text-align: left;         /* Canh lề trái */
-    padding-left: 4.5vh !important; /* 📌 Thay thế padding-left: 50px cứng để chữ nhảy đúng ô trống ảnh */
+    padding-left: 5.5vh !important; /* 📌 Thay thế padding-left: 50px cứng để chữ nhảy đúng ô trống ảnh */
     box-sizing: border-box;
     z-index: 12;
 }
