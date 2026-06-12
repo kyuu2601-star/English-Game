@@ -174,7 +174,7 @@
     background-size: 600% 100% !important;
 }
 
-.play-smoke { display: block; animation: runSmokeSheet 0.5s steps(5) forwards; }
+.play-smoke { display: block; animation: runSmokeSheet 0.5s steps(6) forwards; }
 @keyframes runSmokeSheet { 
     from { background-position: 0 0; } 
     to { background-position: 100% 0; } 
