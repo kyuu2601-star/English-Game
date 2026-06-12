@@ -52,6 +52,8 @@
 #btn-collection-book:active { background-image: url('assets/Btn_Collection_Icon_Pressed.png') !important; }
 #btn-backpack { background-image: url('assets/Btn_Backpack_Icon.png') !important; }
 #btn-backpack:active { background-image: url('assets/Btn_Backpack_Icon_Pressed.png') !important; }
+#btn-leaderboard { background-image: url('assets/Btn_Leadership_Icon.png') !important; }
+#btn-leaderboard:active { background-image: url('assets/Btn_Leadership_Icon_Pressed.png') !important; }
 #btn-setting { background-image: url('assets/Btn_Setting_Icon.png') !important; }
 #btn-setting:active { background-image: url('assets/Btn_Setting_Icon_Pressed.png') !important; }
 
