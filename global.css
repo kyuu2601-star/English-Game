@@ -60,3 +60,43 @@ html, body {
     left: 0;
     box-sizing: border-box;
 }
+
+/* ==========================================================================
+   🌍 BỘ NÚT CHO POPUP GLOBAL (RESPONSIVE)
+   ========================================================================== */
+.btn-popup-action {
+    /* 📌 Scale chuẩn theo vh, chia nửa ra để 2 nút vừa vặn trong 1 popup */
+    width: 26vh !important;  
+    height: 11vh !important; 
+    max-width: 180px !important;
+    max-height: 75px !important;
+    
+    border: none; cursor: pointer;
+    background: url('assets/UI_Answer_Box.png') no-repeat center/contain;
+    background-color: transparent; 
+    display: inline-flex; justify-content: center; align-items: center;
+    
+    font-family: 'MyFredoka', sans-serif; 
+    font-size: 3vh !important; /* Scale font size theo vh luôn */
+    color: white; font-weight: bold; text-transform: uppercase; 
+    padding: 0;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    outline: none;
+    transition: transform 0.1s;
+}
+
+.btn-popup-action:active {
+    background-image: url('assets/UI_Answer_Box_Pressed.png') !important;
+    transform: scale(0.95);
+}
+
+/* 🔴 TÀ THUẬT: ÉP NÚT CANCEL THÀNH MÀU ĐỎ BẰNG CSS FILTER */
+.btn-popup-cancel {
+    /* Biến ảnh thành trắng đen -> ám màu -> xoay hệ màu sang đỏ -> tăng đậm */
+    filter: grayscale(100%) sepia(100%) hue-rotate(315deg) saturate(300%) brightness(0.9) !important;
+}
+
+/* Đảm bảo lúc bấm xuống nó vẫn giữ màu đỏ */
+.btn-popup-cancel:active {
+    filter: grayscale(100%) sepia(100%) hue-rotate(315deg) saturate(300%) brightness(0.8) !important;
+}
