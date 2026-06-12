@@ -187,7 +187,7 @@
 /* 🎯 THÊM MỚI: CSS kích hoạt khi JS phát hiện số > 99 */
 .card-tag .tag-text.shrink-text {
     font-size: 9cqi !important; /* Ép chữ nhỏ lại (gốc là 16cqi) */
-    transform: rotate(16deg) translateY(-2px); /* Tinh chỉnh nhích lên 1 chút cho cân giữa Tag */
+    transform: rotate(16deg) translateY(-4px); /* Tinh chỉnh nhích lên 1 chút cho cân giữa Tag */
 }
 
 /* Ép font-size theo tỷ lệ thẻ khi thẻ bị bóp trần (max-width) */
