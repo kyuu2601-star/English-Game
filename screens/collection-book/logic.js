@@ -79,16 +79,6 @@ function renderCollectionBook() {
             <div class="card-title">${mob.Name}</div>
             <div class="card-tag"><span class="tag-text ${shrinkClass}">${displayCount}</span></div>
         `;
-        // ===================================================================
-
-        card.style.backgroundImage = `url('assets/${imgName}')`;
-
-        // 🎯 ĐÃ SỬA: Vứt bỏ chữ x cũ rích, chỉ truyền displayCount vào thôi
-        card.innerHTML = `
-            <img src="${mob.Image}" class="mob-thumb">
-            <div class="card-title">${mob.Name}</div>
-            <div class="card-tag"><span class="tag-text">${displayCount}</span></div>
-        `;
 
         // ===================================================================
         // 🎯 TỰ FIX: CLICK VÀO THẺ HIỆN HÌNH MON FULL MÀN HÌNH 1000PX + OVERLAY TỐI
