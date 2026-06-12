@@ -141,6 +141,7 @@
     
     /* 🎯 1. ÉP CÁI TEXT CANH TRÁI Tuyệt đối INSIDE thẻ nhựa */
     text-align: left !important;
+    left: 5px
     width: 100% !important; /* Chiếm hết chiều rộng thẻ để text-align có tác dụng */
     
     /* 🎯 2. TẠO KHU VỰC AN TOÀN TRÁNH CÁI ICON LEVEL TRÊN ẢNH NỀN */
