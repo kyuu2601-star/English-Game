@@ -146,8 +146,8 @@
     position: relative;
     height: 12vh !important;       /* Bằng ~18% chiều cao con nhân vật 65vh */
     width: calc(12vh * 4) !important; /* Tự tính toán chiều ngang theo tỷ lệ ảnh gốc (440/110 = 4) */
-    max-height: 110px !important;  /* Thay vì 110px, tui bóp trần max-height về đúng 55px khớp với phôi chữ */
-    max-width: 440px !important;   /* Giới hạn max-width tương ứng tỷ lệ 4 lần */
+    max-height: 100px !important;  /* Thay vì 110px, tui bóp trần max-height về đúng 55px khớp với phôi chữ */
+    max-width: 400px !important;   /* Giới hạn max-width tương ứng tỷ lệ 4 lần */
     margin-top: -3vh !important;   /* Khóa âm khoảng cách nhích lên che chân nhân vật không bị giãn khi zoom */
     background: url('assets/Nametag_Player.png') no-repeat center/contain;
     display: flex;
