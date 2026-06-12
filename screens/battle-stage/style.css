@@ -171,10 +171,14 @@
     width: 40vh !important; height: 40vh !important;
     max-width: 400px !important; max-height: 400px !important;
     background: url('assets/VFX_Smoke.png') no-repeat; display: none; z-index: 750;
+    background-size: 600% 100% !important;
 }
 
-.play-smoke { display: block; animation: runSmokeSheet 0.5s steps(6) forwards; }
-@keyframes runSmokeSheet { from { background-position: 0 0; } to { background-position: -1800px 0; } }
+.play-smoke { display: block; animation: runSmokeSheet 0.5s steps(5) forwards; }
+@keyframes runSmokeSheet { 
+    from { background-position: 0 0; } 
+    to { background-position: 100% 0; } 
+}
 
 /* ==========================================================================
    5. HIỆU ỨNG VFX LAYERS & POPUPS KẾT QUẢ 
