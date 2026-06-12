@@ -161,7 +161,7 @@
     align-items: flex-end;       
     
     /* 🎯 Giữ nguyên thông số fen đã canh chỉnh */
-    padding-left: 10%; 
+    padding-left: 9%; 
     padding-bottom: 27%;
     
     /* ❌ Đã bứng dòng transform đi chỗ khác để khung Tag đứng im */
@@ -170,7 +170,7 @@
     font-family: 'MyFredoka', sans-serif;
     
     /* 🎯 ĐÃ ĐỔI: Chữ luôn bằng 16% chiều ngang thẻ, vứt luôn đơn vị vw cũ */
-    font-size: 20cqi !important; 
+    font-size: 16cqi !important; 
     
     color: #475569; 
     font-weight: bold;
