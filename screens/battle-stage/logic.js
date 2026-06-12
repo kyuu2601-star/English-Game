@@ -62,12 +62,12 @@ function nextBattleTurn() {
     // 🎡 TẦNG 1: ĐỔ XÚC XẮC CHỌN MỐC BUCKET % (CHỐNG PHA LOÃNG)
     // ------------------------------------------------------------------
     const STAR_PERCENTAGES = {
-        "1": 29,
+        "1": 30,
         "2": 24,
         "3": 19,
-        "4": 14,
-        "5": 9,
-        "E": 5
+        "4": 15,
+        "5": 10,
+        "E": 2
     };
 
     let randStar = Math.random() * 100;
