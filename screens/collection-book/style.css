@@ -243,7 +243,7 @@
    ========================================================================== */
 .collection-top-left-nav {
     position: absolute;
-    top: 25% !important;
+    top: 20% !important;
     right: 40px !important; 
     left: auto !important;  
     transform: none !important;
@@ -276,3 +276,7 @@
 /* Asset Battle Icon */
 .btn-battle-main { background-image: url('assets/Btn_Battle_Icon.png') !important; }
 .btn-battle-main:active { background-image: url('assets/Btn_Battle_Icon_Pressed.png') !important; }
+
+/* 🎯 THÊM MỚI: Asset Backpack Icon (Vào Vườn) */
+#btn-backpack { background-image: url('assets/Btn_Backpack_Icon.png') !important; }
+#btn-backpack:active { background-image: url('assets/Btn_Backpack_Icon_Pressed.png') !important; }
