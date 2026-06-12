@@ -67,7 +67,7 @@ function nextBattleTurn() {
         "3": 19,
         "4": 14,
         "5": 9,
-        "P": 5
+        "E": 5
     };
 
     let randStar = Math.random() * 100;
