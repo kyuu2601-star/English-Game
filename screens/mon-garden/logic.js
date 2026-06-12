@@ -315,6 +315,10 @@ function spawnAllMonsFromUserSheet() {
                     bubbleEl.style.fontSize = "18px"; 
                     bubbleEl.style.transform = "scale(1) !important"; 
                     bubbleEl.style.transformOrigin = "bottom center";
+                    bubbleEl.style.display = "flex";
+                    bubbleEl.style.justifyContent = "center";
+                    bubbleEl.style.alignItems = "center";
+                    bubbleEl.style.paddingBottom = "8px";
 
                     // CĂN GIỮA TUYỆT ĐỐI NGAY TRÊN ĐẦU QUÁI VẬT
                     bubbleEl.style.top = "-60px"; 
