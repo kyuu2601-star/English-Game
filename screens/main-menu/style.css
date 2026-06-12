@@ -178,9 +178,9 @@
    ========================================================================== */
 #main-menu-avatar {
     /* 🎯 RESPONSIVE SCALE: Tự động zoom to nhỏ tỷ lệ thuận theo chiều cao Khung Tên (vh) */
-    width: 11vh !important;       /* Cho nhỏ hơn chiều cao khung tên 12vh một xíu nhìn cho gọn gàng */
-    height: 11vh !important;
-    max-width: 1200px !important;   /* Khống chế trần max để khớp khít khi khung tên đạt max-height 55px */
+    width: 20vh !important;       /* Cho nhỏ hơn chiều cao khung tên 12vh một xíu nhìn cho gọn gàng */
+    height: 20vh !important;
+    max-width: 120px !important;   /* Khống chế trần max để khớp khít khi khung tên đạt max-height 55px */
     max-height: 120px !important;
 
     position: absolute;           /* Ép tọa độ chạy theo thằng cha .player-nametag-wrapper */
