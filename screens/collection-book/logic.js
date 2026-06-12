@@ -46,22 +46,23 @@ function renderCollectionBook() {
         let count = gameState.captured[mob.ID] || 0;
         
         // 🎯 ĐÃ THÊM: Hàm nén số siêu gọn (Dưới 1000 hiện số thường, từ 1000 trở lên hiện 1k, 1.2k...)
+ // 🎯 Rút gọn số lượng & set class bóp chữ
         let displayCount = count;
         if (count >= 1000) {
             displayCount = (count / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
         }
+        let shrinkClass = count > 99 ? "shrink-text" : "";
         
+        // 1️⃣ BƯỚC 1: XÂY CÁI KHUNG THẺ TRƯỚC (createElement)
         let card = document.createElement('div');
         card.className = `card-item unlocked slot-${index + 1}`;
         
+        // 2️⃣ BƯỚC 2: TÌM ẢNH NỀN PHÙ HỢP CHO THẺ
         let starLevel = mob.Stars ? mob.Stars.toString().trim() : "";
         if (starLevel === "" || isNaN(starLevel)) {
             starLevel = "1";
         }
         
-        // ===================================================================
-        // 🎯 KHÚC CHÈN MỚI: RÀNG BUỘC GẮN CARD ĐẶC CHỦNG CHO RANK E
-        // ===================================================================
         let isRankE = mob.ID.toString().toUpperCase().startsWith('E');
         let imgName = "";
 
@@ -70,6 +71,14 @@ function renderCollectionBook() {
         } else {
             imgName = isShiny ? `Card_lv${starLevel}_S.png` : `Card_lv${starLevel}.png`;
         }
+
+        // 3️⃣ BƯỚC 3: LẮP RÁP NỘI THẤT VÀO THẺ
+        card.style.backgroundImage = `url('assets/${imgName}')`;
+        card.innerHTML = `
+            <img src="${mob.Image}" class="mob-thumb">
+            <div class="card-title">${mob.Name}</div>
+            <div class="card-tag"><span class="tag-text ${shrinkClass}">${displayCount}</span></div>
+        `;
         // ===================================================================
 
         card.style.backgroundImage = `url('assets/${imgName}')`;
