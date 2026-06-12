@@ -320,6 +320,51 @@ function consumeEnergy() {
     return false; 
 }
 
+// ==========================================
+// 🚪 HỆ THỐNG ĐĂNG XUẤT TOÀN CỤC (GLOBAL LOGOUT)
+// ==========================================
+
+// 1. Hàm mở Popup (Gắn vào mọi nút Logout trên các màn hình)
+function openLogoutPopup() {
+    const popup = document.getElementById('global-logout-popup');
+    if (popup) popup.style.display = "flex";
+}
+
+// 2. Hàm đóng Popup (Khi bấm Hủy)
+function closeLogoutPopup() {
+    const popup = document.getElementById('global-logout-popup');
+    if (popup) popup.style.display = "none";
+}
+
+// 3. Hàm kích hoạt Đăng xuất (Khi bấm Đồng ý)
+function executeLogout() {
+    closeLogoutPopup();
+    console.log("🧹 Đang xóa dữ liệu phiên chơi cũ...");
+
+    // Xóa sạch Local Storage chứa tên game
+    let keys = Object.keys(localStorage);
+    keys.forEach(k => {
+        if (k.startsWith('pkm_catch_')) {
+            localStorage.removeItem(k);
+        }
+    });
+
+    // Reset sạch sẽ Data ngầm trong RAM
+    if (typeof gameState !== 'undefined') {
+        gameState.username = "";
+        gameState.password = "";
+        gameState.gender = "";
+        gameState.coins = 0;
+        gameState.captured = {};
+        gameState.energy = 0;
+        gameState.avatar = "";
+    }
+
+    // 🔥 CHIÊU CUỐI: F5 tải lại toàn bộ trang web
+    // Cách này là an toàn và sạch sẽ nhất, tự động đá bay mọi màn hình và lôi người chơi về đúng cái form Login mặc định ban đầu.
+    window.location.reload();
+}
+
 // ==========================================================================
 // 🔐 HỆ THỐNG ĐĂNG NHẬP & XỬ LÝ DỮ LIỆU TỪ SHEET (API FETCH)
 // ==========================================================================
