@@ -92,7 +92,7 @@ function nextBattleTurn() {
 
     let isShinyRoll = Math.random() < 0.01; 
     let shinyPool = pool.filter(m => /[a-zA-Z]$/.test(m.ID));
-    let normalPool = pool.filter(m => /^\d+\.\d+$/.test(m.ID));
+    let normalPool = pool.filter(m => m.ID && !/[a-zA-Z]$/.test(m.ID.toString().trim()));
 
     let targetPool = pool;
     if (isShinyRoll && shinyPool.length > 0) {
